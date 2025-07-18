@@ -45,13 +45,37 @@ const taskTests = {
   ],
 }
 
+const EVENT_UPDATE = new Event('update')
+
 customElements.define(
   'task-element',
   class extends HTMLElement {
     constructor() {
       super()
+
       const template = document.getElementById('task-template').content
       this.attachShadow({ mode: 'open' }).appendChild(template.cloneNode(true))
+
+      this.shadowRoot
+        .getElementById('task-edit')
+        .addEventListener('click', (event) => {
+          const nameInput = document.createElement('input')
+          nameInput.setAttribute('type', 'text')
+
+          const taskNameParent = event.currentTarget.parentElement
+          taskNameParent.appendChild(nameInput)
+
+          nameInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+              taskNameParent.removeChild(nameInput)
+              this.task.task_name = nameInput.value
+              EVENT_UPDATE.task = this.task
+              EVENT_UPDATE.elementQuery = 'span[slot="task-name"]'
+              this.dispatchEvent(EVENT_UPDATE)
+            }
+          })
+          nameInput.focus()
+        })
     }
   }
 )
@@ -68,6 +92,12 @@ function renderTaskTree(task) {
   const taskElement = document.createElement('task-element')
   taskElement.appendChild(taskName)
   taskElement.appendChild(taskNote)
+  taskElement.task = task
+
+  taskElement.addEventListener('update', (event) => {
+    event.currentTarget.querySelector(event.elementQuery).textContent =
+      event.task.task_name
+  })
 
   if (!task.task_subs?.length) {
     const leafSubTasks = document.createElement('span')

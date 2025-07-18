@@ -22,7 +22,7 @@
   "license": "GPL-3.0-or-later",
   "author": "Alan Vincenzi",
   "type": "module",
-  "main": "index.js",
+  "main": "source/main.js",
   "scripts": {
     "test": "npm run test"
   }
