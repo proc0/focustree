@@ -1,0 +1,29 @@
+{
+  "name": "focal",
+  "version": "0.0.1",
+  "description": "Task manager, action tracker, habit builder",
+  "keywords": [
+    "task",
+    "manager",
+    "action",
+    "tracker",
+    "habit",
+    "builder",
+    "typescript"
+  ],
+  "homepage": "https://github.com/proc0/Focal#readme",
+  "bugs": {
+    "url": "https://github.com/proc0/Focal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/proc0/Focal.git"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": "Alan Vincenzi",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  }
+}

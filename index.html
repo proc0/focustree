@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Focal</title>
+    <!-- <link rel="stylesheet" href="css/style.css" /> -->
+    <!-- <meta name="description" content="" />
+
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:image:alt" content="" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icon.png" />
+
+    <link rel="manifest" href="site.webmanifest" /> -->
+    <meta name="theme-color" content="#fafafa" />
+  </head>
+  <template id="element-details-template">
+    <style>
+      details {
+        font-family: 'Open Sans Light', Helvetica, Arial, sans-serif;
+      }
+      .name {
+        font-weight: bold;
+        color: #217ac0;
+        font-size: 120%;
+      }
+      h4 {
+        margin: 10px 0 -8px 0;
+        background: #217ac0;
+        color: white;
+        padding: 2px 6px;
+        border: 1px solid #cee9f9;
+        border-radius: 4px;
+      }
+      .attributes {
+        margin-left: 22px;
+        font-size: 90%;
+      }
+      .attributes p {
+        margin-left: 16px;
+        font-style: italic;
+      }
+    </style>
+    <details>
+      <summary>
+        <code class="name"> &lt;<slot name="title">NEED NAME</slot>&gt; </code>
+        <span class="desc"
+          ><slot name="description">NEED DESCRIPTION</slot></span
+        >
+      </summary>
+      <div class="attributes">
+        <h4>Attributes</h4>
+        <slot name="attributes"><p>None</p></slot>
+      </div>
+    </details>
+    <hr />
+  </template>
+  <body>
+    <!-- <element-details>
+      <div slot="title">Blah</div>
+      <div slot="description">balbhalhbalslh</div>
+    </element-details>
+    <element-details>
+      <div slot="title">Blah2</div>
+      <div slot="description">22222balbhalhbalslh</div>
+      <element-details slot="attributes">
+        <div slot="title">Blah</div>
+        <div slot="description">balbhalhbalslh</div>
+        <element-details slot="attributes">
+          <div slot="title">Blah</div>
+          <div slot="description">balbhalhbalslh</div>
+        </element-details>
+      </element-details>
+    </element-details> -->
+    <main></main>
+    <script src="source/main.js"></script>
+  </body>
+</html>
