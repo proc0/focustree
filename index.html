@@ -18,21 +18,22 @@
     <template id="task-template">
       <link rel="stylesheet" href="style/task.css" />
       <details>
-        <summary id="task-head">
+        <summary class="task-head">
           <div class="task-name">
             <slot name="task-name">[NAME]</slot>
-            <button id="task-edit">Edit</button>
+            <button>Edit</button>
           </div>
           <div class="task-note">
             <slot name="task-note">[NOTE]</slot>
+            <button>Edit</button>
           </div>
         </summary>
-        <article id="task-body">
+        <div class="task-body">
           <!-- when the task-leaf slot is defined the contents are hidden, 
            when it is not a leaf it defaults to this header content -->
           <slot name="task-leaf"><h4>Subtasks</h4></slot>
           <slot name="task-subs"></slot>
-        </article>
+        </div>
       </details>
     </template>
     <main>

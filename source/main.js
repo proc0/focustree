@@ -58,29 +58,81 @@ customElements.define(
       const taskTemplate = document.getElementById('task-template').content
       this.shadowRoot.appendChild(taskTemplate.cloneNode(true))
 
+      // prevent summary from expanding when entering text in input
       this.shadowRoot
-        .getElementById('task-edit')
-        .addEventListener('click', (event) => {
-          const taskNameParent = event.currentTarget.parentElement
+        .querySelector('summary')
+        .addEventListener('keyup', (event) => {
+          if (event.key === ' ') {
+            event.preventDefault()
+          }
+        })
 
-          if (taskNameParent.getElementsByTagName('input')?.length) return
+      const slots = this.shadowRoot.querySelectorAll('summary slot')
 
-          const nameInput = document.createElement('input')
-          nameInput.setAttribute('type', 'text')
+      for (const i in slots) {
+        const editButton = slots[i].parentElement?.querySelector('button')
 
-          taskNameParent.appendChild(nameInput)
+        if (!editButton) continue
 
-          nameInput.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-              taskNameParent.removeChild(nameInput)
-              this.task.task_name = nameInput.value
-              this.updateEvent.task = this.task
-              this.updateEvent.elementQuery = 'span[slot="task-name"]'
-              this.dispatchEvent(this.updateEvent)
+        const slotName = slots[i].getAttribute('name')
+
+        editButton.addEventListener('click', (event) => {
+          const currentButton = event.currentTarget
+          const parentElement = currentButton.parentElement
+
+          if (parentElement.getElementsByTagName('input')?.length) return
+
+          currentButton.setAttribute('class', 'hidden')
+          parentElement.querySelector('slot').setAttribute('class', 'hidden')
+
+          const inputElement = document.createElement('input')
+          inputElement.setAttribute('type', 'text')
+          inputElement.setAttribute(
+            'value',
+            this.task[slotName.replace('-', '_')]
+          )
+
+          const saveButton = document.createElement('button')
+          saveButton.textContent = 'Save'
+          saveButton.addEventListener('click', () => {
+            this.updateDone(
+              parentElement,
+              inputElement,
+              currentButton,
+              saveButton,
+              slotName
+            )
+          })
+
+          parentElement.appendChild(inputElement)
+          parentElement.appendChild(saveButton)
+
+          inputElement.addEventListener('keyup', ({ key }) => {
+            if (key === 'Enter') {
+              this.updateDone(
+                parentElement,
+                inputElement,
+                currentButton,
+                saveButton,
+                slotName
+              )
             }
           })
-          nameInput.focus()
+
+          inputElement.focus()
         })
+      }
+    }
+
+    updateDone(parentElement, inputElement, editButton, saveButton, slotName) {
+      this.task[slotName.replace('-', '_')] = inputElement.value
+      this.updateEvent.updateValue = inputElement.value
+      this.updateEvent.elementQuery = `span[slot="${slotName}"]`
+      parentElement.removeChild(inputElement)
+      parentElement.querySelector('slot').setAttribute('class', '')
+      editButton.setAttribute('class', '')
+      saveButton.remove()
+      this.dispatchEvent(this.updateEvent)
     }
   }
 )
@@ -101,22 +153,25 @@ function renderTaskTree(task) {
 
   taskElement.addEventListener(EVENT_UPDATE, (event) => {
     event.currentTarget.querySelector(event.elementQuery).textContent =
-      event.task.task_name
+      event.updateValue
   })
 
+  // task leaf
   if (!task.task_subs?.length) {
     const leafSubTasks = document.createElement('span')
     leafSubTasks.setAttribute('slot', 'task-leaf')
     taskElement.shadowRoot
-      .getElementById('task-head')
+      .querySelector('summary')
       .setAttribute('class', 'task-leaf')
     taskElement.appendChild(leafSubTasks)
     return taskElement
   }
 
+  // task subs
   for (const sub in task.task_subs) {
     const subTask = renderTaskTree(task.task_subs[sub])
     subTask.setAttribute('slot', 'task-subs')
+
     taskElement.appendChild(subTask)
   }
 

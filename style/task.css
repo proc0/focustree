@@ -3,15 +3,19 @@ summary {
   margin-left: 2em;
   padding: 0.5em;
 }
+
 summary:hover {
   cursor: pointer;
 }
+
 summary.task-leaf {
   list-style: none;
 }
+
 summary.task-leaf:hover {
   cursor: auto;
 }
+
 summary::marker {
   display: inline-flex;
   color: #350200;
@@ -32,7 +36,11 @@ h4 {
   border-radius: 4px;
 }
 
-article {
+.task-body {
   margin-left: 22px;
   font-size: 90%;
+}
+
+.hidden {
+  display: none;
 }
