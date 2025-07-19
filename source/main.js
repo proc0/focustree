@@ -45,33 +45,38 @@ const taskTests = {
   ],
 }
 
-const EVENT_UPDATE = new Event('update')
+const EVENT_UPDATE = 'update'
 
 customElements.define(
   'task-element',
   class extends HTMLElement {
     constructor() {
       super()
+      this.attachShadow({ mode: 'open' })
+      this.updateEvent = new CustomEvent(EVENT_UPDATE)
 
-      const template = document.getElementById('task-template').content
-      this.attachShadow({ mode: 'open' }).appendChild(template.cloneNode(true))
+      const taskTemplate = document.getElementById('task-template').content
+      this.shadowRoot.appendChild(taskTemplate.cloneNode(true))
 
       this.shadowRoot
         .getElementById('task-edit')
         .addEventListener('click', (event) => {
+          const taskNameParent = event.currentTarget.parentElement
+
+          if (taskNameParent.getElementsByTagName('input')?.length) return
+
           const nameInput = document.createElement('input')
           nameInput.setAttribute('type', 'text')
 
-          const taskNameParent = event.currentTarget.parentElement
           taskNameParent.appendChild(nameInput)
 
           nameInput.addEventListener('keypress', (event) => {
             if (event.key === 'Enter') {
               taskNameParent.removeChild(nameInput)
               this.task.task_name = nameInput.value
-              EVENT_UPDATE.task = this.task
-              EVENT_UPDATE.elementQuery = 'span[slot="task-name"]'
-              this.dispatchEvent(EVENT_UPDATE)
+              this.updateEvent.task = this.task
+              this.updateEvent.elementQuery = 'span[slot="task-name"]'
+              this.dispatchEvent(this.updateEvent)
             }
           })
           nameInput.focus()
@@ -94,7 +99,7 @@ function renderTaskTree(task) {
   taskElement.appendChild(taskNote)
   taskElement.task = task
 
-  taskElement.addEventListener('update', (event) => {
+  taskElement.addEventListener(EVENT_UPDATE, (event) => {
     event.currentTarget.querySelector(event.elementQuery).textContent =
       event.task.task_name
   })
@@ -118,10 +123,11 @@ function renderTaskTree(task) {
   return taskElement
 }
 
-const addTaskButton = document.getElementById('add-task')
-addTaskButton.addEventListener('click', () => {
-  main.appendChild(renderTaskTree(taskModel))
-})
-
 const main = document.getElementsByTagName('main')[0]
+
+const addTaskButton = document.getElementById('add-task')
+addTaskButton.addEventListener('click', () =>
+  main.appendChild(renderTaskTree(structuredClone(taskModel)))
+)
+
 main.appendChild(renderTaskTree(taskTests))
