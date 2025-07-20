@@ -36,7 +36,7 @@ h4 {
   border-radius: 4px;
 }
 
-.task-body {
+details section {
   margin-left: 22px;
   font-size: 90%;
 }
