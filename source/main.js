@@ -45,40 +45,59 @@ const taskTests = {
   ],
 }
 
+const CUSTOM_ELEMENT = 'task-element'
+const TEMPLATE_ID = 'task-template'
+
 const EVENT_UPDATE = 'update'
 
+const QUERY_SLOT_FIELD = 'ul li slot'
+const QUERY_BUTTON_ADD = 'details summary button'
+const QUERY_SUB_SECTION = 'details section'
+
+const CLASS_LEAF = 'leaf'
+
+const LABEL_BUTTON_SAVE = 'Save'
+
 customElements.define(
-  'task-element',
+  CUSTOM_ELEMENT,
   class extends HTMLElement {
     constructor() {
       super()
-      this.attachShadow({ mode: 'open' })
       this.updateEvent = new CustomEvent(EVENT_UPDATE)
 
-      const taskTemplate = document.getElementById('task-template').content
-      this.shadowRoot.appendChild(taskTemplate.cloneNode(true))
+      this.attachShadow({ mode: 'open' }).appendChild(
+        document.getElementById(TEMPLATE_ID).content.cloneNode(true)
+      )
 
-      this.shadowRoot.querySelectorAll('ul li slot').forEach((slot) => {
-        const editButton = slot.parentElement?.querySelector('button')
+      this.shadowRoot.querySelectorAll(QUERY_SLOT_FIELD).forEach((slot) => {
+        const editButton = slot.parentElement.querySelector('button')
         editButton.addEventListener('click', this.onEditButtonClick.bind(this))
       })
 
       this.shadowRoot
-        .querySelector('details summary button')
+        .querySelector(QUERY_BUTTON_ADD)
         .addEventListener('click', (event) => {
           const newTask = structuredClone(taskModel)
           newTask.task_id = this.task.task_id + 1
           const subTask = renderTaskTree(newTask)
           subTask.setAttribute('slot', 'task-subs')
-
-          this.shadowRoot.querySelector('details section').appendChild(subTask)
+          this.shadowRoot.querySelector('div').setAttribute('class', '')
+          this.shadowRoot.querySelector(QUERY_SUB_SECTION).appendChild(subTask)
         })
     }
 
-    updateDone(parentElement, inputElement, editButton, saveButton, slotName) {
-      this.task[slotName.replace('-', '_')] = inputElement.value
+    commit(event) {
+      const saveButton = event.currentTarget
+      const parentElement = saveButton.parentElement
+      const inputElement = parentElement.getElementsByTagName('input')[0]
+      const editButton = parentElement.querySelector('button[name="edit"]')
+      const slotName = parentElement.querySelector('slot').getAttribute('name')
+      const fieldName = slotName.replace('-', '_')
+
+      this.task[fieldName] = inputElement.value
       this.updateEvent.updateValue = inputElement.value
       this.updateEvent.elementQuery = `span[slot="${slotName}"]`
+
       parentElement.removeChild(inputElement)
       parentElement.querySelector('slot').setAttribute('class', '')
       editButton.setAttribute('class', '')
@@ -91,6 +110,7 @@ customElements.define(
       const currentButton = event.currentTarget
       const parentElement = currentButton.parentElement
       const slotName = parentElement.querySelector('slot').getAttribute('name')
+      const fieldName = slotName.replace('-', '_')
 
       if (parentElement.getElementsByTagName('input')?.length) return
 
@@ -99,33 +119,17 @@ customElements.define(
 
       const inputElement = document.createElement('input')
       inputElement.setAttribute('type', 'text')
-      inputElement.setAttribute('value', this.task[slotName.replace('-', '_')])
+      inputElement.setAttribute('value', this.task[fieldName])
 
       const saveButton = document.createElement('button')
-      saveButton.textContent = 'Save'
-      saveButton.addEventListener('click', () => {
-        this.updateDone(
-          parentElement,
-          inputElement,
-          currentButton,
-          saveButton,
-          slotName
-        )
-      })
+      saveButton.textContent = LABEL_BUTTON_SAVE
+      saveButton.addEventListener('click', this.commit.bind(this))
 
       parentElement.appendChild(inputElement)
       parentElement.appendChild(saveButton)
 
       inputElement.addEventListener('keyup', ({ key }) => {
-        if (key === 'Enter') {
-          this.updateDone(
-            parentElement,
-            inputElement,
-            currentButton,
-            saveButton,
-            slotName
-          )
-        }
+        if (key === 'Enter') saveButton.click()
       })
 
       inputElement.focus()
@@ -134,17 +138,7 @@ customElements.define(
 )
 
 function renderTaskTree(task) {
-  const taskName = document.createElement('span')
-  taskName.setAttribute('slot', 'task-name')
-  taskName.textContent = task.task_name
-
-  const taskNote = document.createElement('span')
-  taskNote.setAttribute('slot', 'task-note')
-  taskNote.textContent = task.task_note
-
-  const taskElement = document.createElement('task-element')
-  taskElement.appendChild(taskName)
-  taskElement.appendChild(taskNote)
+  const taskElement = document.createElement(CUSTOM_ELEMENT)
   taskElement.task = task
 
   taskElement.addEventListener(EVENT_UPDATE, (event) => {
@@ -152,16 +146,23 @@ function renderTaskTree(task) {
       event.updateValue
   })
 
+  const taskName = document.createElement('span')
+  taskName.setAttribute('slot', 'task-name')
+  taskName.textContent = task.task_name
+  taskElement.appendChild(taskName)
+
+  const taskNote = document.createElement('span')
+  taskNote.setAttribute('slot', 'task-note')
+  taskNote.textContent = task.task_note
+  taskElement.appendChild(taskNote)
+
   // task leaf
-  //   if (!task.task_subs?.length) {
-  //     const leafSubTasks = document.createElement('span')
-  //     leafSubTasks.setAttribute('slot', 'task-leaf')
-  //     taskElement.shadowRoot
-  //       .querySelector('summary')
-  //       .setAttribute('class', 'task-leaf')
-  //     taskElement.appendChild(leafSubTasks)
-  //     return taskElement
-  //   }
+  if (!task.task_subs?.length) {
+    taskElement.shadowRoot
+      .querySelector('div')
+      .setAttribute('class', CLASS_LEAF)
+    return taskElement
+  }
 
   // task subs
   for (const sub in task.task_subs) {

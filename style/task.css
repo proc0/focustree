@@ -8,26 +8,26 @@ summary:hover {
   cursor: pointer;
 }
 
-summary.task-leaf {
+.leaf details summary {
   list-style: none;
 }
 
-summary.task-leaf:hover {
+.leaf details summary:hover {
   cursor: auto;
 }
 
-summary::marker {
+.leaf details summary::marker {
   display: inline-flex;
   color: #350200;
 }
 
-.task-name {
+ul > li:first-child {
   font-weight: bold;
   color: #217ac0;
   font-size: 120%;
 }
 
-h4 {
+summary header {
   margin: 10px 0 -8px 0;
   background: #217ac0;
   color: white;
