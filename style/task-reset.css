@@ -1,0 +1,11 @@
+/* reset */
+
+ul li {
+  list-style: none;
+}
+
+/* remove default styles from button */
+button {
+  border: none;
+  background: none;
+}

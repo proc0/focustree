@@ -48,12 +48,14 @@ const taskTests = {
 const CUSTOM_ELEMENT = 'task-element'
 const ID_TEMPLATE = 'task-template'
 
+// const EVENT_DELETE = 'delete'
 const EVENT_UPDATE = 'update'
 
 const QUERY_SLOT_FIELD = 'ul li slot'
 const QUERY_SLOT_SUBS = 'details section'
 const QUERY_BUTTON_ADD = 'button[name="add"]'
 const QUERY_BUTTON_EDIT = 'button[name="edit"]'
+const QUERY_BUTTON_DELETE = 'button[name="delete"]'
 
 const CLASS_BRANCH = 'branch'
 const CLASS_LEAF = 'leaf'
@@ -66,6 +68,7 @@ customElements.define(
     constructor() {
       super()
       this.updateEvent = new CustomEvent(EVENT_UPDATE)
+      // this.deleteEvent = new CustomEvent(EVENT_DELETE)
 
       this.attachShadow({ mode: 'open' }).appendChild(
         document.getElementById(ID_TEMPLATE).content.cloneNode(true)
@@ -85,12 +88,20 @@ customElements.define(
         this.shadowRoot.querySelector('div').setAttribute('class', CLASS_BRANCH)
 
         this.shadowRoot.querySelector(QUERY_SLOT_SUBS).appendChild(subTask)
+        this.shadowRoot.querySelector('details').setAttribute('open', '')
+      })
+
+      //TODO: add a way to undo with ctrl+z, tombstone and hide instead? needs the data processing layer
+      this.shadowRoot.querySelector(QUERY_BUTTON_DELETE).addEventListener('click', () => {
+        this.remove()
       })
     }
 
     commit(event) {
       const saveButton = event.currentTarget
       const parent = saveButton.parentElement
+      const deleteButton = parent.querySelector(QUERY_BUTTON_DELETE)
+
       const slotName = parent.querySelector('slot').getAttribute('name')
       const fieldName = slotName.replace('-', '_')
 
@@ -103,6 +114,7 @@ customElements.define(
       parent.removeChild(input)
       parent.querySelector('slot').setAttribute('class', '')
       editButton.setAttribute('class', '')
+      deleteButton?.setAttribute('class', '')
       saveButton.remove()
 
       this.dispatchEvent(this.updateEvent)
@@ -111,12 +123,15 @@ customElements.define(
     edit(event) {
       const editButton = event.currentTarget
       const parent = editButton.parentElement
+      const deleteButton = parent.querySelector(QUERY_BUTTON_DELETE)
+
       const slotName = parent.querySelector('slot').getAttribute('name')
       const fieldName = slotName.replace('-', '_')
 
       if (parent.getElementsByTagName('input')?.length) return
 
       editButton.setAttribute('class', 'hidden')
+      deleteButton?.setAttribute('class', 'hidden')
       parent.querySelector('slot').setAttribute('class', 'hidden')
 
       const inputElement = document.createElement('input')
