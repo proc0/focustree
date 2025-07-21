@@ -1,11 +1,19 @@
 @import url('reset.css');
+@import url('global.css');
 
 html {
   font-family: sans-serif;
-  background-color: #222;
-  color: white;
+  background-color: #312a2aff;
+  color: #d0d6c9ff;
+  font-size: 1.1em;
 }
 
-button {
-  color: white;
+main {
+  padding: 2em;
+}
+
+main > button {
+  color: inherit;
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid;
 }

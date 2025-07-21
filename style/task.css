@@ -1,17 +1,44 @@
-@import url('task-reset.css');
+@import url('global-reset.css');
+@import url('global.css');
 
 /* main task */
 
-/* details {
-  border: 1px solid;
-  padding: 0 1rem;
-  background: white;
-} */
+div {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+details {
+  border-left: 1px solid #bababa;
+  margin-top: 0.5em;
+}
+
+ul {
+  margin-right: 1em;
+  margin-left: 0.75em;
+  min-width: 13em;
+}
+
+ul li {
+  display: flex;
+  vertical-align: middle;
+}
+
+ul li slot {
+  display: inline-block;
+  margin: 0 0.5em;
+}
+
+ul li:first-child slot {
+  margin: 0 0.3em;
+}
 
 ul > li:first-child {
   font-weight: bold;
-  color: #217ac0;
-  font-size: 120%;
+  color: #749b08ff;
+  font-size: 150%;
 }
 
 /* subtasks */
@@ -19,16 +46,15 @@ ul > li:first-child {
 summary {
   list-style-position: outside;
   margin-left: 2em;
-  padding: 0.5em;
 }
 
-summary header {
-  margin: 10px 0 -8px 0;
-  background: #217ac0;
-  color: white;
-  padding: 2px 6px;
-  border: 1px solid #cee9f9;
-  border-radius: 4px;
+summary::marker {
+  color: #bababa;
+}
+
+summary header button {
+  font-size: 1.2em;
+  margin: 0 0.5em;
 }
 
 summary:hover {
@@ -46,13 +72,12 @@ details section {
   list-style: none;
 }
 
-.leaf details summary:hover {
-  cursor: auto;
+.leaf details summary header {
+  color: #5e5e5eff;
 }
 
-.leaf details summary::marker {
-  display: inline-flex;
-  color: #350200;
+.leaf details summary:hover {
+  cursor: auto;
 }
 
 /* interactions */

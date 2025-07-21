@@ -17,19 +17,18 @@
       <div>
         <ul>
           <li>
-            <slot name="task-name"></slot>
             <button name="edit">✎</button>
-            <button name="delete">x</button>
+            <slot name="task-name"></slot>
+            <button name="delete">✕</button>
           </li>
           <li>
-            <slot name="task-note"></slot>
             <button name="edit">✎</button>
+            <slot name="task-note"></slot>
           </li>
         </ul>
         <details>
           <summary>
-            <header>Subtasks</header>
-            <button name="add">+</button>
+            <header>Subtasks<button name="add">+</button></header>
           </summary>
           <section>
             <slot name="task-subs"></slot>
