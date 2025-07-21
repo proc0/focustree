@@ -45,129 +45,144 @@ const taskTests = {
   ],
 }
 
+const CUSTOM_ELEMENT = 'task-element'
+const ID_TEMPLATE = 'task-template'
+
+// const EVENT_DELETE = 'delete'
 const EVENT_UPDATE = 'update'
 
+const QUERY_SLOT_FIELD = 'ul li slot'
+const QUERY_SLOT_SUBS = 'details section'
+const QUERY_BUTTON_ADD = 'button[name="add"]'
+const QUERY_BUTTON_EDIT = 'button[name="edit"]'
+const QUERY_BUTTON_DELETE = 'button[name="delete"]'
+
+const CLASS_BRANCH = 'branch'
+const CLASS_LEAF = 'leaf'
+
+const LABEL_BUTTON_SAVE = 'Save'
+
 customElements.define(
-  'task-element',
+  CUSTOM_ELEMENT,
   class extends HTMLElement {
     constructor() {
       super()
-      this.attachShadow({ mode: 'open' })
       this.updateEvent = new CustomEvent(EVENT_UPDATE)
+      // this.deleteEvent = new CustomEvent(EVENT_DELETE)
 
-      const taskTemplate = document.getElementById('task-template').content
-      this.shadowRoot.appendChild(taskTemplate.cloneNode(true))
+      this.attachShadow({ mode: 'open' }).appendChild(
+        document.getElementById(ID_TEMPLATE).content.cloneNode(true)
+      )
 
-      // prevent summary from expanding when entering text in input
-      this.shadowRoot
-        .querySelector('summary')
-        .addEventListener('keyup', (event) => {
-          if (event.key === ' ') {
-            event.preventDefault()
-          }
-        })
+      this.shadowRoot.querySelectorAll(QUERY_SLOT_FIELD).forEach((slot) => {
+        const editButton = slot.parentElement.querySelector(QUERY_BUTTON_EDIT)
+        editButton.addEventListener('click', this.edit.bind(this))
+      })
 
-      const slots = this.shadowRoot.querySelectorAll('summary slot')
+      this.shadowRoot.querySelector(QUERY_BUTTON_ADD).addEventListener('click', (event) => {
+        const newTask = structuredClone(taskModel)
+        newTask.task_id = this.task.task_id + 1
 
-      for (const i in slots) {
-        const editButton = slots[i].parentElement?.querySelector('button')
+        const subTask = renderTaskTree(newTask)
+        subTask.setAttribute('slot', 'task-subs')
+        this.shadowRoot.querySelector('div').setAttribute('class', CLASS_BRANCH)
 
-        if (!editButton) continue
+        this.shadowRoot.querySelector(QUERY_SLOT_SUBS).appendChild(subTask)
+        this.shadowRoot.querySelector('details').setAttribute('open', '')
+      })
 
-        const slotName = slots[i].getAttribute('name')
-
-        editButton.addEventListener('click', (event) => {
-          const currentButton = event.currentTarget
-          const parentElement = currentButton.parentElement
-
-          if (parentElement.getElementsByTagName('input')?.length) return
-
-          currentButton.setAttribute('class', 'hidden')
-          parentElement.querySelector('slot').setAttribute('class', 'hidden')
-
-          const inputElement = document.createElement('input')
-          inputElement.setAttribute('type', 'text')
-          inputElement.setAttribute(
-            'value',
-            this.task[slotName.replace('-', '_')]
-          )
-
-          const saveButton = document.createElement('button')
-          saveButton.textContent = 'Save'
-          saveButton.addEventListener('click', () => {
-            this.updateDone(
-              parentElement,
-              inputElement,
-              currentButton,
-              saveButton,
-              slotName
-            )
-          })
-
-          parentElement.appendChild(inputElement)
-          parentElement.appendChild(saveButton)
-
-          inputElement.addEventListener('keyup', ({ key }) => {
-            if (key === 'Enter') {
-              this.updateDone(
-                parentElement,
-                inputElement,
-                currentButton,
-                saveButton,
-                slotName
-              )
-            }
-          })
-
-          inputElement.focus()
-        })
-      }
+      //TODO: add a way to undo with ctrl+z, tombstone and hide instead? needs the data processing layer
+      this.shadowRoot.querySelector(QUERY_BUTTON_DELETE).addEventListener('click', () => {
+        this.remove()
+      })
     }
 
-    updateDone(parentElement, inputElement, editButton, saveButton, slotName) {
-      this.task[slotName.replace('-', '_')] = inputElement.value
-      this.updateEvent.updateValue = inputElement.value
+    commit(event) {
+      const saveButton = event.currentTarget
+      const parent = saveButton.parentElement
+      const deleteButton = parent.querySelector(QUERY_BUTTON_DELETE)
+
+      const slotName = parent.querySelector('slot').getAttribute('name')
+      const fieldName = slotName.replace('-', '_')
+
+      const input = parent.querySelector('input')
+      this.task[fieldName] = input.value
+      this.updateEvent.updateValue = input.value
       this.updateEvent.elementQuery = `span[slot="${slotName}"]`
-      parentElement.removeChild(inputElement)
-      parentElement.querySelector('slot').setAttribute('class', '')
+
+      const editButton = parent.querySelector(QUERY_BUTTON_EDIT)
+      parent.removeChild(input)
+      parent.querySelector('slot').setAttribute('class', '')
       editButton.setAttribute('class', '')
+      deleteButton?.setAttribute('class', '')
       saveButton.remove()
+
       this.dispatchEvent(this.updateEvent)
+    }
+
+    edit(event) {
+      const editButton = event.currentTarget
+      const parent = editButton.parentElement
+      const deleteButton = parent.querySelector(QUERY_BUTTON_DELETE)
+
+      const slotName = parent.querySelector('slot').getAttribute('name')
+      const fieldName = slotName.replace('-', '_')
+
+      if (parent.getElementsByTagName('input')?.length) return
+
+      editButton.setAttribute('class', 'hidden')
+      deleteButton?.setAttribute('class', 'hidden')
+      parent.querySelector('slot').setAttribute('class', 'hidden')
+
+      const inputElement = document.createElement('input')
+      inputElement.setAttribute('type', 'text')
+      inputElement.setAttribute('id', `${slotName}-${this.task.task_id}`)
+      inputElement.setAttribute('value', this.task[fieldName])
+
+      const saveButton = document.createElement('button')
+      saveButton.textContent = LABEL_BUTTON_SAVE
+      saveButton.addEventListener('click', this.commit.bind(this))
+
+      parent.appendChild(inputElement)
+      parent.appendChild(saveButton)
+
+      inputElement.addEventListener('keyup', ({ key }) => {
+        if (key === 'Enter') saveButton.click()
+      })
+
+      inputElement.focus()
     }
   }
 )
 
 function renderTaskTree(task) {
+  const taskElement = document.createElement(CUSTOM_ELEMENT)
+  taskElement.task = task
+
+  taskElement.addEventListener(EVENT_UPDATE, (event) => {
+    event.currentTarget.querySelector(event.elementQuery).textContent = event.updateValue
+  })
+
+  // fields
   const taskName = document.createElement('span')
   taskName.setAttribute('slot', 'task-name')
   taskName.textContent = task.task_name
+  taskElement.appendChild(taskName)
 
   const taskNote = document.createElement('span')
   taskNote.setAttribute('slot', 'task-note')
   taskNote.textContent = task.task_note
-
-  const taskElement = document.createElement('task-element')
-  taskElement.appendChild(taskName)
   taskElement.appendChild(taskNote)
-  taskElement.task = task
 
-  taskElement.addEventListener(EVENT_UPDATE, (event) => {
-    event.currentTarget.querySelector(event.elementQuery).textContent =
-      event.updateValue
-  })
-
-  // task leaf
+  // leaf
   if (!task.task_subs?.length) {
-    const leafSubTasks = document.createElement('span')
-    leafSubTasks.setAttribute('slot', 'task-leaf')
-    taskElement.shadowRoot
-      .querySelector('summary')
-      .setAttribute('class', 'task-leaf')
-    taskElement.appendChild(leafSubTasks)
+    taskElement.shadowRoot.querySelector('div').setAttribute('class', CLASS_LEAF)
     return taskElement
   }
 
-  // task subs
+  // branch
+  taskElement.shadowRoot.querySelector('div').setAttribute('class', CLASS_BRANCH)
+
   for (const sub in task.task_subs) {
     const subTask = renderTaskTree(task.task_subs[sub])
     subTask.setAttribute('slot', 'task-subs')
@@ -180,9 +195,12 @@ function renderTaskTree(task) {
 
 const main = document.getElementsByTagName('main')[0]
 
-const addTaskButton = document.getElementById('add-task')
-addTaskButton.addEventListener('click', () =>
-  main.appendChild(renderTaskTree(structuredClone(taskModel)))
-)
+const addTaskButton = document.getElementById('add-root')
+addTaskButton.addEventListener('click', () => {
+  const newTask = structuredClone(taskModel)
+  newTask.task_id = taskModel.task_id + 1
+
+  main.appendChild(renderTaskTree(newTask))
+})
 
 main.appendChild(renderTaskTree(taskTests))

@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Focal</title>
     <link rel="stylesheet" href="style/main.css" />
-    <meta
-      name="description"
-      content="task manager action tracker habit builder"
-    />
+    <meta name="description" content="task manager action tracker habit builder" />
     <!-- <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="icon.png" /> -->
@@ -17,27 +14,31 @@
   <body>
     <template id="task-template">
       <link rel="stylesheet" href="style/task.css" />
-      <details>
-        <summary class="task-head">
-          <div class="task-name">
-            <slot name="task-name">[NAME]</slot>
-            <button>Edit</button>
-          </div>
-          <div class="task-note">
-            <slot name="task-note">[NOTE]</slot>
-            <button>Edit</button>
-          </div>
-        </summary>
-        <div class="task-body">
-          <!-- when the task-leaf slot is defined the contents are hidden, 
-           when it is not a leaf it defaults to this header content -->
-          <slot name="task-leaf"><h4>Subtasks</h4></slot>
-          <slot name="task-subs"></slot>
-        </div>
-      </details>
+      <div>
+        <ul>
+          <li>
+            <slot name="task-name"></slot>
+            <button name="edit">✎</button>
+            <button name="delete">x</button>
+          </li>
+          <li>
+            <slot name="task-note"></slot>
+            <button name="edit">✎</button>
+          </li>
+        </ul>
+        <details>
+          <summary>
+            <header>Subtasks</header>
+            <button name="add">+</button>
+          </summary>
+          <section>
+            <slot name="task-subs"></slot>
+          </section>
+        </details>
+      </div>
     </template>
     <main>
-      <button id="add-task">Add Task</button>
+      <button id="add-root">New</button>
     </main>
     <script src="source/main.js"></script>
   </body>

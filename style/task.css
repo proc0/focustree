@@ -1,33 +1,28 @@
+@import url('task-reset.css');
+
+/* main task */
+
+/* details {
+  border: 1px solid;
+  padding: 0 1rem;
+  background: white;
+} */
+
+ul > li:first-child {
+  font-weight: bold;
+  color: #217ac0;
+  font-size: 120%;
+}
+
+/* subtasks */
+
 summary {
   list-style-position: outside;
   margin-left: 2em;
   padding: 0.5em;
 }
 
-summary:hover {
-  cursor: pointer;
-}
-
-summary.task-leaf {
-  list-style: none;
-}
-
-summary.task-leaf:hover {
-  cursor: auto;
-}
-
-summary::marker {
-  display: inline-flex;
-  color: #350200;
-}
-
-.task-name {
-  font-weight: bold;
-  color: #217ac0;
-  font-size: 120%;
-}
-
-h4 {
+summary header {
   margin: 10px 0 -8px 0;
   background: #217ac0;
   color: white;
@@ -36,10 +31,31 @@ h4 {
   border-radius: 4px;
 }
 
-.task-body {
+summary:hover {
+  cursor: pointer;
+}
+
+details section {
   margin-left: 22px;
   font-size: 90%;
 }
+
+/* leaf subtasks */
+
+.leaf details summary {
+  list-style: none;
+}
+
+.leaf details summary:hover {
+  cursor: auto;
+}
+
+.leaf details summary::marker {
+  display: inline-flex;
+  color: #350200;
+}
+
+/* interactions */
 
 .hidden {
   display: none;
