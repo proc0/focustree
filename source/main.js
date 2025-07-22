@@ -81,7 +81,7 @@ customElements.define(
 
       this.shadowRoot.querySelector(QUERY_BUTTON_ADD).addEventListener('click', (event) => {
         const newTask = structuredClone(taskModel)
-        newTask.task_id = this.task.task_id + 1
+        newTask.task_id = this.task.task_id + 1 + this.task.task_subs.length
 
         this.task.task_subs.push(newTask)
 
@@ -100,10 +100,9 @@ customElements.define(
         }
 
         const parentTask = this.parentElement.task
-
-        for (const subs in parentTask.task_subs) {
-          if (parentTask.task_subs[subs].task_id === this.task.task_id) {
-            parentTask.task_subs.splice(subs, 1)
+        for (const index in parentTask.task_subs) {
+          if (parentTask.task_subs[index].task_id === this.task.task_id) {
+            parentTask.task_subs.splice(index, 1)
             break
           }
         }
