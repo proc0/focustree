@@ -83,17 +83,37 @@ customElements.define(
         const newTask = structuredClone(taskModel)
         newTask.task_id = this.task.task_id + 1
 
-        const subTask = renderTaskTree(newTask)
-        subTask.setAttribute('slot', 'task-subs')
-        this.shadowRoot.querySelector('div').setAttribute('class', CLASS_BRANCH)
+        this.task.task_subs.push(newTask)
 
-        this.shadowRoot.querySelector(QUERY_SLOT_SUBS).appendChild(subTask)
-        this.shadowRoot.querySelector('details').setAttribute('open', '')
+        const updatedTaskElement = renderTaskTree(this.task)
+        updatedTaskElement.setAttribute('slot', 'task-subs')
+        updatedTaskElement.shadowRoot.querySelector('details').setAttribute('open', '')
+
+        this.parentElement.replaceChild(updatedTaskElement, this)
       })
 
       //TODO: add a way to undo with ctrl+z, tombstone and hide instead? needs the data processing layer
       this.shadowRoot.querySelector(QUERY_BUTTON_DELETE).addEventListener('click', () => {
-        this.remove()
+        if (this.parentElement.tagName === 'MAIN') {
+          this.remove()
+          return
+        }
+
+        const parentTask = this.parentElement.task
+
+        for (const subs in parentTask.task_subs) {
+          if (parentTask.task_subs[subs].task_id === this.task.task_id) {
+            parentTask.task_subs.splice(subs, 1)
+            break
+          }
+        }
+
+        const updatedTaskElement = renderTaskTree(parentTask)
+        updatedTaskElement.setAttribute('slot', 'task-subs')
+        updatedTaskElement.shadowRoot.querySelector('details').setAttribute('open', '')
+        // this promotes the task to the parent task...
+        // this.parentElement.replaceWith(updatedTaskElement, this)
+        this.parentElement.replaceWith(updatedTaskElement)
       })
     }
 
@@ -182,6 +202,12 @@ function renderTaskTree(task) {
 
   // branch
   taskElement.shadowRoot.querySelector('div').setAttribute('class', CLASS_BRANCH)
+
+  const subLength = task.task_subs.length
+  const numSubs = document.createElement('span')
+  numSubs.setAttribute('slot', 'num-subs')
+  numSubs.textContent = `${subLength} ${subLength === 1 ? 'subtask' : 'subtasks'}`
+  taskElement.appendChild(numSubs)
 
   for (const sub in task.task_subs) {
     const subTask = renderTaskTree(task.task_subs[sub])

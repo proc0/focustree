@@ -17,7 +17,6 @@ details {
 
 ul {
   margin-right: 1em;
-  margin-left: 0.75em;
   min-width: 13em;
 }
 
@@ -45,7 +44,8 @@ ul > li:first-child {
 
 summary {
   list-style-position: outside;
-  margin-left: 2em;
+  padding-left: 1.2em;
+  background-color: #222222;
 }
 
 summary::marker {
@@ -72,7 +72,8 @@ details section {
   list-style: none;
 }
 
-.leaf details summary header {
+.leaf details summary header,
+.leaf details summary header button {
   color: #5e5e5eff;
 }
 
