@@ -18,14 +18,13 @@ details {
 ul {
   margin-right: 1em;
   min-width: 13em;
+  margin-bottom: 0.5em;
 }
 
 ul li {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  height: 30px;
-  margin-bottom: 8px;
   margin-left: -28px;
 }
 
@@ -105,33 +104,42 @@ details section {
 /* interactions */
 
 .hidden {
-  display: none;
+  display: inline;
+  visibility: hidden;
 }
 
 input {
-  margin-left: 36px;
-  margin-right: 0.5em;
+  margin-left: 4px;
   background-color: #312a2aff;
   color: #d0d6c9ff;
   font-size: 1em;
+  min-width: 30%;
 }
 
-input + button {
+button[name='task-save'] {
   display: flex;
-  font-size: 1em;
   justify-content: center;
   align-items: center;
 }
 
+ul li:first-child button {
+  font-size: 70%;
+}
+
 input:focus {
   outline: none !important;
-  border: 1px solid red;
+  border-top: 2px solid #3b0303ff;
+  border-left: 2px solid #3b0303ff;
+  border-right: 2px solid #b13030ff;
+  border-bottom: 2px solid #b13030ff;
 }
 
 button {
   color: #575757ff;
   height: 100%;
   width: 30px;
+  padding: 6px 0;
+  font-size: 90%;
 }
 
 button:hover {

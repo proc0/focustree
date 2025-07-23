@@ -174,10 +174,11 @@ customElements.define(
 
       const saveButton = document.createElement('button')
       saveButton.textContent = LABEL_BUTTON_SAVE
+      saveButton.setAttribute('name', 'task-save')
       saveButton.addEventListener('click', this.commit.bind(this))
 
-      parent.appendChild(inputElement)
-      parent.appendChild(saveButton)
+      parent.prepend(inputElement)
+      parent.prepend(saveButton)
 
       inputElement.addEventListener('keyup', ({ key }) => {
         if (key === 'Enter') saveButton.click()

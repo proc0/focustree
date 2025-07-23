@@ -12,8 +12,21 @@ main {
   padding: 2em;
 }
 
-main > button {
+main menu {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0;
+  margin: 12px;
+}
+
+main menu li {
+  list-style: none;
+  margin-right: 1em;
+}
+
+main menu button {
   color: inherit;
-  padding-bottom: 0.2em;
+  padding-bottom: 0.1em;
   border-bottom: 1px solid;
 }

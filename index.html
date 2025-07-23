@@ -17,19 +17,20 @@
       <div>
         <ul>
           <li>
-            <button name="task-edit">✎</button>
+            <button name="task-edit" title="Edit">✎</button>
             <slot name="task-name"></slot>
-            <button name="task-delete">✕</button>
+            <button name="task-delete" title="Delete">✕</button>
           </li>
           <li>
-            <button name="task-edit">✎</button>
+            <button name="task-edit" title="Edit">✎</button>
             <slot name="task-note"></slot>
           </li>
         </ul>
         <details>
           <summary>
             <header>
-              <slot name="num-subs">Add subtasks</slot><button name="task-add">+</button>
+              <slot name="num-subs">No subtasks</slot
+              ><button name="task-add" title="Add subtask">+</button>
             </header>
           </summary>
           <section>
@@ -39,8 +40,10 @@
       </div>
     </template>
     <main>
-      <button id="root-add">New</button>
-      <button id="root-save">Save</button>
+      <menu>
+        <li><button id="root-add" title="New task">New</button></li>
+        <li><button id="root-save" title="Save tasks">Save</button></li>
+      </menu>
     </main>
     <script src="source/main.js"></script>
   </body>
