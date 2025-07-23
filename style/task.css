@@ -12,7 +12,6 @@ div {
 
 details {
   border-left: 1px solid #bababa;
-  margin-top: 0.5em;
 }
 
 ul {
@@ -22,13 +21,15 @@ ul {
 
 ul li {
   display: flex;
-  vertical-align: middle;
+  justify-content: flex-start;
+  align-items: center;
+  height: 30px;
+  margin-bottom: 8px;
 }
 
 ul li slot {
   display: inline-block;
   margin: 0 0.5em;
-  margin-bottom: 8px;
 }
 
 ul li:first-child slot {
@@ -45,6 +46,7 @@ ul li:first-child input {
   font-weight: bold;
   color: #749b08ff;
 }
+
 /* subtasks */
 
 summary {
@@ -82,6 +84,10 @@ details section {
   color: #5e5e5eff;
 }
 
+.leaf details summary header button:hover {
+  color: white;
+}
+
 .leaf details summary:hover {
   cursor: auto;
 }
@@ -93,19 +99,30 @@ details section {
 }
 
 input {
-  margin-left: 20px;
+  margin-left: 36px;
   margin-right: 0.5em;
-  margin-bottom: 8px;
   background-color: #312a2aff;
   color: #d0d6c9ff;
   font-size: 1em;
 }
 
 input + button {
+  display: flex;
   font-size: 1em;
+  justify-content: center;
+  align-items: center;
 }
 
 input:focus {
   outline: none !important;
   border: 1px solid red;
+}
+
+button {
+  height: 100%;
+  width: 30px;
+}
+
+button:hover {
+  background-color: #5e5e5eff;
 }
