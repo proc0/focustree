@@ -192,7 +192,7 @@ function renderTaskTree(task) {
   const subLength = task.task_subs.length
   const numSubs = document.createElement('span')
   numSubs.setAttribute('slot', 'num-subs')
-  numSubs.textContent = `${subLength} ${subLength === 1 ? 'subtask' : 'subtasks'}`
+  numSubs.textContent = `Subtasks (${subLength})`
   taskElement.appendChild(numSubs)
 
   for (const sub in task.task_subs) {

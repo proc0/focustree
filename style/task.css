@@ -11,7 +11,8 @@ div {
 }
 
 details {
-  border-left: 1px solid #bababa;
+  border-left: 1px solid #181818ff;
+  border-bottom: 3px solid #222222;
 }
 
 ul {
@@ -25,6 +26,7 @@ ul li {
   align-items: center;
   height: 30px;
   margin-bottom: 8px;
+  margin-left: -28px;
 }
 
 ul li slot {
@@ -51,17 +53,25 @@ ul li:first-child input {
 
 summary {
   list-style-position: outside;
-  padding-left: 1.2em;
+  padding-left: 10px;
   background-color: #222222;
 }
 
 summary::marker {
   color: #bababa;
+  font-size: 1em;
+}
+
+summary header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 summary header button {
   font-size: 1.2em;
-  margin: 0 0.5em;
+  margin: 0 8px;
 }
 
 summary:hover {
@@ -69,7 +79,7 @@ summary:hover {
 }
 
 details section {
-  margin-left: 22px;
+  margin-left: 30px;
   font-size: 90%;
 }
 
@@ -119,10 +129,12 @@ input:focus {
 }
 
 button {
+  color: #575757ff;
   height: 100%;
   width: 30px;
 }
 
 button:hover {
+  color: #d0d6c9ff;
   background-color: #5e5e5eff;
 }
