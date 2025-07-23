@@ -2,7 +2,6 @@ const taskModel = {
   task_id: 0,
   task_name: 'New Task',
   task_note: 'This is a new task.',
-  task_fields: [],
   task_subs: [],
 }
 
@@ -10,25 +9,16 @@ const taskTests = {
   task_id: '1',
   task_name: 'first task',
   task_note: 'first task details',
-  task_fields: ['field1', 'field2'],
-  field1: 'value1',
-  field2: 'value2',
   task_subs: [
     {
       task_id: '2',
       task_name: 'second subtask',
       task_note: 'second task details',
-      task_fields: ['field3', 'field4'],
-      field3: 'value3',
-      field4: 'value4',
       task_subs: [
         {
           task_id: '4',
           task_name: 'sub subtask',
           task_note: 'sub sub task details',
-          task_fields: ['field3.1', 'field4.1'],
-          field3: 'value3.1',
-          field4: 'value4.1',
           task_subs: [],
         },
       ],
@@ -37,9 +27,6 @@ const taskTests = {
       task_id: '3',
       task_name: 'third subtask',
       task_note: 'third task details',
-      task_fields: ['field5', 'field6'],
-      field3: 'value5',
-      field4: 'value6',
       task_subs: [],
     },
   ],
@@ -60,7 +47,7 @@ const QUERY_BUTTON_DELETE = 'button[name="delete"]'
 const CLASS_BRANCH = 'branch'
 const CLASS_LEAF = 'leaf'
 
-const LABEL_BUTTON_SAVE = 'Save'
+const LABEL_BUTTON_SAVE = '✔'
 
 customElements.define(
   CUSTOM_ELEMENT,

@@ -28,18 +28,23 @@ ul li {
 ul li slot {
   display: inline-block;
   margin: 0 0.5em;
+  margin-bottom: 8px;
 }
 
 ul li:first-child slot {
   margin: 0 0.3em;
 }
 
-ul > li:first-child {
+ul li:first-child {
   font-weight: bold;
   color: #749b08ff;
-  font-size: 150%;
+  font-size: 1.5em;
 }
 
+ul li:first-child input {
+  font-weight: bold;
+  color: #749b08ff;
+}
 /* subtasks */
 
 summary {
@@ -85,4 +90,22 @@ details section {
 
 .hidden {
   display: none;
+}
+
+input {
+  margin-left: 20px;
+  margin-right: 0.5em;
+  margin-bottom: 8px;
+  background-color: #312a2aff;
+  color: #d0d6c9ff;
+  font-size: 1em;
+}
+
+input + button {
+  font-size: 1em;
+}
+
+input:focus {
+  outline: none !important;
+  border: 1px solid red;
 }
