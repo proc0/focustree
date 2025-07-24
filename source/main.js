@@ -15,7 +15,7 @@ const taskTests = {
   task_note: 'First steps for using Focus Tree.',
   task_state: 'idle',
   task_ui: {
-    is_open: false,
+    is_open: true,
   },
   task_subs: [
     {
@@ -239,67 +239,74 @@ function renderTaskTree(task) {
   return taskElement
 }
 
-class TaskDB {
-  constructor() {
-    const taskDB = window.indexedDB.open('tasks', 1)
+const TASKBASE_NAME = 'taskbase'
+const TASKBASE_VERSION = 1
+const TASKBASE_STORE = 'task'
+const TASKBASE_KEYPATH = 'task_id'
+const TASKBASE_INDEX = 'roots'
 
-    taskDB.onerror = (event) => {
+class Taskbase {
+  constructor() {
+    const taskbase = window.indexedDB.open(TASKBASE_NAME, TASKBASE_VERSION)
+
+    taskbase.onerror = (event) => {
       console.log(event.target.error)
     }
 
-    taskDB.onsuccess = (event) => {
-      console.log('Database initialised.')
+    taskbase.onsuccess = (event) => {
+      console.log('Taskbase initialized.')
 
       // Store the result of opening the database in the db variable. This is used a lot below
-      this.db = taskDB.result
+      this.taskbase = event.target.result
 
-      const transaction = this.db.transaction(['task-list'], 'readwrite')
+      const transaction = this.taskbase.transaction([TASKBASE_STORE], 'readwrite')
       // Do something when all the data is added to the database.
       transaction.oncomplete = (event) => {
-        console.log('TaskDB transaction complete.')
+        console.log('Taskbase transaction complete.')
       }
 
       transaction.onerror = (event) => {
         console.error(event.target.error)
       }
 
-      const objectStore = transaction.objectStore('task-list')
+      this.load()
+    }
+
+    taskbase.onupgradeneeded = (event) => {
+      console.log('Taskbase upgrade needed.')
+
+      const taskbase = event.target.result
+
+      taskbase.onerror = (event) => {
+        console.error(event.target.error)
+      }
+
+      // Create an objectStore for this database
+      const objectStore = taskbase.createObjectStore(TASKBASE_STORE, { keyPath: TASKBASE_KEYPATH })
+
+      // Define what data items the objectStore will contain
+      objectStore.createIndex(TASKBASE_INDEX, TASKBASE_KEYPATH, { unique: false })
+
       const request = objectStore.add(taskTests)
       request.onsuccess = (event) => {
-        console.log(event.target.result)
+        console.log(`Added task ${event.target.result}`)
       }
 
       request.onerror = (event) => {
         console.error(event.target.error)
       }
-
-      this.load()
-    }
-
-    taskDB.onupgradeneeded = (event) => {
-      const db = event.target.result
-
-      db.onerror = (event) => {
-        console.error(event.target.error)
-      }
-
-      // Create an objectStore for this database
-      const objectStore = db.createObjectStore('task-list', { keyPath: 'task_id' })
-
-      // Define what data items the objectStore will contain
-      objectStore.createIndex('root-task', 'task_id', { unique: false })
     }
   }
 
   load() {
-    const objectStore = this.db.transaction('task-list').objectStore('task-list')
+    const store = this.taskbase.transaction(TASKBASE_STORE).objectStore(TASKBASE_STORE)
 
-    objectStore.openCursor().onsuccess = (event) => {
+    store.openCursor().onsuccess = (event) => {
       const cursor = event.target.result
       // Check if there are no (more) cursor items to iterate through
       if (!cursor) {
         // No more items to iterate through, we quit.
-        console.log('Entries all displayed.')
+        console.log('Taskbase loading complete.')
         return
       }
 
@@ -327,5 +334,5 @@ rootSaveButton.addEventListener('click', () => {
 main.appendChild(renderTaskTree(taskTests))
 
 window.onload = () => {
-  const db = new TaskDB()
+  const db = new Taskbase()
 }
