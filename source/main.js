@@ -1,5 +1,5 @@
 const taskModel = {
-  task_id: 0,
+  task_id: 1,
   task_name: 'New Task',
   task_note: 'This is a new task.',
   task_subs: [],
@@ -11,8 +11,8 @@ const taskModel = {
 
 const taskTests = {
   task_id: '1',
-  task_name: 'first task',
-  task_note: 'first task details',
+  task_name: 'Tutorial',
+  task_note: 'First steps for using Focus Tree.',
   task_state: 'idle',
   task_ui: {
     is_open: false,
@@ -20,8 +20,8 @@ const taskTests = {
   task_subs: [
     {
       task_id: '2',
-      task_name: 'second subtask',
-      task_note: 'second task details',
+      task_name: 'Complete a task',
+      task_note: 'Click on the done button to complete a task.',
       task_state: 'idle',
       task_ui: {
         is_open: false,
@@ -239,11 +239,93 @@ function renderTaskTree(task) {
   return taskElement
 }
 
+class TaskDB {
+  constructor() {
+    const taskDB = window.indexedDB.open('tasks', 1)
+
+    taskDB.onerror = (event) => {
+      console.log(event.target.error)
+    }
+
+    taskDB.onsuccess = (event) => {
+      console.log('Database initialised.')
+
+      // Store the result of opening the database in the db variable. This is used a lot below
+      this.db = taskDB.result
+
+      const transaction = this.db.transaction(['task-list'], 'readwrite')
+      // Do something when all the data is added to the database.
+      transaction.oncomplete = (event) => {
+        console.log('TaskDB transaction complete.')
+      }
+
+      transaction.onerror = (event) => {
+        console.error(event.target.error)
+      }
+
+      const objectStore = transaction.objectStore('task-list')
+      const request = objectStore.add(taskTests)
+      request.onsuccess = (event) => {
+        console.log(event.target.result)
+      }
+
+      request.onerror = (event) => {
+        console.error(event.target.error)
+      }
+
+      this.load()
+    }
+
+    taskDB.onupgradeneeded = (event) => {
+      const db = event.target.result
+
+      db.onerror = (event) => {
+        console.error(event.target.error)
+      }
+
+      // Create an objectStore for this database
+      const objectStore = db.createObjectStore('task-list', { keyPath: 'task_id' })
+
+      // Define what data items the objectStore will contain
+      objectStore.createIndex('root-task', 'task_id', { unique: false })
+    }
+  }
+
+  load() {
+    const objectStore = this.db.transaction('task-list').objectStore('task-list')
+
+    objectStore.openCursor().onsuccess = (event) => {
+      const cursor = event.target.result
+      // Check if there are no (more) cursor items to iterate through
+      if (!cursor) {
+        // No more items to iterate through, we quit.
+        console.log('Entries all displayed.')
+        return
+      }
+
+      console.log(cursor.value)
+
+      // continue on to the next item in the cursor
+      cursor.continue()
+    }
+  }
+}
+
 const main = document.getElementsByTagName('main')[0]
 
-const addTaskButton = document.getElementById(ID_BUTTON_ROOT_ADD)
-addTaskButton.addEventListener('click', () => {
+const rootAddButton = document.getElementById(ID_BUTTON_ROOT_ADD)
+rootAddButton.addEventListener('click', () => {
   main.appendChild(renderTaskTree(structuredClone(taskModel)))
 })
 
+const rootSaveButton = document.getElementById(ID_BUTTON_ROOT_SAVE)
+rootSaveButton.addEventListener('click', () => {
+  const rootTasks = document.querySelectorAll('main > task-element')
+  console.log(rootTasks)
+})
+
 main.appendChild(renderTaskTree(taskTests))
+
+window.onload = () => {
+  const db = new TaskDB()
+}
