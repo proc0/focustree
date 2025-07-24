@@ -246,7 +246,7 @@ const TASKBASE_KEYPATH = 'task_id'
 const TASKBASE_INDEX = 'roots'
 
 class Taskbase {
-  constructor() {
+  constructor(renderTask) {
     const taskbase = window.indexedDB.open(TASKBASE_NAME, TASKBASE_VERSION)
 
     taskbase.onerror = (event) => {
@@ -256,20 +256,19 @@ class Taskbase {
     taskbase.onsuccess = (event) => {
       console.log('Taskbase initialized.')
 
-      // Store the result of opening the database in the db variable. This is used a lot below
+      // persist DB
       this.taskbase = event.target.result
 
       const transaction = this.taskbase.transaction([TASKBASE_STORE], 'readwrite')
       // Do something when all the data is added to the database.
       transaction.oncomplete = (event) => {
-        console.log('Taskbase transaction complete.')
+        console.log('Taskbase loading complete.')
+        this.load(renderTask)
       }
 
       transaction.onerror = (event) => {
         console.error(event.target.error)
       }
-
-      this.load()
     }
 
     taskbase.onupgradeneeded = (event) => {
@@ -282,12 +281,13 @@ class Taskbase {
       }
 
       // Create an objectStore for this database
-      const objectStore = taskbase.createObjectStore(TASKBASE_STORE, { keyPath: TASKBASE_KEYPATH })
+      const store = taskbase.createObjectStore(TASKBASE_STORE, { keyPath: TASKBASE_KEYPATH })
 
       // Define what data items the objectStore will contain
-      objectStore.createIndex(TASKBASE_INDEX, TASKBASE_KEYPATH, { unique: false })
+      store.createIndex(TASKBASE_INDEX, TASKBASE_KEYPATH, { unique: false })
 
-      const request = objectStore.add(taskTests)
+      const request = store.add(taskTests)
+
       request.onsuccess = (event) => {
         console.log(`Added task ${event.target.result}`)
       }
@@ -298,30 +298,36 @@ class Taskbase {
     }
   }
 
-  load() {
+  load(renderTask) {
+    console.log('Loading tasks...')
+
     const store = this.taskbase.transaction(TASKBASE_STORE).objectStore(TASKBASE_STORE)
 
     store.openCursor().onsuccess = (event) => {
       const cursor = event.target.result
-      // Check if there are no (more) cursor items to iterate through
+
       if (!cursor) {
-        // No more items to iterate through, we quit.
-        console.log('Taskbase loading complete.')
+        // No more items to iterate through
+        console.log('Tasks loading complete.')
         return
       }
 
+      renderTask(cursor.value)
       console.log(cursor.value)
 
-      // continue on to the next item in the cursor
       cursor.continue()
     }
   }
 }
 
-const main = document.getElementsByTagName('main')[0]
+const renderTask = (task) => {
+  const main = document.getElementsByTagName('main')[0]
+  main.appendChild(renderTaskTree(task))
+}
 
 const rootAddButton = document.getElementById(ID_BUTTON_ROOT_ADD)
 rootAddButton.addEventListener('click', () => {
+  const main = document.getElementsByTagName('main')[0]
   main.appendChild(renderTaskTree(structuredClone(taskModel)))
 })
 
@@ -331,8 +337,6 @@ rootSaveButton.addEventListener('click', () => {
   console.log(rootTasks)
 })
 
-main.appendChild(renderTaskTree(taskTests))
-
 window.onload = () => {
-  const db = new Taskbase()
+  const db = new Taskbase(renderTask)
 }
