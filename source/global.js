@@ -1,5 +1,6 @@
 const NEW_TASK = {
-  task_id: [0],
+  task_id: 0,
+  task_path: [0],
   task_name: 'New Task',
   task_note: 'This is a new task.',
   task_subs: [],
@@ -10,7 +11,8 @@ const NEW_TASK = {
 }
 
 const SEED_TASK = {
-  task_id: [0],
+  task_id: 1,
+  task_path: [0],
   task_name: 'Tutorial',
   task_note: 'First steps for using Focus Tree.',
   task_state: 'idle',
@@ -19,7 +21,7 @@ const SEED_TASK = {
   },
   task_subs: [
     {
-      task_id: [0, 0],
+      task_path: [0, 0],
       task_name: 'Complete a task',
       task_note: 'Click on the done button to complete a task.',
       task_state: 'idle',
@@ -28,7 +30,7 @@ const SEED_TASK = {
       },
       task_subs: [
         {
-          task_id: [0, 1, 0],
+          task_path: [0, 1, 0],
           task_name: 'sub subtask',
           task_note: 'sub sub task details',
           task_state: 'idle',
@@ -40,7 +42,7 @@ const SEED_TASK = {
       ],
     },
     {
-      task_id: [0, 1],
+      task_path: [0, 1],
       task_name: 'third subtask',
       task_note: 'third task details',
       task_state: 'idle',
@@ -54,7 +56,9 @@ const SEED_TASK = {
 
 // global consts
 const EVENT_UPDATE = 'update'
-const EVENT_ADD_ROOT = 'add-root'
+const EVENT_BRANCH = 'branch'
+const EVENT_DELETE = 'delete'
+const EVENT_EXPAND = 'expand'
 
 const ID_BUTTON_ROOT_ADD = 'root-add'
 const ID_BUTTON_ROOT_SAVE = 'root-save'

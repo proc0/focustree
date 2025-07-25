@@ -2,7 +2,7 @@ function renderTaskTree(task) {
   const taskElement = document.createElement(TASK_ELEMENT)
   taskElement.task = task
 
-  taskElement.shadowRoot.querySelector('div').setAttribute('id', `task-${task.task_id.join('')}`)
+  taskElement.shadowRoot.querySelector('div').setAttribute('id', `task-${task.task_path.join('')}`)
 
   // fields
   const taskName = document.createElement(ELEMENT_TASK_FIELD)

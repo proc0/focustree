@@ -11,22 +11,30 @@ class TaskElement extends HTMLElement {
       const editButton = slot.parentElement.querySelector(QUERY_BUTTON_EDIT)
       editButton.addEventListener('click', this.edit.bind(this))
     })
+
     this.addEventListener(EVENT_UPDATE, (event) => {
-      if (event.detail.taskId === this.task.task_id.join('')) {
+      if (event.detail.taskPath === this.task.task_path.join('')) {
         event.currentTarget.querySelector(event.detail.elementQuery).textContent =
           event.detail.updateValue
       }
     })
     // add event for subtasks
-    this.shadowRoot.querySelector(QUERY_BUTTON_ADD).addEventListener('click', (event) => {
+    this.shadowRoot.querySelector(QUERY_BUTTON_ADD).addEventListener('click', () => {
       const newTask = structuredClone(NEW_TASK)
-      newTask.task_id = [...this.task.task_id, this.task.task_subs.length]
+      newTask.task_path = [...this.task.task_path, this.task.task_subs.length]
 
       this.task.task_subs.push(newTask)
+      this.task.task_ui.is_open = true
 
       const updatedTaskElement = renderTaskTree(this.task)
       updatedTaskElement.setAttribute('slot', 'task-subs')
       updatedTaskElement.shadowRoot.querySelector('details').setAttribute('open', '')
+
+      this.dispatchEvent(
+        new CustomEvent(EVENT_BRANCH, {
+          bubbles: true,
+        })
+      )
 
       this.parentElement.replaceChild(updatedTaskElement, this)
     })
@@ -39,7 +47,7 @@ class TaskElement extends HTMLElement {
 
       const parentTask = this.parentElement.task
       for (const index in parentTask.task_subs) {
-        if (parentTask.task_subs[index].task_id.join('') === this.task.task_id.join('')) {
+        if (parentTask.task_subs[index].task_path.join('') === this.task.task_path.join('')) {
           parentTask.task_subs.splice(index, 1)
           break
         }
@@ -48,6 +56,11 @@ class TaskElement extends HTMLElement {
       const updatedTaskElement = renderTaskTree(parentTask)
       updatedTaskElement.setAttribute('slot', 'task-subs')
 
+      this.dispatchEvent(
+        new CustomEvent(EVENT_DELETE, {
+          bubbles: true,
+        })
+      )
       // this promotes the task to the parent task...
       // this.parentElement.replaceWith(updatedTaskElement, this)
       this.parentElement.replaceWith(updatedTaskElement)
@@ -56,6 +69,12 @@ class TaskElement extends HTMLElement {
     this.shadowRoot.querySelector('details summary').addEventListener('click', (event) => {
       const isOpen = !!event.currentTarget.getAttribute('open')
       this.task.task_ui.is_open = !isOpen
+
+      this.dispatchEvent(
+        new CustomEvent(EVENT_EXPAND, {
+          bubbles: true,
+        })
+      )
     })
   }
 
@@ -71,7 +90,7 @@ class TaskElement extends HTMLElement {
     this.task[fieldName] = input.value
     const updateValue = input.value
     const elementQuery = `${ELEMENT_TASK_FIELD}[slot="${slotName}"]`
-    const taskId = this.task.task_id.join('')
+    const taskPath = this.task.task_path.join('')
 
     const editButton = parent.querySelector(QUERY_BUTTON_EDIT)
     parent.removeChild(input)
@@ -83,7 +102,7 @@ class TaskElement extends HTMLElement {
     this.dispatchEvent(
       new CustomEvent(EVENT_UPDATE, {
         bubbles: true,
-        detail: { updateValue, elementQuery, taskId },
+        detail: { updateValue, elementQuery, taskPath },
       })
     )
   }
@@ -104,7 +123,7 @@ class TaskElement extends HTMLElement {
 
     const inputElement = document.createElement('input')
     inputElement.setAttribute('type', 'text')
-    inputElement.setAttribute('id', `${slotName}-${this.task.task_id.join('')}`)
+    inputElement.setAttribute('id', `${slotName}-${this.task.task_path.join('')}`)
     inputElement.setAttribute('value', this.task[fieldName])
 
     const saveButton = document.createElement('button')

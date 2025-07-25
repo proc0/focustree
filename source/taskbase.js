@@ -50,9 +50,31 @@ class TaskbaseElement extends HTMLElement {
       }
     }
 
-    this.addEventListener(EVENT_UPDATE, (event) => {
-      console.log(event)
-    })
+    this.addEventListener(EVENT_BRANCH, this.save.bind(this))
+    this.addEventListener(EVENT_UPDATE, this.save.bind(this))
+    this.addEventListener(EVENT_DELETE, this.save.bind(this))
+    this.addEventListener(EVENT_EXPAND, this.save.bind(this))
+  }
+
+  save(event) {
+    let taskElement = event.target
+
+    for (let i = 0; i < event.target.task.task_path.length - 1; i++) {
+      taskElement = taskElement.parentElement
+    }
+
+    const rootTask = taskElement.task
+
+    const store = this.taskbase.transaction(TASKBASE_STORE, 'readwrite').objectStore(TASKBASE_STORE)
+    const request = store.put(rootTask, rootTask.task_id)
+
+    request.onsuccess = (event) => {
+      console.log(`Updated task ${event.target.result}`)
+    }
+
+    request.onerror = (event) => {
+      console.error(event.target.error)
+    }
   }
 
   load() {
@@ -80,6 +102,8 @@ class TaskbaseElement extends HTMLElement {
     const store = this.taskbase.transaction(TASKBASE_STORE, 'readwrite').objectStore(TASKBASE_STORE)
     const task = structuredClone(NEW_TASK)
 
+    //TODO: use IndexedDB keypath for task_id instead of correlating task-element length with database ID
+    task.task_id = this.querySelectorAll('task-base > task-element').length + 1
     const request = store.add(task)
 
     request.onsuccess = (event) => {
