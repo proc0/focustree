@@ -2,6 +2,7 @@
 
 Task manager, action tracker, habit builder
 
+//META TODO: ADD THIS LIST TO THE INITIAL SEED
 //TODO: encapsulate the render function, could be an event listener on main tag, let other events bubble up, remove it completely from taskbase
 //TODO: add better render transition so it does not flash unstyled elements
 //TODO: add readme info
