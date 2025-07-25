@@ -38,13 +38,11 @@ ul li:first-child slot {
 }
 
 ul li:first-child {
-  font-weight: bold;
   color: #749b08ff;
   font-size: 1.5em;
 }
 
 ul li:first-child input {
-  font-weight: bold;
   color: #749b08ff;
 }
 

@@ -41,6 +41,12 @@ class TaskElement extends HTMLElement {
     //TODO: add a way to undo with ctrl+z, tombstone and hide instead? needs the data processing layer
     this.shadowRoot.querySelector(QUERY_BUTTON_DELETE).addEventListener('click', () => {
       if (this.parentElement.tagName === TASK_BASE_ELEMENT.toUpperCase()) {
+        this.dispatchEvent(
+          new CustomEvent(EVENT_DELETE, {
+            bubbles: true,
+            detail: { is_root: true },
+          })
+        )
         this.remove()
         return
       }

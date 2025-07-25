@@ -58,6 +58,20 @@ class TaskbaseElement extends HTMLElement {
 
   save(event) {
     let taskElement = event.target
+    const store = this.taskbase.transaction(TASKBASE_STORE, 'readwrite').objectStore(TASKBASE_STORE)
+
+    if (event.type === EVENT_DELETE && event.detail?.is_root) {
+      const deleteRequest = store.delete(taskElement.task.task_id)
+      deleteRequest.onsuccess = (event) => {
+        console.log(`Deleted task ${event.target.result}`)
+      }
+
+      deleteRequest.onerror = (event) => {
+        console.error(event.target.error)
+      }
+
+      return
+    }
 
     for (let i = 0; i < event.target.task.task_path.length - 1; i++) {
       taskElement = taskElement.parentElement
@@ -65,7 +79,6 @@ class TaskbaseElement extends HTMLElement {
 
     const rootTask = taskElement.task
 
-    const store = this.taskbase.transaction(TASKBASE_STORE, 'readwrite').objectStore(TASKBASE_STORE)
     const request = store.put(rootTask, rootTask.task_id)
 
     request.onsuccess = (event) => {
