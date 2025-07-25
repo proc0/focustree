@@ -68,7 +68,7 @@ class TaskElement extends HTMLElement {
     // record open state
     this.shadowRoot.querySelector('details summary').addEventListener('click', (event) => {
       const isOpen = !!event.currentTarget.getAttribute('open')
-      this.task.task_ui.is_open = !isOpen
+      this.task.task_ui.is_open = this.task.task_ui.is_open ? isOpen : !isOpen
 
       this.dispatchEvent(
         new CustomEvent(EVENT_EXPAND, {
