@@ -9,37 +9,26 @@ class TaskbaseElement extends HTMLElement {
 
     taskbase.onsuccess = (event) => {
       console.log('Taskbase initialized.')
-
-      // persist DB
+      // save taskbase reference
       this.taskbase = event.target.result
-
-      const transaction = this.taskbase.transaction([TASKBASE_STORE], 'readwrite')
-      // Do something when all the data is added to the database.
-      transaction.oncomplete = (event) => {
-        console.log('Taskbase loading complete.')
-        this.load()
-      }
-
-      transaction.onerror = (event) => {
-        console.error(event.target.error)
-      }
+      this.load()
     }
 
     taskbase.onupgradeneeded = (event) => {
       console.log('Taskbase upgrade needed.')
 
-      const taskbase = event.target.result
+      const tb = event.target.result
 
-      taskbase.onerror = (event) => {
+      tb.onerror = (event) => {
         console.error(event.target.error)
       }
 
-      // Create an objectStore for this database
-      const store = taskbase.createObjectStore(TASKBASE_STORE, {
+      // create an objectStore for tasks
+      const taskStore = tb.createObjectStore(TASKBASE_STORE, {
         autoIncrement: true,
       })
 
-      const addRequest = store.add(SEED_TASK)
+      const addRequest = taskStore.add(SEED_TASK)
 
       addRequest.onsuccess = (event) => {
         console.log(`Added task ${event.target.result}`)
@@ -50,18 +39,22 @@ class TaskbaseElement extends HTMLElement {
       }
     }
 
-    this.addEventListener(EVENT_BRANCH, this.save.bind(this))
-    this.addEventListener(EVENT_UPDATE, this.save.bind(this))
-    this.addEventListener(EVENT_DELETE, this.save.bind(this))
-    this.addEventListener(EVENT_EXPAND, this.save.bind(this))
+    const saveEvents = [EVENT_BRANCH, EVENT_UPDATE, EVENT_DELETE, EVENT_EXPAND]
+    saveEvents.forEach((eventName) => {
+      this.addEventListener(eventName, this.save.bind(this))
+    })
   }
 
   save(event) {
-    let taskElement = event.target
-    const store = this.taskbase.transaction(TASKBASE_STORE, 'readwrite').objectStore(TASKBASE_STORE)
+    let rootElement = event.target
+    const taskStore = this.taskbase
+      .transaction(TASKBASE_STORE, 'readwrite')
+      .objectStore(TASKBASE_STORE)
 
+    // root task delete
     if (event.type === EVENT_DELETE && event.detail?.is_root) {
-      const deleteRequest = store.delete(taskElement.task.task_id)
+      const deleteRequest = taskStore.delete(rootElement.task.task_id)
+
       deleteRequest.onsuccess = (event) => {
         console.log(`Deleted task ${event.target.result}`)
       }
@@ -73,19 +66,19 @@ class TaskbaseElement extends HTMLElement {
       return
     }
 
+    // grab root
     for (let i = 0; i < event.target.task.task_path.length - 1; i++) {
-      taskElement = taskElement.parentElement
+      rootElement = rootElement.parentElement
     }
 
-    const rootTask = taskElement.task
+    const rootTask = rootElement.task
+    const putRequest = taskStore.put(rootTask, rootTask.task_id)
 
-    const request = store.put(rootTask, rootTask.task_id)
-
-    request.onsuccess = (event) => {
+    putRequest.onsuccess = (event) => {
       console.log(`Updated task ${event.target.result}`)
     }
 
-    request.onerror = (event) => {
+    putRequest.onerror = (event) => {
       console.error(event.target.error)
     }
   }
@@ -93,13 +86,12 @@ class TaskbaseElement extends HTMLElement {
   load() {
     console.log('Loading tasks...')
 
-    const store = this.taskbase.transaction(TASKBASE_STORE).objectStore(TASKBASE_STORE)
+    const taskStore = this.taskbase.transaction(TASKBASE_STORE).objectStore(TASKBASE_STORE)
 
-    store.openCursor().onsuccess = (event) => {
+    taskStore.openCursor().onsuccess = (event) => {
       const cursor = event.target.result
 
       if (!cursor) {
-        // No more items to iterate through
         console.log('Tasks loading complete.')
         return
       }
@@ -112,20 +104,22 @@ class TaskbaseElement extends HTMLElement {
   }
 
   addRoot() {
-    const store = this.taskbase.transaction(TASKBASE_STORE, 'readwrite').objectStore(TASKBASE_STORE)
     const task = structuredClone(NEW_TASK)
+    const taskStore = this.taskbase
+      .transaction(TASKBASE_STORE, 'readwrite')
+      .objectStore(TASKBASE_STORE)
 
     //TODO: use IndexedDB keypath for task_id instead of correlating task-element length with database ID
     task.task_id = this.querySelectorAll('task-base > task-element').length + 1
-    const request = store.add(task)
+    const addRequest = taskStore.add(task)
 
-    request.onsuccess = (event) => {
+    addRequest.onsuccess = (event) => {
       console.log(`Added task ${event.target.result}`)
       const taskElement = renderTaskTree(task)
       this.appendChild(taskElement)
     }
 
-    request.onerror = (event) => {
+    addRequest.onerror = (event) => {
       console.error(event.target.error)
     }
   }

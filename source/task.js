@@ -93,8 +93,9 @@ class TaskElement extends HTMLElement {
     const fieldName = slotName.replace('-', '_')
 
     const input = parent.querySelector('input')
-    this.task[fieldName] = input.value
     const updateValue = input.value
+
+    this.task[fieldName] = updateValue
     const elementQuery = `${ELEMENT_TASK_FIELD}[slot="${slotName}"]`
     const taskPath = this.task.task_path.join('')
 
