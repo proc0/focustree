@@ -53,10 +53,11 @@ class TaskbaseElement extends HTMLElement {
 
     // root task delete
     if (event.type === EVENT_DELETE && event.detail?.is_root) {
-      const deleteRequest = taskStore.delete(rootElement.task.task_id)
+      const taskKey = rootElement.task.task_id
+      const deleteRequest = taskStore.delete(taskKey)
 
-      deleteRequest.onsuccess = (event) => {
-        console.log(`Deleted task ${event.target.result}`)
+      deleteRequest.onsuccess = () => {
+        console.log(`Deleted task ${taskKey}`)
       }
 
       deleteRequest.onerror = (event) => {
@@ -64,6 +65,14 @@ class TaskbaseElement extends HTMLElement {
       }
 
       return
+    }
+
+    // event details
+    const eventType = event.type
+    const task = event.detail.task
+    let taskElement = event.target
+    if (event.type === EVENT_DELETE) {
+      taskElement = event.target.parentElement
     }
 
     // grab root
@@ -76,6 +85,19 @@ class TaskbaseElement extends HTMLElement {
 
     putRequest.onsuccess = (event) => {
       console.log(`Updated task ${event.target.result}`)
+      if (eventType === EVENT_EXPAND) {
+        // does not need a render
+        return
+      }
+      this.dispatchEvent(
+        new CustomEvent(EVENT_RENDER, {
+          bubbles: true,
+          detail: {
+            taskElement,
+            task,
+          },
+        })
+      )
     }
 
     putRequest.onerror = (event) => {
@@ -96,8 +118,16 @@ class TaskbaseElement extends HTMLElement {
         return
       }
 
-      const taskElement = renderTaskTree(cursor.value)
-      this.appendChild(taskElement)
+      //   const taskElement = renderTaskTree(cursor.value)
+      //   this.appendChild(taskElement)
+      this.dispatchEvent(
+        new CustomEvent(EVENT_RENDER_ROOT, {
+          bubbles: true,
+          detail: {
+            task: cursor.value,
+          },
+        })
+      )
 
       cursor.continue()
     }
@@ -110,13 +140,32 @@ class TaskbaseElement extends HTMLElement {
       .objectStore(TASKBASE_STORE)
 
     //TODO: use IndexedDB keypath for task_id instead of correlating task-element length with database ID
-    task.task_id = this.querySelectorAll('task-base > task-element').length + 1
+    // task.task_id = this.querySelectorAll('task-base > task-element').length + 1
     const addRequest = taskStore.add(task)
 
     addRequest.onsuccess = (event) => {
       console.log(`Added task ${event.target.result}`)
-      const taskElement = renderTaskTree(task)
-      this.appendChild(taskElement)
+      task.task_id = event.target.result
+
+      // update with the DB key
+      const updateKeyRequest = taskStore.put(task, task.task_id)
+
+      updateKeyRequest.onsuccess = (event) => {
+        //   const taskElement = renderTaskTree(task)
+        //   this.appendChild(taskElement)
+        this.dispatchEvent(
+          new CustomEvent(EVENT_RENDER_ROOT, {
+            bubbles: true,
+            detail: {
+              task,
+            },
+          })
+        )
+      }
+
+      updateKeyRequest.onerror = (event) => {
+        console.error(event.target.error)
+      }
     }
 
     addRequest.onerror = (event) => {

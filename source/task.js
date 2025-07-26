@@ -11,7 +11,8 @@ class TaskElement extends HTMLElement {
       const editButton = slot.parentElement.querySelector(QUERY_BUTTON_EDIT)
       editButton.addEventListener('click', this.edit.bind(this))
     })
-
+    // update fields with new input
+    // TODO: move this to a method, remove event details and derive from event, event should only have detail.task
     this.addEventListener(EVENT_UPDATE, (event) => {
       if (event.detail.taskPath === this.task.task_path.join('')) {
         event.currentTarget.querySelector(event.detail.elementQuery).textContent =
@@ -26,29 +27,30 @@ class TaskElement extends HTMLElement {
       this.task.task_subs.push(newTask)
       this.task.task_ui.is_open = true
 
-      const updatedTaskElement = renderTaskTree(this.task)
-      updatedTaskElement.setAttribute('slot', 'task-subs')
-      updatedTaskElement.shadowRoot.querySelector('details').setAttribute('open', '')
+      // const updatedTaskElement = renderTaskTree(this.task)
+      // updatedTaskElement.setAttribute('slot', 'task-subs')
+      // updatedTaskElement.shadowRoot.querySelector('details').setAttribute('open', '')
 
       this.dispatchEvent(
         new CustomEvent(EVENT_BRANCH, {
           bubbles: true,
+          detail: {
+            task: this.task,
+          },
         })
       )
 
-      this.parentElement.replaceChild(updatedTaskElement, this)
+      // this.parentElement.replaceChild(updatedTaskElement, this)
     })
     //TODO: add a way to undo with ctrl+z, tombstone and hide instead? needs the data processing layer
     this.shadowRoot.querySelector(QUERY_BUTTON_DELETE).addEventListener('click', () => {
       if (this.parentElement.tagName === TASK_BASE_ELEMENT.toUpperCase()) {
-        this.dispatchEvent(
+        return this.dispatchEvent(
           new CustomEvent(EVENT_DELETE, {
             bubbles: true,
             detail: { is_root: true },
           })
         )
-        this.remove()
-        return
       }
 
       const parentTask = this.parentElement.task
@@ -59,26 +61,36 @@ class TaskElement extends HTMLElement {
         }
       }
 
-      const updatedTaskElement = renderTaskTree(parentTask)
-      updatedTaskElement.setAttribute('slot', 'task-subs')
+      // const updatedTaskElement = renderTaskTree(parentTask)
+      // updatedTaskElement.setAttribute('slot', 'task-subs')
 
       this.dispatchEvent(
         new CustomEvent(EVENT_DELETE, {
           bubbles: true,
+          detail: {
+            task: parentTask,
+          },
         })
       )
       // this promotes the task to the parent task...
       // this.parentElement.replaceWith(updatedTaskElement, this)
-      this.parentElement.replaceWith(updatedTaskElement)
+      // this.parentElement.replaceWith(updatedTaskElement)
     })
     // record open state
     this.shadowRoot.querySelector('details summary').addEventListener('click', (event) => {
+      if (event.target.tagName === 'BUTTON') {
+        // add event handles this case
+        return
+      }
       const isOpen = !!event.currentTarget.getAttribute('open')
       this.task.task_ui.is_open = this.task.task_ui.is_open ? isOpen : !isOpen
 
       this.dispatchEvent(
         new CustomEvent(EVENT_EXPAND, {
           bubbles: true,
+          detail: {
+            task: this.task,
+          },
         })
       )
     })
@@ -109,7 +121,7 @@ class TaskElement extends HTMLElement {
     this.dispatchEvent(
       new CustomEvent(EVENT_UPDATE, {
         bubbles: true,
-        detail: { updateValue, elementQuery, taskPath },
+        detail: { updateValue, elementQuery, taskPath, task: this.task },
       })
     )
   }
@@ -136,6 +148,7 @@ class TaskElement extends HTMLElement {
     const saveButton = document.createElement('button')
     saveButton.textContent = LABEL_BUTTON_SAVE
     saveButton.setAttribute('name', 'task-save')
+    // bind commit on save click
     saveButton.addEventListener('click', this.commit.bind(this))
 
     parent.prepend(inputElement)

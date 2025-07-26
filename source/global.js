@@ -59,9 +59,14 @@ const EVENT_UPDATE = 'update'
 const EVENT_BRANCH = 'branch'
 const EVENT_DELETE = 'delete'
 const EVENT_EXPAND = 'expand'
+const EVENT_RENDER = 'render'
+const EVENT_RENDER_ROOT = 'render-root'
 
 const ID_BUTTON_ROOT_ADD = 'root-add'
 const ID_BUTTON_ROOT_SAVE = 'root-save'
+
+// task-render consts
+const TASK_RENDER_ELEMENT = 'task-render-element'
 
 // task-element consts
 const TASK_ELEMENT = 'task-element'
