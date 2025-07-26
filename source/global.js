@@ -21,6 +21,7 @@ const SEED_TASK = {
   },
   task_subs: [
     {
+      task_id: 1,
       task_path: [0, 0],
       task_name: 'Complete a task',
       task_note: 'Click on the done button to complete a task.',
@@ -30,6 +31,7 @@ const SEED_TASK = {
       },
       task_subs: [
         {
+          task_id: 1,
           task_path: [0, 1, 0],
           task_name: 'sub subtask',
           task_note: 'sub sub task details',
@@ -42,6 +44,7 @@ const SEED_TASK = {
       ],
     },
     {
+      task_id: 1,
       task_path: [0, 1],
       task_name: 'third subtask',
       task_note: 'third task details',
@@ -62,6 +65,8 @@ const EVENT_EXPAND = 'expand'
 
 const ID_BUTTON_ROOT_ADD = 'root-add'
 const ID_BUTTON_ROOT_SAVE = 'root-save'
+
+const TASK_RENDER = 'task-render'
 
 // task-element consts
 const TASK_ELEMENT = 'task-element'

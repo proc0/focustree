@@ -46,14 +46,16 @@ class TaskbaseElement extends HTMLElement {
   }
 
   save(event) {
-    let rootElement = event.target
+    const task = event.detail.task
+    const rootElement = this.querySelector(`task-render > task-element[id="${task.task_id}"`)
+
     const taskStore = this.taskbase
       .transaction(TASKBASE_STORE, 'readwrite')
       .objectStore(TASKBASE_STORE)
 
     // root task delete
     if (event.type === EVENT_DELETE && event.detail?.is_root) {
-      const deleteRequest = taskStore.delete(rootElement.task.task_id)
+      const deleteRequest = taskStore.delete(task.task_id)
 
       deleteRequest.onsuccess = (event) => {
         console.log(`Deleted task ${event.target.result}`)
@@ -67,12 +69,11 @@ class TaskbaseElement extends HTMLElement {
     }
 
     // grab root
-    for (let i = 0; i < event.target.task.task_path.length - 1; i++) {
-      rootElement = rootElement.parentElement
-    }
+    // for (let i = 0; i < task.task_path.length - 1; i++) {
+    //   rootElement = rootElement.parentElement
+    // }
 
-    const rootTask = rootElement.task
-    const putRequest = taskStore.put(rootTask, rootTask.task_id)
+    const putRequest = taskStore.put(rootElement.task, task.task_id)
 
     putRequest.onsuccess = (event) => {
       console.log(`Updated task ${event.target.result}`)
@@ -87,6 +88,7 @@ class TaskbaseElement extends HTMLElement {
     console.log('Loading tasks...')
 
     const taskStore = this.taskbase.transaction(TASKBASE_STORE).objectStore(TASKBASE_STORE)
+    const tasKRenderElement = this.querySelector(TASK_RENDER)
 
     taskStore.openCursor().onsuccess = (event) => {
       const cursor = event.target.result
@@ -96,27 +98,27 @@ class TaskbaseElement extends HTMLElement {
         return
       }
 
-      const taskElement = renderTaskTree(cursor.value)
-      this.appendChild(taskElement)
+      const taskElement = tasKRenderElement.renderTaskTree(cursor.value)
+      tasKRenderElement.appendChild(taskElement)
 
       cursor.continue()
     }
   }
 
-  addRoot() {
+  addRoot(renderTaskTree) {
     const task = structuredClone(NEW_TASK)
     const taskStore = this.taskbase
       .transaction(TASKBASE_STORE, 'readwrite')
       .objectStore(TASKBASE_STORE)
 
     //TODO: use IndexedDB keypath for task_id instead of correlating task-element length with database ID
-    task.task_id = this.querySelectorAll('task-base > task-element').length + 1
+    task.task_id = this.querySelectorAll('task-render > task-element').length + 1
     const addRequest = taskStore.add(task)
 
     addRequest.onsuccess = (event) => {
       console.log(`Added task ${event.target.result}`)
       const taskElement = renderTaskTree(task)
-      this.appendChild(taskElement)
+      this.querySelector('task-render').appendChild(taskElement)
     }
 
     addRequest.onerror = (event) => {

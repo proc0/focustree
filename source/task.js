@@ -22,32 +22,34 @@ class TaskElement extends HTMLElement {
     this.shadowRoot.querySelector(QUERY_BUTTON_ADD).addEventListener('click', () => {
       const newTask = structuredClone(NEW_TASK)
       newTask.task_path = [...this.task.task_path, this.task.task_subs.length]
+      newTask.task_id = this.task_id
 
       this.task.task_subs.push(newTask)
       this.task.task_ui.is_open = true
 
-      const updatedTaskElement = renderTaskTree(this.task)
-      updatedTaskElement.setAttribute('slot', 'task-subs')
-      updatedTaskElement.shadowRoot.querySelector('details').setAttribute('open', '')
+      // const updatedTaskElement = renderTaskTree(this.task)
+      // updatedTaskElement.setAttribute('slot', 'task-subs')
+      // updatedTaskElement.shadowRoot.querySelector('details').setAttribute('open', '')
 
       this.dispatchEvent(
         new CustomEvent(EVENT_BRANCH, {
           bubbles: true,
+          detail: { task: this.task },
         })
       )
 
-      this.parentElement.replaceChild(updatedTaskElement, this)
+      // this.parentElement.replaceChild(updatedTaskElement, this)
     })
     //TODO: add a way to undo with ctrl+z, tombstone and hide instead? needs the data processing layer
     this.shadowRoot.querySelector(QUERY_BUTTON_DELETE).addEventListener('click', () => {
-      if (this.parentElement.tagName === TASK_BASE_ELEMENT.toUpperCase()) {
+      if (this.parentElement.tagName === TASK_RENDER.toUpperCase()) {
         this.dispatchEvent(
           new CustomEvent(EVENT_DELETE, {
             bubbles: true,
-            detail: { is_root: true },
+            detail: { is_root: true, task: this.task },
           })
         )
-        this.remove()
+        // this.remove()
         return
       }
 
@@ -59,17 +61,18 @@ class TaskElement extends HTMLElement {
         }
       }
 
-      const updatedTaskElement = renderTaskTree(parentTask)
-      updatedTaskElement.setAttribute('slot', 'task-subs')
+      // const updatedTaskElement = renderTaskTree(parentTask)
+      // updatedTaskElement.setAttribute('slot', 'task-subs')
 
       this.dispatchEvent(
         new CustomEvent(EVENT_DELETE, {
           bubbles: true,
+          detail: { task: parentTask },
         })
       )
       // this promotes the task to the parent task...
       // this.parentElement.replaceWith(updatedTaskElement, this)
-      this.parentElement.replaceWith(updatedTaskElement)
+      // this.parentElement.replaceWith(updatedTaskElement)
     })
     // record open state
     this.shadowRoot.querySelector('details summary').addEventListener('click', (event) => {
@@ -79,6 +82,7 @@ class TaskElement extends HTMLElement {
       this.dispatchEvent(
         new CustomEvent(EVENT_EXPAND, {
           bubbles: true,
+          detail: { task: this.task },
         })
       )
     })
