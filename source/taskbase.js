@@ -47,7 +47,7 @@ class TaskbaseElement extends HTMLElement {
 
   save(event) {
     const task = event.detail.task
-    const rootElement = this.querySelector(`task-render > task-element[id="${task.task_id}"`)
+    // grab root
 
     const taskStore = this.taskbase
       .transaction(TASKBASE_STORE, 'readwrite')
@@ -68,7 +68,13 @@ class TaskbaseElement extends HTMLElement {
       return
     }
 
-    // grab root
+    let rootTask = task
+    while (rootTask.task_parent) {
+      rootTask = task.task_parent
+    }
+
+    const rootElement = this.querySelector(`task-render > task-element[id="${rootTask.task_id}"`)
+
     // for (let i = 0; i < task.task_path.length - 1; i++) {
     //   rootElement = rootElement.parentElement
     // }

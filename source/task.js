@@ -22,7 +22,7 @@ class TaskElement extends HTMLElement {
     this.shadowRoot.querySelector(QUERY_BUTTON_ADD).addEventListener('click', () => {
       const newTask = structuredClone(NEW_TASK)
       newTask.task_path = [...this.task.task_path, this.task.task_subs.length]
-      newTask.task_id = this.task_id
+      newTask.task_parent = this.task
 
       this.task.task_subs.push(newTask)
       this.task.task_ui.is_open = true
