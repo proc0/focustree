@@ -51,12 +51,12 @@ class TaskBase extends HTMLElement {
 
   //TODO: refactor save, separate delete and another save function with a parent function calling both
   save(event) {
-    let taskElement = event.target
+    let node = event.target
     const taskStore = this.taskBase.transaction(BASE_STORE, 'readwrite').objectStore(BASE_STORE)
 
     // root task delete
     if (event.type === EVENT_DELETE && event.detail?.isRoot) {
-      const taskKey = taskElement.task.task_id
+      const taskKey = node.task.task_id
       const deleteRequest = taskStore.delete(taskKey)
 
       deleteRequest.onsuccess = () => {
@@ -75,7 +75,7 @@ class TaskBase extends HTMLElement {
     const task = event.detail.task
     // when deleting a subtask, grab the parent
     if (event.type === EVENT_DELETE) {
-      taskElement = event.target.parentElement
+      node = event.target.parentElement
     }
 
     // grab root task
@@ -100,7 +100,7 @@ class TaskBase extends HTMLElement {
         new CustomEvent(EVENT_RENDER, {
           bubbles: true,
           detail: {
-            taskElement,
+            node,
             task,
           },
         })

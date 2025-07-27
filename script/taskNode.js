@@ -101,20 +101,20 @@ class TaskNode extends HTMLElement {
     event.stopPropagation()
 
     const saveButton = event.currentTarget
-    const taskElement = saveButton.parentElement
-    const deleteButton = taskElement.querySelector(QUERY_BUTTON_DELETE)
+    const taskNode = saveButton.parentElement
+    const deleteButton = taskNode.querySelector(QUERY_BUTTON_DELETE)
 
-    const slotName = taskElement.querySelector('slot').getAttribute('name')
+    const slotName = taskNode.querySelector('slot').getAttribute('name')
     const fieldName = slotName.replace('-', '_')
 
-    const input = taskElement.querySelector('input')
+    const input = taskNode.querySelector('input')
     const updateValue = input.value
 
     this.task[fieldName] = updateValue
 
-    const editButton = taskElement.querySelector(QUERY_BUTTON_EDIT)
-    taskElement.removeChild(input)
-    taskElement.querySelector('slot').setAttribute('class', '')
+    const editButton = taskNode.querySelector(QUERY_BUTTON_EDIT)
+    taskNode.removeChild(input)
+    taskNode.querySelector('slot').setAttribute('class', '')
     editButton.setAttribute('class', '')
     deleteButton?.setAttribute('class', '')
     saveButton.remove()
@@ -131,17 +131,17 @@ class TaskNode extends HTMLElement {
     event.stopPropagation()
 
     const editButton = event.currentTarget
-    const taskElement = editButton.parentElement
-    const deleteButton = taskElement.querySelector(QUERY_BUTTON_DELETE)
+    const taskNode = editButton.parentElement
+    const deleteButton = taskNode.querySelector(QUERY_BUTTON_DELETE)
 
-    const slotName = taskElement.querySelector('slot').getAttribute('name')
+    const slotName = taskNode.querySelector('slot').getAttribute('name')
     const fieldName = slotName.replace('-', '_')
 
-    if (taskElement.getElementsByTagName('input')?.length) return
+    if (taskNode.getElementsByTagName('input')?.length) return
 
     editButton.setAttribute('class', 'hidden')
     deleteButton?.setAttribute('class', 'hidden')
-    taskElement.querySelector('slot').setAttribute('class', 'hidden')
+    taskNode.querySelector('slot').setAttribute('class', 'hidden')
 
     const inputElement = document.createElement('input')
     inputElement.setAttribute('type', 'text')
@@ -154,8 +154,8 @@ class TaskNode extends HTMLElement {
     // bind commit on save click
     saveButton.addEventListener('click', this.commit.bind(this))
 
-    taskElement.prepend(inputElement)
-    taskElement.prepend(saveButton)
+    taskNode.prepend(inputElement)
+    taskNode.prepend(saveButton)
 
     inputElement.addEventListener('keyup', ({ key }) => {
       if (key === 'Enter') saveButton.click()
