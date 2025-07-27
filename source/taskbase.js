@@ -47,14 +47,14 @@ class TaskbaseElement extends HTMLElement {
 
   //TODO: refactor save, separate delete and another save function with a parent function calling both
   save(event) {
-    let rootElement = event.target
+    let taskElement = event.target
     const taskStore = this.taskbase
       .transaction(TASKBASE_STORE, 'readwrite')
       .objectStore(TASKBASE_STORE)
 
     // root task delete
     if (event.type === EVENT_DELETE && event.detail?.is_root) {
-      const taskKey = rootElement.task.task_id
+      const taskKey = taskElement.task.task_id
       const deleteRequest = taskStore.delete(taskKey)
 
       deleteRequest.onsuccess = () => {
@@ -64,19 +64,20 @@ class TaskbaseElement extends HTMLElement {
       deleteRequest.onerror = (event) => {
         console.error(event.target.error)
       }
-
+      // bubbles up to task view
       return
     }
 
     // event details
     const eventType = event.type
     const task = event.detail.task
-    let taskElement = event.target
+    // when deleting a subtask, grab the parent
     if (event.type === EVENT_DELETE) {
       taskElement = event.target.parentElement
     }
 
-    // grab root
+    // grab root task
+    let rootElement = taskElement
     if (event.target.task.task_path.length > 1) {
       for (let i = 0; i < event.target.task.task_path.length - 1; i++) {
         rootElement = rootElement.parentElement
@@ -143,13 +144,14 @@ class TaskbaseElement extends HTMLElement {
     const addRequest = taskStore.add(task)
 
     addRequest.onsuccess = (event) => {
-      console.log(`Added task ${event.target.result}`)
-      task.task_id = event.target.result
+      const taskId = event.target.result
 
-      // update with the DB key
+      task.task_id = taskId
+      // another request to save the DB key in task_id
       const updateKeyRequest = taskStore.put(task, task.task_id)
 
       updateKeyRequest.onsuccess = (event) => {
+        console.log(`Added task ${taskId}`)
         this.dispatchEvent(
           new CustomEvent(EVENT_RENDER, {
             bubbles: true,

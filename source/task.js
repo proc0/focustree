@@ -16,11 +16,16 @@ class TaskElement extends HTMLElement {
     this.addEventListener(EVENT_UPDATE, this.update.bind(this))
 
     // add event for subtasks
-    this.shadowRoot.querySelector(QUERY_BUTTON_ADD).addEventListener('click', () => {
+    this.shadowRoot.querySelector(QUERY_BUTTON_ADD).addEventListener('click', (event) => {
+      // click event only relevant to triggering task
+      event.stopPropagation()
+
+      // create new task and add path
       const newTask = structuredClone(NEW_TASK)
       newTask.task_path = [...this.task.task_path, this.task.task_subs.length]
-
       this.task.task_subs.push(newTask)
+
+      // open drawer
       this.task.task_ui.is_open = true
 
       this.dispatchEvent(
@@ -32,8 +37,12 @@ class TaskElement extends HTMLElement {
         })
       )
     })
-    //TODO: add a way to undo with ctrl+z, tombstone and hide instead? needs the data processing layer
-    this.shadowRoot.querySelector(QUERY_BUTTON_DELETE).addEventListener('click', () => {
+    //TODO: add a way to undo with ctrl+z, add a history data struct in taskbase, and send opposite command (delete -> add)
+    this.shadowRoot.querySelector(QUERY_BUTTON_DELETE).addEventListener('click', (event) => {
+      // click event only relevant to triggering task
+      event.stopPropagation()
+
+      // root task delete
       if (this.parentElement.tagName === TASKBASE_ELEMENT.toUpperCase()) {
         return this.dispatchEvent(
           new CustomEvent(EVENT_DELETE, {
@@ -43,6 +52,7 @@ class TaskElement extends HTMLElement {
         )
       }
 
+      // since we are deleting this task, get parent task
       const parentTask = this.parentElement.task
       for (const index in parentTask.task_subs) {
         if (parentTask.task_subs[index].task_path.join('') === this.task.task_path.join('')) {
@@ -51,7 +61,7 @@ class TaskElement extends HTMLElement {
         }
       }
 
-      // dispatch parent element task in delete event
+      // dispatch parent taks to render
       this.dispatchEvent(
         new CustomEvent(EVENT_DELETE, {
           bubbles: true,
@@ -63,12 +73,11 @@ class TaskElement extends HTMLElement {
     })
 
     // open and close subtasks drawer
-    this.shadowRoot.querySelector('details').addEventListener('click', (event) => {
-      if (event.target.tagName === 'BUTTON') {
-        // add event handles this case
-        return
-      }
-      const isOpen = event.currentTarget.getAttribute('open') === null
+    this.shadowRoot.querySelector(QUERY_SUBS_HEADER).addEventListener('click', (event) => {
+      // only affects this task
+      event.stopPropagation()
+      // get the details tag, somehow null open attribute means it is open
+      const isOpen = event.currentTarget.parentElement.parentElement.getAttribute('open') === null
       this.task.task_ui.is_open = isOpen
       // stops bubblng at taskbase
       this.dispatchEvent(
@@ -83,6 +92,8 @@ class TaskElement extends HTMLElement {
   }
 
   commit(event) {
+    event.stopPropagation()
+
     const saveButton = event.currentTarget
     const taskElement = saveButton.parentElement
     const deleteButton = taskElement.querySelector(QUERY_BUTTON_DELETE)
@@ -111,6 +122,8 @@ class TaskElement extends HTMLElement {
   }
 
   edit(event) {
+    event.stopPropagation()
+
     const editButton = event.currentTarget
     const taskElement = editButton.parentElement
     const deleteButton = taskElement.querySelector(QUERY_BUTTON_DELETE)

@@ -73,7 +73,7 @@ const ID_TEMPLATE = 'task-template'
 const LABEL_BUTTON_SAVE = '✔'
 
 const QUERY_SLOT_FIELD = 'ul li slot'
-// const QUERY_SLOT_SUBS = 'details section'
+const QUERY_SUBS_HEADER = 'details summary header'
 const QUERY_BUTTON_ADD = 'button[name="task-add"]'
 const QUERY_BUTTON_EDIT = 'button[name="task-edit"]'
 const QUERY_BUTTON_DELETE = 'button[name="task-delete"]'

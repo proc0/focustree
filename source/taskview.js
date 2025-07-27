@@ -17,9 +17,13 @@ class TaskviewElement extends HTMLElement {
     const task = event.detail.task
     const updatedTaskElement = this.renderTaskTree(task)
     updatedTaskElement.setAttribute('slot', 'task-subs')
-    updatedTaskElement.shadowRoot.querySelector('details').setAttribute('open', '')
+
+    if (task.task_ui.is_open) {
+      updatedTaskElement.shadowRoot.querySelector('details').setAttribute('open', '')
+    }
 
     if (event.detail?.is_root) {
+      // append root tasks to task-base
       return event.target.appendChild(updatedTaskElement)
     }
 
