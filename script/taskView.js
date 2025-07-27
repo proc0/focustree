@@ -4,33 +4,28 @@ const CLASS_LEAF = 'leaf'
 class TaskView extends HTMLElement {
   constructor() {
     super()
-
     this.addEventListener(EVENT_RENDER, this.render.bind(this))
     this.addEventListener(EVENT_DELETE, this.delete.bind(this))
   }
 
-  delete(event) {
-    const taskNode = event.target
-    if (event.detail?.isRoot) {
-      taskNode.remove()
+  delete({ detail, target }) {
+    if (detail?.isRoot) {
+      target.remove()
     }
   }
 
-  render(event) {
-    const task = event.detail.task
+  render({ detail, target }) {
+    const task = detail.task
     const taskNode = this.renderTaskNode(task)
-    taskNode.setAttribute('slot', 'task-subs')
 
-    if (task.task_ui.is_open) {
-      taskNode.shadowRoot.querySelector('details').setAttribute('open', '')
-    }
-
-    if (event.detail?.isRoot) {
+    if (detail?.isRoot) {
       // append root tasks to task-base
-      return event.target.appendChild(taskNode)
+      return target.appendChild(taskNode)
     }
 
-    event.detail.node.replaceWith(taskNode)
+    taskNode.setAttribute('slot', 'task-subs')
+    // replace node with updated node
+    detail.node.replaceWith(taskNode)
   }
 
   renderTaskNode(task) {
