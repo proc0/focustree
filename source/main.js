@@ -1,10 +1,10 @@
 window.onload = () => {
   customElements.define(TASK_ELEMENT, TaskElement)
-  customElements.define(TASK_BASE_ELEMENT, TaskbaseElement)
-  customElements.define(TASK_RENDER_ELEMENT, TaskRenderElement)
+  customElements.define(TASKBASE_ELEMENT, TaskbaseElement)
+  customElements.define(TASKVIEW_ELEMENT, TaskviewElement)
 
-  const taskRenderElement = document.createElement(TASK_RENDER_ELEMENT)
-  const taskbaseElement = document.createElement(TASK_BASE_ELEMENT)
+  const taskRenderElement = document.createElement(TASKVIEW_ELEMENT)
+  const taskbaseElement = document.createElement(TASKBASE_ELEMENT)
   taskRenderElement.appendChild(taskbaseElement)
 
   document.querySelector('main').appendChild(taskRenderElement)
@@ -16,7 +16,7 @@ window.onload = () => {
 
   const rootSaveButton = document.getElementById(ID_BUTTON_ROOT_SAVE)
   rootSaveButton.addEventListener('click', () => {
-    const rootTasks = document.querySelectorAll('task-base > task-element')
+    const rootTasks = document.querySelectorAll('task-base > task-node')
     console.log(rootTasks)
   })
 }

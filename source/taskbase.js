@@ -45,6 +45,7 @@ class TaskbaseElement extends HTMLElement {
     })
   }
 
+  //TODO: refactor save, separate delete and another save function with a parent function calling both
   save(event) {
     let rootElement = event.target
     const taskStore = this.taskbase
@@ -76,8 +77,10 @@ class TaskbaseElement extends HTMLElement {
     }
 
     // grab root
-    for (let i = 0; i < event.target.task.task_path.length - 1; i++) {
-      rootElement = rootElement.parentElement
+    if (event.target.task.task_path.length > 1) {
+      for (let i = 0; i < event.target.task.task_path.length - 1; i++) {
+        rootElement = rootElement.parentElement
+      }
     }
 
     const rootTask = rootElement.task
@@ -114,17 +117,15 @@ class TaskbaseElement extends HTMLElement {
       const cursor = event.target.result
 
       if (!cursor) {
-        console.log('Tasks loading complete.')
-        return
+        return console.log('Tasks loading complete.')
       }
 
-      //   const taskElement = renderTaskTree(cursor.value)
-      //   this.appendChild(taskElement)
       this.dispatchEvent(
-        new CustomEvent(EVENT_RENDER_ROOT, {
+        new CustomEvent(EVENT_RENDER, {
           bubbles: true,
           detail: {
             task: cursor.value,
+            is_root: true,
           },
         })
       )
@@ -139,8 +140,6 @@ class TaskbaseElement extends HTMLElement {
       .transaction(TASKBASE_STORE, 'readwrite')
       .objectStore(TASKBASE_STORE)
 
-    //TODO: use IndexedDB keypath for task_id instead of correlating task-element length with database ID
-    // task.task_id = this.querySelectorAll('task-base > task-element').length + 1
     const addRequest = taskStore.add(task)
 
     addRequest.onsuccess = (event) => {
@@ -151,13 +150,12 @@ class TaskbaseElement extends HTMLElement {
       const updateKeyRequest = taskStore.put(task, task.task_id)
 
       updateKeyRequest.onsuccess = (event) => {
-        //   const taskElement = renderTaskTree(task)
-        //   this.appendChild(taskElement)
         this.dispatchEvent(
-          new CustomEvent(EVENT_RENDER_ROOT, {
+          new CustomEvent(EVENT_RENDER, {
             bubbles: true,
             detail: {
               task,
+              is_root: true,
             },
           })
         )

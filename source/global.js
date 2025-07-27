@@ -60,16 +60,15 @@ const EVENT_BRANCH = 'branch'
 const EVENT_DELETE = 'delete'
 const EVENT_EXPAND = 'expand'
 const EVENT_RENDER = 'render'
-const EVENT_RENDER_ROOT = 'render-root'
 
 const ID_BUTTON_ROOT_ADD = 'root-add'
 const ID_BUTTON_ROOT_SAVE = 'root-save'
 
 // task-render consts
-const TASK_RENDER_ELEMENT = 'task-render-element'
+const TASKVIEW_ELEMENT = 'task-view'
 
 // task-element consts
-const TASK_ELEMENT = 'task-element'
+const TASK_ELEMENT = 'task-node'
 const ID_TEMPLATE = 'task-template'
 const LABEL_BUTTON_SAVE = '✔'
 
@@ -87,7 +86,7 @@ const CLASS_BRANCH = 'branch'
 const CLASS_LEAF = 'leaf'
 
 // taskbase + task-element consts
-const TASK_BASE_ELEMENT = 'task-base'
+const TASKBASE_ELEMENT = 'task-base'
 
 // taskbase consts
 const TASKBASE_NAME = 'taskbase'

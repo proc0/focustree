@@ -1,15 +1,14 @@
-class TaskRenderElement extends HTMLElement {
+class TaskviewElement extends HTMLElement {
   constructor() {
     super()
 
     this.addEventListener(EVENT_RENDER, this.render.bind(this))
-    this.addEventListener(EVENT_RENDER_ROOT, this.render.bind(this))
     this.addEventListener(EVENT_DELETE, this.delete.bind(this))
   }
 
   delete(event) {
     const taskElement = event.target
-    if (event.type === EVENT_DELETE && event.detail?.is_root) {
+    if (event.detail?.is_root) {
       taskElement.remove()
     }
   }
@@ -20,22 +19,19 @@ class TaskRenderElement extends HTMLElement {
     updatedTaskElement.setAttribute('slot', 'task-subs')
     updatedTaskElement.shadowRoot.querySelector('details').setAttribute('open', '')
 
-    if (event.type === EVENT_RENDER_ROOT) {
-      // event.target.parentElement.replaceChild(updatedTaskElement, this)
-      event.target.appendChild(updatedTaskElement)
+    if (event.detail?.is_root) {
+      return event.target.appendChild(updatedTaskElement)
     }
-    if (event.type === EVENT_RENDER) {
-      event.detail.taskElement.replaceWith(updatedTaskElement)
-    }
+
+    event.detail.taskElement.replaceWith(updatedTaskElement)
   }
 
   renderTaskTree(task) {
     const taskElement = document.createElement(TASK_ELEMENT)
     taskElement.task = task
 
-    taskElement.shadowRoot
-      .querySelector('div')
-      .setAttribute('id', `task-${task.task_path.join('')}`)
+    // set the task path
+    taskElement.shadowRoot.querySelector('div').setAttribute('data-path', task.task_path)
 
     // fields
     const taskName = document.createElement(ELEMENT_TASK_FIELD)
