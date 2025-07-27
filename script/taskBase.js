@@ -19,7 +19,7 @@ class TaskBase extends HTMLElement {
     }
 
     taskBase.onupgradeneeded = (event) => {
-      console.log('Taskbase upgrade needed.')
+      console.log('TaskBase upgrade needed.')
 
       const tb = event.target.result
 
@@ -55,7 +55,7 @@ class TaskBase extends HTMLElement {
     const taskStore = this.taskBase.transaction(BASE_STORE, 'readwrite').objectStore(BASE_STORE)
 
     // root task delete
-    if (event.type === EVENT_DELETE && event.detail?.is_root) {
+    if (event.type === EVENT_DELETE && event.detail?.isRoot) {
       const taskKey = taskElement.task.task_id
       const deleteRequest = taskStore.delete(taskKey)
 
@@ -129,7 +129,7 @@ class TaskBase extends HTMLElement {
           bubbles: true,
           detail: {
             task: cursor.value,
-            is_root: true,
+            isRoot: true,
           },
         })
       )
@@ -158,7 +158,7 @@ class TaskBase extends HTMLElement {
             bubbles: true,
             detail: {
               task,
-              is_root: true,
+              isRoot: true,
             },
           })
         )

@@ -53,7 +53,7 @@ class TaskNode extends HTMLElement {
         return this.dispatchEvent(
           new CustomEvent(EVENT_DELETE, {
             bubbles: true,
-            detail: { is_root: true },
+            detail: { isRoot: true },
           })
         )
       }

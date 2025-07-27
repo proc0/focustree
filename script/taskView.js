@@ -11,7 +11,7 @@ class TaskView extends HTMLElement {
 
   delete(event) {
     const taskElement = event.target
-    if (event.detail?.is_root) {
+    if (event.detail?.isRoot) {
       taskElement.remove()
     }
   }
@@ -25,7 +25,7 @@ class TaskView extends HTMLElement {
       updatedTaskElement.shadowRoot.querySelector('details').setAttribute('open', '')
     }
 
-    if (event.detail?.is_root) {
+    if (event.detail?.isRoot) {
       // append root tasks to task-base
       return event.target.appendChild(updatedTaskElement)
     }
