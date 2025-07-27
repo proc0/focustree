@@ -1,20 +1,24 @@
-class TaskbaseElement extends HTMLElement {
+const BASE_NAME = 'taskbase'
+const BASE_VERSION = 1
+const BASE_STORE = 'task'
+
+class TaskBase extends HTMLElement {
   constructor() {
     super()
-    const taskbase = window.indexedDB.open(TASKBASE_NAME, TASKBASE_VERSION)
+    const taskBase = window.indexedDB.open(BASE_NAME, BASE_VERSION)
 
-    taskbase.onerror = (event) => {
+    taskBase.onerror = (event) => {
       console.log(event.target.error)
     }
 
-    taskbase.onsuccess = (event) => {
-      console.log('Taskbase initialized.')
-      // save taskbase reference
-      this.taskbase = event.target.result
+    taskBase.onsuccess = (event) => {
+      console.log('TaskBase initialized.')
+      // save taskBase reference
+      this.taskBase = event.target.result
       this.load()
     }
 
-    taskbase.onupgradeneeded = (event) => {
+    taskBase.onupgradeneeded = (event) => {
       console.log('Taskbase upgrade needed.')
 
       const tb = event.target.result
@@ -24,7 +28,7 @@ class TaskbaseElement extends HTMLElement {
       }
 
       // create an objectStore for tasks
-      const taskStore = tb.createObjectStore(TASKBASE_STORE, {
+      const taskStore = tb.createObjectStore(BASE_STORE, {
         autoIncrement: true,
       })
 
@@ -48,9 +52,7 @@ class TaskbaseElement extends HTMLElement {
   //TODO: refactor save, separate delete and another save function with a parent function calling both
   save(event) {
     let taskElement = event.target
-    const taskStore = this.taskbase
-      .transaction(TASKBASE_STORE, 'readwrite')
-      .objectStore(TASKBASE_STORE)
+    const taskStore = this.taskBase.transaction(BASE_STORE, 'readwrite').objectStore(BASE_STORE)
 
     // root task delete
     if (event.type === EVENT_DELETE && event.detail?.is_root) {
@@ -77,9 +79,10 @@ class TaskbaseElement extends HTMLElement {
     }
 
     // grab root task
-    let rootElement = taskElement
-    if (event.target.task.task_path.length > 1) {
-      for (let i = 0; i < event.target.task.task_path.length - 1; i++) {
+    let rootElement = event.target
+    const targetPathLength = event.target.task.task_path.length
+    if (targetPathLength > 1) {
+      for (let i = 0; i < targetPathLength - 1; i++) {
         rootElement = rootElement.parentElement
       }
     }
@@ -112,7 +115,7 @@ class TaskbaseElement extends HTMLElement {
   load() {
     console.log('Loading tasks...')
 
-    const taskStore = this.taskbase.transaction(TASKBASE_STORE).objectStore(TASKBASE_STORE)
+    const taskStore = this.taskBase.transaction(BASE_STORE).objectStore(BASE_STORE)
 
     taskStore.openCursor().onsuccess = (event) => {
       const cursor = event.target.result
@@ -137,9 +140,7 @@ class TaskbaseElement extends HTMLElement {
 
   addRoot() {
     const task = structuredClone(NEW_TASK)
-    const taskStore = this.taskbase
-      .transaction(TASKBASE_STORE, 'readwrite')
-      .objectStore(TASKBASE_STORE)
+    const taskStore = this.taskBase.transaction(BASE_STORE, 'readwrite').objectStore(BASE_STORE)
 
     const addRequest = taskStore.add(task)
 

@@ -1,4 +1,7 @@
-class TaskviewElement extends HTMLElement {
+const CLASS_BRANCH = 'branch'
+const CLASS_LEAF = 'leaf'
+
+class TaskView extends HTMLElement {
   constructor() {
     super()
 
@@ -31,19 +34,19 @@ class TaskviewElement extends HTMLElement {
   }
 
   renderTaskTree(task) {
-    const taskElement = document.createElement(TASK_ELEMENT)
+    const taskElement = document.createElement(ELEMENT_NODE)
     taskElement.task = task
 
     // set the task path
     taskElement.shadowRoot.querySelector('div').setAttribute('data-path', task.task_path)
 
     // fields
-    const taskName = document.createElement(ELEMENT_TASK_FIELD)
+    const taskName = document.createElement(ELEMENT_FIELD)
     taskName.setAttribute('slot', 'task-name')
     taskName.textContent = task.task_name
     taskElement.appendChild(taskName)
 
-    const taskNote = document.createElement(ELEMENT_TASK_FIELD)
+    const taskNote = document.createElement(ELEMENT_FIELD)
     taskNote.setAttribute('slot', 'task-note')
     taskNote.textContent = task.task_note
     taskElement.appendChild(taskNote)

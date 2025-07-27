@@ -54,42 +54,21 @@ const SEED_TASK = {
   ],
 }
 
-// global consts
+// main menu
+const ID_ROOT_ADD = 'root-add'
+const ID_ROOT_SAVE = 'root-save'
+// global events
 const EVENT_UPDATE = 'update'
 const EVENT_BRANCH = 'branch'
 const EVENT_DELETE = 'delete'
 const EVENT_EXPAND = 'expand'
 const EVENT_RENDER = 'render'
 
-const ID_BUTTON_ROOT_ADD = 'root-add'
-const ID_BUTTON_ROOT_SAVE = 'root-save'
+const TEMPLATE_NODE = 'task-template'
+// custom elements
+const ELEMENT_NODE = 'task-node'
+const ELEMENT_BASE = 'task-base'
+const ELEMENT_VIEW = 'task-view'
+const ELEMENT_FIELD = 'span'
 
-// task-render consts
-const TASKVIEW_ELEMENT = 'task-view'
-
-// task-element consts
-const TASK_ELEMENT = 'task-node'
-const ID_TEMPLATE = 'task-template'
-const LABEL_BUTTON_SAVE = '✔'
-
-const QUERY_SLOT_FIELD = 'ul li slot'
-const QUERY_SUBS_HEADER = 'details summary header'
-const QUERY_BUTTON_ADD = 'button[name="task-add"]'
-const QUERY_BUTTON_EDIT = 'button[name="task-edit"]'
-const QUERY_BUTTON_DELETE = 'button[name="task-delete"]'
-
-// task-element + renderTaskTree consts
-const ELEMENT_TASK_FIELD = 'span'
-
-// renderTaskTree consts
-const CLASS_BRANCH = 'branch'
-const CLASS_LEAF = 'leaf'
-
-// taskbase + task-element consts
-const TASKBASE_ELEMENT = 'task-base'
-
-// taskbase consts
-const TASKBASE_NAME = 'taskbase'
-const TASKBASE_VERSION = 1
-const TASKBASE_STORE = 'task'
-const TASKBASE_INDEX = 'roots'
+const TEXT_SAVE = '✔'

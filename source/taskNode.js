@@ -1,9 +1,15 @@
-class TaskElement extends HTMLElement {
+const QUERY_SLOT_FIELD = 'ul li slot'
+const QUERY_SUBS_HEADER = 'details summary header'
+const QUERY_BUTTON_ADD = 'button[name="task-add"]'
+const QUERY_BUTTON_EDIT = 'button[name="task-edit"]'
+const QUERY_BUTTON_DELETE = 'button[name="task-delete"]'
+
+class TaskNode extends HTMLElement {
   constructor() {
     super()
 
     this.attachShadow({ mode: 'open' }).appendChild(
-      document.getElementById(ID_TEMPLATE).content.cloneNode(true)
+      document.getElementById(TEMPLATE_NODE).content.cloneNode(true)
     )
 
     // edit event for task fields
@@ -37,13 +43,13 @@ class TaskElement extends HTMLElement {
         })
       )
     })
-    //TODO: add a way to undo with ctrl+z, add a history data struct in taskbase, and send opposite command (delete -> add)
+    //TODO: add a way to undo with ctrl+z, add a history data struct in taskBase, and send opposite command (delete -> add)
     this.shadowRoot.querySelector(QUERY_BUTTON_DELETE).addEventListener('click', (event) => {
       // click event only relevant to triggering task
       event.stopPropagation()
 
       // root task delete
-      if (this.parentElement.tagName === TASKBASE_ELEMENT.toUpperCase()) {
+      if (this.parentElement.tagName === ELEMENT_BASE.toUpperCase()) {
         return this.dispatchEvent(
           new CustomEvent(EVENT_DELETE, {
             bubbles: true,
@@ -79,7 +85,7 @@ class TaskElement extends HTMLElement {
       // get the details tag, somehow null open attribute means it is open
       const isOpen = event.currentTarget.parentElement.parentElement.getAttribute('open') === null
       this.task.task_ui.is_open = isOpen
-      // stops bubblng at taskbase
+      // stops bubblng at taskBase
       this.dispatchEvent(
         new CustomEvent(EVENT_EXPAND, {
           bubbles: true,
@@ -143,7 +149,7 @@ class TaskElement extends HTMLElement {
     inputElement.setAttribute('value', this.task[fieldName])
 
     const saveButton = document.createElement('button')
-    saveButton.textContent = LABEL_BUTTON_SAVE
+    saveButton.textContent = TEXT_SAVE
     saveButton.setAttribute('name', 'task-save')
     // bind commit on save click
     saveButton.addEventListener('click', this.commit.bind(this))
@@ -162,7 +168,7 @@ class TaskElement extends HTMLElement {
     const shadow = event.currentTarget.shadowRoot
     const slotName = shadow.querySelector('slot').getAttribute('name')
     const fieldName = slotName.replace('-', '_')
-    const elementQuery = `${ELEMENT_TASK_FIELD}[slot="${slotName}"]`
+    const elementQuery = `${ELEMENT_FIELD}[slot="${slotName}"]`
     const taskPath = event.detail.task.task_path.join('')
     const updateValue = event.detail.task[fieldName]
 
