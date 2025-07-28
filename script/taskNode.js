@@ -26,14 +26,6 @@ class TaskNode extends HTMLElement {
       // click event only relevant to triggering task
       event.stopPropagation()
 
-      // create new task and add path
-      const newTask = structuredClone(NEW_TASK)
-      newTask.task_path = [...this.task.task_path, this.task.task_subs.length]
-      this.task.task_subs.push(newTask)
-
-      // open drawer
-      this.task.task_ui.is_open = true
-
       this.dispatchEvent(
         new CustomEvent(EVENT_BRANCH, {
           bubbles: true,
@@ -53,7 +45,7 @@ class TaskNode extends HTMLElement {
         return this.dispatchEvent(
           new CustomEvent(EVENT_DELETE, {
             bubbles: true,
-            detail: { isRoot: true },
+            detail: { task: this.task },
           })
         )
       }
@@ -67,7 +59,7 @@ class TaskNode extends HTMLElement {
         }
       }
 
-      // dispatch parent taks to render
+      // dispatch parent task to render
       this.dispatchEvent(
         new CustomEvent(EVENT_DELETE, {
           bubbles: true,

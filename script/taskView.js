@@ -9,7 +9,7 @@ class TaskView extends HTMLElement {
   }
 
   delete({ detail, target }) {
-    if (detail?.isRoot) {
+    if (detail?.task.task_id) {
       target.remove()
     }
   }
@@ -18,11 +18,13 @@ class TaskView extends HTMLElement {
     const task = detail.task
     const taskNode = this.renderTaskNode(task)
 
-    if (detail?.isRoot) {
+    // root add event does not have node to replace
+    if (task.task_id && !detail?.node) {
       // append root tasks to task-base
       return target.appendChild(taskNode)
     }
 
+    // branching subtask
     taskNode.setAttribute('slot', 'task-subs')
     // replace node with updated node
     detail.node.replaceWith(taskNode)

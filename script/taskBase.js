@@ -70,7 +70,6 @@ class TaskBase extends HTMLElement {
               bubbles: true,
               detail: {
                 task,
-                isRoot: true,
               },
             })
           )
@@ -101,7 +100,6 @@ class TaskBase extends HTMLElement {
             bubbles: true,
             detail: {
               task: cursor.value,
-              isRoot: true,
             },
           })
         )
@@ -116,7 +114,7 @@ class TaskBase extends HTMLElement {
   delete(event) {
     let node = event.target
     // root task delete
-    if (event.detail?.isRoot) {
+    if (node.task.task_id) {
       return this.store('readwrite', (store) => {
         const taskKey = node.task.task_id
         const deleteRequest = store.delete(taskKey)
@@ -134,25 +132,43 @@ class TaskBase extends HTMLElement {
     this.save(event)
   }
 
-  save({ detail, target, type }) {
-    // when deleting a subtask, grab the parent
-    const node = type === EVENT_DELETE ? target.parentElement : target
+  save(event) {
+    // stop save events here
+    event.stopPropagation()
+
+    let node = event.target
+    // when deleting a subtask,
+    if (event.type === EVENT_DELETE) {
+      // grab the parent and stop event
+      node = event.target.parentElement
+    }
 
     // grab root element
-    let root = target
-    const pathLength = target.task.task_path.length
+    let root = event.target
+    const pathLength = event.target.task.task_path.length
     if (pathLength > 1) {
       for (let i = 0; i < pathLength - 1; i++) {
         root = root.parentElement
       }
     }
 
+    // add new task if branching
+    const task = event.detail.task
+    if (event.type === EVENT_BRANCH) {
+      // create new task and add path
+      const newTask = structuredClone(NEW_TASK)
+      newTask.task_path = [...task.task_path, task.task_subs.length]
+      task.task_subs.push(newTask)
+      // open drawer
+      task.task_ui.is_open = true
+    }
+
     this.store('readwrite', (store) => {
       const putRequest = store.put(root.task, root.task.task_id)
 
-      putRequest.onsuccess = (event) => {
-        console.log(`Updated task ${event.target.result}`)
-        if (type === EVENT_EXPAND) {
+      putRequest.onsuccess = (success) => {
+        console.log(`Updated task ${success.target.result}`)
+        if (event.type === EVENT_EXPAND) {
           // does not need a render
           return
         }
@@ -162,7 +178,7 @@ class TaskBase extends HTMLElement {
             bubbles: true,
             detail: {
               node,
-              task: detail.task,
+              task,
             },
           })
         )
