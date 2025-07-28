@@ -7,21 +7,21 @@ class TaskBase extends HTMLElement {
     super()
     const initBase = window.indexedDB.open(BASE_NAME, BASE_VERSION)
 
-    initBase.onerror = (event) => {
-      console.log(event.target.error)
+    initBase.onerror = ({ target }) => {
+      console.log(target.error)
     }
 
-    initBase.onsuccess = (event) => {
+    initBase.onsuccess = ({ target }) => {
       console.log('TaskBase initialized.')
       // save taskBase reference
-      this.taskBase = event.target.result
+      this.taskBase = target.result
       this.load()
     }
 
-    initBase.onupgradeneeded = (event) => {
+    initBase.onupgradeneeded = ({ target }) => {
       console.log('TaskBase upgrade needed.')
 
-      const taskBase = event.target.result
+      const taskBase = target.result
 
       taskBase.onerror = (event) => {
         console.error(event.target.error)
@@ -56,14 +56,14 @@ class TaskBase extends HTMLElement {
       const task = structuredClone(NEW_TASK)
       const addRequest = store.add(task)
 
-      addRequest.onsuccess = (event) => {
-        const taskId = event.target.result
-
+      addRequest.onsuccess = ({ target }) => {
+        const taskId = target.result
         task.task_id = taskId
+
         // another request to save the DB key in task_id
         const putRequest = store.put(task, task.task_id)
 
-        putRequest.onsuccess = (event) => {
+        putRequest.onsuccess = () => {
           console.log(`Added task ${taskId}`)
           this.dispatchEvent(
             new CustomEvent(EVENT_RENDER, {
@@ -89,8 +89,8 @@ class TaskBase extends HTMLElement {
     console.log('Loading tasks...')
 
     this.store('readonly', (store) => {
-      const readRequest = (store.openCursor().onsuccess = (event) => {
-        const cursor = event.target.result
+      const readRequest = (store.openCursor().onsuccess = ({ target }) => {
+        const cursor = target.result
 
         if (!cursor) {
           return console.log('Tasks loading complete.')
@@ -134,43 +134,35 @@ class TaskBase extends HTMLElement {
     this.save(event)
   }
 
-  save(event) {
-    let node = event.target
-
+  save({ detail, target, type }) {
     // when deleting a subtask, grab the parent
-    if (event.type === EVENT_DELETE) {
-      node = event.target.parentElement
-    }
+    const node = type === EVENT_DELETE ? target.parentElement : target
 
-    // closure event details
-    const eventType = event.type
-    const task = event.detail.task
-
-    // grab root task
-    let rootElement = event.target
-    const pathLength = event.target.task.task_path.length
+    // grab root element
+    let root = target
+    const pathLength = target.task.task_path.length
     if (pathLength > 1) {
       for (let i = 0; i < pathLength - 1; i++) {
-        rootElement = rootElement.parentElement
+        root = root.parentElement
       }
     }
 
-    const rootTask = rootElement.task
     this.store('readwrite', (store) => {
-      const putRequest = store.put(rootTask, rootTask.task_id)
+      const putRequest = store.put(root.task, root.task.task_id)
 
       putRequest.onsuccess = (event) => {
         console.log(`Updated task ${event.target.result}`)
-        if (eventType === EVENT_EXPAND) {
+        if (type === EVENT_EXPAND) {
           // does not need a render
           return
         }
+
         this.dispatchEvent(
           new CustomEvent(EVENT_RENDER, {
             bubbles: true,
             detail: {
               node,
-              task,
+              task: detail.task,
             },
           })
         )
@@ -185,8 +177,8 @@ class TaskBase extends HTMLElement {
 
     const request = order(store)
 
-    request.onerror = (event) => {
-      console.error(event.target.error)
+    request.onerror = ({ target }) => {
+      console.error(target.error)
     }
 
     return request
