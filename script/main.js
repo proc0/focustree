@@ -3,15 +3,15 @@ window.onload = () => {
   customElements.define(ELEMENT_BASE, TaskBase)
   customElements.define(ELEMENT_VIEW, TaskView)
 
-  const taskRenderElement = document.createElement(ELEMENT_VIEW)
-  const taskbaseElement = document.createElement(ELEMENT_BASE)
-  taskRenderElement.appendChild(taskbaseElement)
+  const taskView = document.createElement(ELEMENT_VIEW)
+  const taskBase = document.createElement(ELEMENT_BASE)
 
-  document.querySelector('main').appendChild(taskRenderElement)
+  taskView.appendChild(taskBase)
+  document.querySelector('main').appendChild(taskView)
 
   const rootAddButton = document.getElementById(ID_ROOT_ADD)
   rootAddButton.addEventListener('click', () => {
-    taskbaseElement.addRoot()
+    taskBase.addRoot()
   })
 
   const rootSaveButton = document.getElementById(ID_ROOT_SAVE)

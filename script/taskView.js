@@ -9,6 +9,7 @@ class TaskView extends HTMLElement {
   }
 
   delete({ detail, target }) {
+    // root task delete
     if (detail?.task.task_id) {
       target.remove()
     }

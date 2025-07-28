@@ -115,13 +115,13 @@ class TaskBase extends HTMLElement {
     let node = event.target
     // root task delete
     if (node.task.task_id) {
+      // bubbles up to task view
       return this.store('readwrite', (store) => {
         const taskKey = node.task.task_id
         const deleteRequest = store.delete(taskKey)
 
         deleteRequest.onsuccess = () => {
           console.log(`Deleted task ${taskKey}`)
-          // bubbles up to task view
         }
 
         return deleteRequest
