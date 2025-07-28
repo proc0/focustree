@@ -12,7 +12,7 @@ class TaskNode extends HTMLElement {
       document.getElementById(TEMPLATE_NODE).content.cloneNode(true)
     )
 
-    // edit event for task fields
+    // click event for editing task fields
     this.shadowRoot.querySelectorAll(QUERY_SLOT_FIELD).forEach((slot) => {
       const editButton = slot.parentElement.querySelector(QUERY_BUTTON_EDIT)
       editButton.addEventListener('click', this.edit.bind(this))
@@ -23,31 +23,17 @@ class TaskNode extends HTMLElement {
 
     // add event for subtasks
     this.shadowRoot.querySelector(QUERY_BUTTON_ADD).addEventListener('click', (event) => {
-      // click event only relevant to triggering task
       event.stopPropagation()
-
-      this.dispatchEvent(
-        new CustomEvent(EVENT_BRANCH, {
-          bubbles: true,
-          detail: {
-            task: this.task,
-          },
-        })
-      )
+      this.dispatch(EVENT_BRANCH, this.task)
     })
+
     //TODO: add a way to undo with ctrl+z, add a history data struct in taskBase, and send opposite command (delete -> add)
     this.shadowRoot.querySelector(QUERY_BUTTON_DELETE).addEventListener('click', (event) => {
-      // click event only relevant to triggering task
       event.stopPropagation()
 
       // root task delete
       if (this.parentElement.tagName === ELEMENT_BASE.toUpperCase()) {
-        return this.dispatchEvent(
-          new CustomEvent(EVENT_DELETE, {
-            bubbles: true,
-            detail: { task: this.task },
-          })
-        )
+        return this.dispatch(EVENT_DELETE, this.task)
       }
 
       // since we are deleting this task, get parent task
@@ -60,110 +46,117 @@ class TaskNode extends HTMLElement {
       }
 
       // dispatch parent task to render
-      this.dispatchEvent(
-        new CustomEvent(EVENT_DELETE, {
-          bubbles: true,
-          detail: {
-            task: parentTask,
-          },
-        })
-      )
+      this.dispatch(EVENT_DELETE, parentTask)
     })
 
     // open and close subtasks drawer
     this.shadowRoot.querySelector(QUERY_SUBS_HEADER).addEventListener('click', (event) => {
-      // only affects this task
       event.stopPropagation()
       // get the details tag, somehow null open attribute means it is open
       const isOpen = event.currentTarget.parentElement.parentElement.getAttribute('open') === null
       this.task.task_ui.is_open = isOpen
-      // stops bubblng at taskBase
-      this.dispatchEvent(
-        new CustomEvent(EVENT_EXPAND, {
-          bubbles: true,
-          detail: {
-            task: this.task,
-          },
-        })
-      )
+      this.dispatch(EVENT_EXPAND, this.task)
     })
   }
 
   commit(event) {
     event.stopPropagation()
 
-    const saveButton = event.currentTarget
-    const taskNode = saveButton.parentElement
-    const deleteButton = taskNode.querySelector(QUERY_BUTTON_DELETE)
+    const { slotName, fieldName, currentButton, deleteButton, taskField } =
+      this.getFieldElements(event)
 
-    const slotName = taskNode.querySelector('slot').getAttribute('name')
-    const fieldName = slotName.replace('-', '_')
+    const input = taskField.querySelector('input')
 
-    const input = taskNode.querySelector('input')
-    const updateValue = input.value
-
-    this.task[fieldName] = updateValue
-
-    const editButton = taskNode.querySelector(QUERY_BUTTON_EDIT)
-    taskNode.removeChild(input)
-    taskNode.querySelector('slot').setAttribute('class', '')
+    // show hidden elements again
+    const editButton = taskField.querySelector(QUERY_BUTTON_EDIT)
+    taskField.removeChild(input)
+    taskField.querySelector('slot').setAttribute('class', '')
     editButton.setAttribute('class', '')
     deleteButton?.setAttribute('class', '')
-    saveButton.remove()
+    // save button
+    currentButton.remove()
 
+    // no changes
+    if (!input.value || input.value === this.task[fieldName]) {
+      return
+    }
+
+    // update task
+    const updateValue = input.value
+    this.task[fieldName] = updateValue
+
+    this.dispatch(EVENT_UPDATE, this.task)
+  }
+
+  dispatch(eventName, task) {
     this.dispatchEvent(
-      new CustomEvent(EVENT_UPDATE, {
+      new CustomEvent(eventName, {
         bubbles: true,
-        detail: { task: this.task },
+        detail: { task },
       })
     )
   }
 
   edit(event) {
     event.stopPropagation()
+    // current button is edit
+    const { slotName, fieldName, currentButton, deleteButton, taskField } =
+      this.getFieldElements(event)
 
-    const editButton = event.currentTarget
-    const taskNode = editButton.parentElement
-    const deleteButton = taskNode.querySelector(QUERY_BUTTON_DELETE)
+    // return if input is already present
+    if (taskField.getElementsByTagName('input')?.length) return
 
-    const slotName = taskNode.querySelector('slot').getAttribute('name')
-    const fieldName = slotName.replace('-', '_')
-
-    if (taskNode.getElementsByTagName('input')?.length) return
-
-    editButton.setAttribute('class', 'hidden')
+    // hide field elements
+    currentButton.setAttribute('class', 'hidden')
     deleteButton?.setAttribute('class', 'hidden')
-    taskNode.querySelector('slot').setAttribute('class', 'hidden')
-
-    const inputElement = document.createElement('input')
-    inputElement.setAttribute('type', 'text')
-    inputElement.setAttribute('id', `${slotName}-${this.task.task_path.join('')}`)
-    inputElement.setAttribute('value', this.task[fieldName])
-
+    taskField.querySelector('slot').setAttribute('class', 'hidden')
+    // show input in place of field
+    const input = document.createElement('input')
+    input.setAttribute('type', 'text')
+    input.setAttribute('id', `${slotName}-${this.task.task_path.join('')}`)
+    input.setAttribute('value', this.task[fieldName])
+    // spawn a save button
     const saveButton = document.createElement('button')
     saveButton.textContent = TEXT_SAVE
     saveButton.setAttribute('name', 'task-save')
     // bind commit on save click
     saveButton.addEventListener('click', this.commit.bind(this))
 
-    taskNode.prepend(inputElement)
-    taskNode.prepend(saveButton)
+    taskField.prepend(input)
+    taskField.prepend(saveButton)
 
-    inputElement.addEventListener('keyup', ({ key }) => {
+    input.addEventListener('keyup', ({ key }) => {
       if (key === 'Enter') saveButton.click()
     })
 
-    inputElement.focus()
+    input.focus()
+  }
+
+  getFieldNames(element) {
+    const slotName = element.querySelector('slot').getAttribute('name')
+    const fieldName = slotName.replace('-', '_')
+
+    return { slotName, fieldName }
+  }
+
+  getFieldElements(event) {
+    const currentButton = event.currentTarget
+    const taskField = currentButton.parentElement
+    const { slotName, fieldName } = this.getFieldNames(taskField)
+    const deleteButton = taskField.querySelector(QUERY_BUTTON_DELETE)
+
+    return { slotName, fieldName, currentButton, deleteButton, taskField }
   }
 
   update(event) {
-    const shadow = event.currentTarget.shadowRoot
-    const slotName = shadow.querySelector('slot').getAttribute('name')
-    const fieldName = slotName.replace('-', '_')
+    const fieldElement = event.currentTarget.shadowRoot
+    const { slotName, fieldName } = this.getFieldNames(fieldElement)
+
     const elementQuery = `${ELEMENT_FIELD}[slot="${slotName}"]`
     const taskPath = event.detail.task.task_path.join('')
     const updateValue = event.detail.task[fieldName]
 
+    // only update relevant task as this bubbles up to task-view
     if (taskPath === this.task.task_path.join('')) {
       event.currentTarget.querySelector(elementQuery).textContent = updateValue
     }
