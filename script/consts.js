@@ -28,6 +28,7 @@ const SLOT_NAME = 'task-name'
 const SLOT_NOTE = 'task-note'
 const SLOT_TITLE_SUBS = 'title-subs'
 const SLOT_SAVE = 'task-save'
+const SLOT_STATE = 'task-state'
 // text and labels
 const TEXT_SAVE = '✔'
 const TEXT_SUBS = 'Subtasks'

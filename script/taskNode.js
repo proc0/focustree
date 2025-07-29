@@ -15,7 +15,10 @@ class TaskNode extends HTMLElement {
     // click event for editing task fields
     this.shadowRoot.querySelectorAll(QUERY_SLOT_FIELD).forEach((slot) => {
       const editButton = slot.parentElement.querySelector(QUERY_BUTTON_EDIT)
-      editButton.addEventListener('click', this.edit.bind(this))
+
+      if (editButton) {
+        editButton.addEventListener('click', this.edit.bind(this))
+      }
     })
 
     // update fields with new input

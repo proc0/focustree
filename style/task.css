@@ -144,3 +144,27 @@ button:hover {
   color: #d0d6c9ff;
   background-color: #5e5e5eff;
 }
+
+::slotted(select) {
+  display: inline-block;
+  outline: none; // gets rid of that blue "outline" when you click it. sometimes its desired to have this in, but I prefer to take it out
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+  margin: 0 28px;
+  border: 1px solid black;
+  background-color: #312a2aff;
+  border-color: #222222;
+  color: #bababa;
+  cursor: pointer;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.28);
+  -moz-transition: all 0.25s ease;
+  -o-transition: all 0.25s ease;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+
+::slotted(select:hover) {
+  background-color: #4b4040ff;
+  color: #d3d0d0ff;
+}
