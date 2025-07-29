@@ -150,13 +150,13 @@ class TaskBase extends HTMLElement {
   }
 
   save(event) {
-    // stop save events here
+    // stop save event
     event.stopPropagation()
 
     let node = event.target
     // when deleting a subtask,
     if (event.type === EVENT_DELETE) {
-      // grab the parent and stop event
+      // grab the parent
       node = event.target.parentElement
     }
 
