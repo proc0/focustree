@@ -54,6 +54,13 @@ const SEED_TASK = {
   ],
 }
 
+const STATE_TASK = {
+  IDLE: 'idle',
+  DOING: 'doing',
+  FOCUS: 'focus',
+  DONE: 'done',
+}
+
 // main menu
 const ID_ROOT_ADD = 'root-add'
 const ID_ROOT_SAVE = 'root-save'
@@ -70,5 +77,12 @@ const ELEMENT_NODE = 'task-node'
 const ELEMENT_BASE = 'task-base'
 const ELEMENT_VIEW = 'task-view'
 const ELEMENT_FIELD = 'span'
-
+const ELEMENT_LABEL = 'span'
+// slot names
+const SLOT_SUBS = 'task-subs'
+const SLOT_NAME = 'task-name'
+const SLOT_NOTE = 'task-note'
+const SLOT_SUBCOUNT = 'num-subs'
+// text and labels
 const TEXT_SAVE = '✔'
+const TEXT_SUBS = 'Subtasks'

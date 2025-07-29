@@ -26,7 +26,7 @@ class TaskView extends HTMLElement {
     }
 
     // branching subtask
-    taskNode.setAttribute('slot', 'task-subs')
+    taskNode.setAttribute('slot', SLOT_SUBS)
     // replace node with updated node
     detail.node.replaceWith(taskNode)
   }
@@ -42,12 +42,12 @@ class TaskView extends HTMLElement {
 
     // fields
     const taskName = document.createElement(ELEMENT_FIELD)
-    taskName.setAttribute('slot', 'task-name')
+    taskName.setAttribute('slot', SLOT_NAME)
     taskName.textContent = task.task_name
     taskNode.appendChild(taskName)
 
     const taskNote = document.createElement(ELEMENT_FIELD)
-    taskNote.setAttribute('slot', 'task-note')
+    taskNote.setAttribute('slot', SLOT_NOTE)
     taskNote.textContent = task.task_note
     taskNode.appendChild(taskNote)
 
@@ -60,15 +60,15 @@ class TaskView extends HTMLElement {
     // branch
     taskNode.shadowRoot.querySelector('div').setAttribute('class', CLASS_BRANCH)
 
-    const subLength = task.task_subs.length
-    const numSubs = document.createElement('span')
-    numSubs.setAttribute('slot', 'num-subs')
-    numSubs.textContent = `Subtasks (${subLength})`
-    taskNode.appendChild(numSubs)
+    const subsLength = task.task_subs.length
+    const subsLabel = document.createElement(ELEMENT_LABEL)
+    subsLabel.setAttribute('slot', SLOT_SUBCOUNT)
+    subsLabel.textContent = `${TEXT_SUBS} (${subsLength})`
+    taskNode.appendChild(subsLabel)
 
     for (const sub in task.task_subs) {
       const subTask = this.renderTaskNode(task.task_subs[sub])
-      subTask.setAttribute('slot', 'task-subs')
+      subTask.setAttribute('slot', SLOT_SUBS)
 
       taskNode.appendChild(subTask)
     }

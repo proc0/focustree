@@ -2,6 +2,18 @@ const BASE_NAME = 'taskbase'
 const BASE_VERSION = 1
 const BASE_STORE = 'task'
 
+const MODEL_TASK = {
+  id: 0,
+  path: [0],
+  name: 'Le Task',
+  note: 'Lorem Ipsum dolor sit amet.',
+  subs: [],
+  state: STATE_TASK.IDLE,
+  meta: {
+    isOpen: false,
+  },
+}
+
 class TaskBase extends HTMLElement {
   constructor() {
     super()
