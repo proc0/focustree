@@ -35,6 +35,8 @@ class TaskView extends HTMLElement {
     const taskNode = document.createElement(ELEMENT_NODE)
     taskNode.task = task
 
+    taskNode.classList.add('fade-in')
+
     // set the task path
     taskNode.shadowRoot.querySelector('div').setAttribute('data-path', task.task_path)
 

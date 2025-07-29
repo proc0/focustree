@@ -61,7 +61,7 @@ class TaskNode extends HTMLElement {
 
   commit(event) {
     event.stopPropagation()
-
+    // current button is save
     const { slotName, fieldName, currentButton, deleteButton, taskField } =
       this.getFieldElements(event)
 

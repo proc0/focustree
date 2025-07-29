@@ -30,3 +30,36 @@ main menu button {
   padding-bottom: 0.1em;
   border-bottom: 1px solid;
 }
+
+.fade-in {
+  opacity: 1;
+  animation-name: quadratic;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.05s;
+}
+
+@keyframes quadratic {
+  0% {
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 0.04;
+
+  50% {
+    opacity: 0.25;
+  }
+
+  75% {
+    opacity: 0.64;
+  }
+
+  90% {
+    opacity: 0.81;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
