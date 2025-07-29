@@ -10,7 +10,7 @@ class TaskView extends HTMLElement {
 
   delete({ detail, target }) {
     // root task delete
-    if (detail?.task.task_id) {
+    if (detail?.task.id) {
       target.remove()
     }
   }
@@ -20,7 +20,7 @@ class TaskView extends HTMLElement {
     const taskNode = this.renderTaskNode(task)
 
     // root add event does not have node to replace
-    if (task.task_id && !detail?.node) {
+    if (task.id && !detail?.node) {
       // append root tasks to task-base
       return target.appendChild(taskNode)
     }
@@ -38,42 +38,44 @@ class TaskView extends HTMLElement {
     taskNode.classList.add('fade-in')
 
     // set the task path
-    taskNode.shadowRoot.querySelector('div').setAttribute('data-path', task.task_path)
+    taskNode.shadowRoot.querySelector('div').setAttribute('data-path', task.path)
 
     // fields
     const taskName = document.createElement(ELEMENT_FIELD)
     taskName.setAttribute('slot', SLOT_NAME)
-    taskName.textContent = task.task_name
+    taskName.textContent = task.name
     taskNode.appendChild(taskName)
 
     const taskNote = document.createElement(ELEMENT_FIELD)
     taskNote.setAttribute('slot', SLOT_NOTE)
-    taskNote.textContent = task.task_note
+    taskNote.textContent = task.note
     taskNode.appendChild(taskNote)
 
+    const container = taskNode.shadowRoot.querySelector('div')
+
     // leaf
-    if (!task.task_subs?.length) {
-      taskNode.shadowRoot.querySelector('div').setAttribute('class', CLASS_LEAF)
+    if (!task.subs?.length) {
+      container.setAttribute('class', CLASS_LEAF)
       return taskNode
     }
 
     // branch
-    taskNode.shadowRoot.querySelector('div').setAttribute('class', CLASS_BRANCH)
+    container.setAttribute('class', CLASS_BRANCH)
 
-    const subsLength = task.task_subs.length
+    const subsLength = task.subs.length
     const subsLabel = document.createElement(ELEMENT_LABEL)
-    subsLabel.setAttribute('slot', SLOT_SUBCOUNT)
+    subsLabel.setAttribute('slot', SLOT_TITLE_SUBS)
     subsLabel.textContent = `${TEXT_SUBS} (${subsLength})`
     taskNode.appendChild(subsLabel)
 
-    for (const sub in task.task_subs) {
-      const subTask = this.renderTaskNode(task.task_subs[sub])
+    for (const sub in task.subs) {
+      const subTask = this.renderTaskNode(task.subs[sub])
       subTask.setAttribute('slot', SLOT_SUBS)
 
       taskNode.appendChild(subTask)
     }
 
-    if (task.task_ui.is_open) {
+    if (task.meta.isOpen) {
       taskNode.shadowRoot.querySelector('details').setAttribute('open', '')
     }
 

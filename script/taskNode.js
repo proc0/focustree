@@ -38,9 +38,9 @@ class TaskNode extends HTMLElement {
 
       // since we are deleting this task, get parent task
       const parentTask = this.parentElement.task
-      for (const index in parentTask.task_subs) {
-        if (parentTask.task_subs[index].task_path.join('') === this.task.task_path.join('')) {
-          parentTask.task_subs.splice(index, 1)
+      for (const index in parentTask.subs) {
+        if (parentTask.subs[index].path.join('') === this.task.path.join('')) {
+          parentTask.subs.splice(index, 1)
           break
         }
       }
@@ -54,7 +54,7 @@ class TaskNode extends HTMLElement {
       event.stopPropagation()
       // get the details tag, somehow null open attribute means it is open
       const isOpen = event.currentTarget.parentElement.parentElement.getAttribute('open') === null
-      this.task.task_ui.is_open = isOpen
+      this.task.meta.isOpen = isOpen
       this.dispatch(EVENT_EXPAND, this.task)
     })
   }
@@ -113,12 +113,12 @@ class TaskNode extends HTMLElement {
     // show input in place of field
     const input = document.createElement('input')
     input.setAttribute('type', 'text')
-    input.setAttribute('id', `${slotName}-${this.task.task_path.join('')}`)
+    input.setAttribute('id', `${slotName}-${this.task.path.join('')}`)
     input.setAttribute('value', this.task[fieldName])
     // spawn a save button
     const saveButton = document.createElement('button')
     saveButton.textContent = TEXT_SAVE
-    saveButton.setAttribute('name', 'task-save')
+    saveButton.setAttribute('name', SLOT_SAVE)
     // bind commit on save click
     saveButton.addEventListener('click', this.commit.bind(this))
 
@@ -134,7 +134,7 @@ class TaskNode extends HTMLElement {
 
   getFieldNames(element) {
     const slotName = element.querySelector('slot').getAttribute('name')
-    const fieldName = slotName.replace('-', '_')
+    const fieldName = slotName.split('-')[1]
 
     return { slotName, fieldName }
   }
@@ -153,11 +153,11 @@ class TaskNode extends HTMLElement {
     const { slotName, fieldName } = this.getFieldNames(fieldElement)
 
     const elementQuery = `${ELEMENT_FIELD}[slot="${slotName}"]`
-    const taskPath = event.detail.task.task_path.join('')
+    const taskPath = event.detail.task.path.join('')
     const updateValue = event.detail.task[fieldName]
 
     // only update relevant task as this bubbles up to task-view
-    if (taskPath === this.task.task_path.join('')) {
+    if (taskPath === this.task.path.join('')) {
       event.currentTarget.querySelector(elementQuery).textContent = updateValue
     }
   }

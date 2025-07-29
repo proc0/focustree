@@ -3,7 +3,7 @@ const BASE_VERSION = 1
 const BASE_STORE = 'task'
 
 const MODEL_TASK = {
-  id: 0,
+  id: 1,
   path: [0],
   name: 'Le Task',
   note: 'Lorem Ipsum dolor sit amet.',
@@ -45,7 +45,7 @@ class TaskBase extends HTMLElement {
       })
 
       // TODO: detect if IDB is empty and then seed. Otherwise, call some custom migration or leave WIP
-      const addRequest = taskStore.add(SEED_TASK)
+      const addRequest = taskStore.add(MODEL_TASK)
 
       addRequest.onsuccess = (event) => {
         console.log(`Added task ${event.target.result}`)
@@ -65,18 +65,17 @@ class TaskBase extends HTMLElement {
 
   addRoot() {
     this.store('readwrite', (store) => {
-      const task = structuredClone(NEW_TASK)
+      const task = structuredClone(MODEL_TASK)
       const addRequest = store.add(task)
 
       addRequest.onsuccess = ({ target }) => {
-        const taskId = target.result
-        task.task_id = taskId
+        task.id = target.result
 
-        // another request to save the DB key in task_id
-        const putRequest = store.put(task, task.task_id)
+        // another request to save the DB key in id
+        const putRequest = store.put(task, task.id)
 
         putRequest.onsuccess = () => {
-          console.log(`Added task ${taskId}`)
+          console.log(`Added task ${task.id}`)
           this.dispatchEvent(
             new CustomEvent(EVENT_RENDER, {
               bubbles: true,
@@ -126,10 +125,10 @@ class TaskBase extends HTMLElement {
   delete(event) {
     let node = event.target
     // root task delete
-    if (node.task.task_id) {
+    if (node.task.id) {
       // bubbles up to task view
       return this.store('readwrite', (store) => {
-        const taskKey = node.task.task_id
+        const taskKey = node.task.id
         const deleteRequest = store.delete(taskKey)
 
         deleteRequest.onsuccess = () => {
@@ -157,7 +156,7 @@ class TaskBase extends HTMLElement {
 
     // grab root element
     let root = event.target
-    const pathLength = event.target.task.task_path.length
+    const pathLength = event.target.task.path.length
     if (pathLength > 1) {
       for (let i = 0; i < pathLength - 1; i++) {
         root = root.parentElement
@@ -168,15 +167,15 @@ class TaskBase extends HTMLElement {
     const task = event.detail.task
     if (event.type === EVENT_BRANCH) {
       // create new task and add path
-      const newTask = structuredClone(NEW_TASK)
-      newTask.task_path = [...task.task_path, task.task_subs.length]
-      task.task_subs.push(newTask)
+      const newTask = structuredClone(MODEL_TASK)
+      newTask.path = [...task.path, task.subs.length]
+      task.subs.push(newTask)
       // open drawer
-      task.task_ui.is_open = true
+      task.meta.isOpen = true
     }
 
     this.store('readwrite', (store) => {
-      const putRequest = store.put(root.task, root.task.task_id)
+      const putRequest = store.put(root.task, root.task.id)
 
       putRequest.onsuccess = (success) => {
         console.log(`Updated task ${success.target.result}`)
