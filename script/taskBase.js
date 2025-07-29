@@ -2,8 +2,11 @@ const BASE_NAME = 'taskbase'
 const BASE_VERSION = 1
 const BASE_STORE = 'task'
 
+// TODO: review how to distinguish root
+// from subtasks, should it be a meta prop?
+// what is id useful for in subtasks?
 const MODEL_TASK = {
-  id: 1,
+  // id: 1, (root only)
   path: [0],
   name: 'Le Task',
   note: 'Lorem Ipsum dolor sit amet.',
@@ -44,8 +47,11 @@ class TaskBase extends HTMLElement {
         autoIncrement: true,
       })
 
+      const taskSeed = structuredClone(MODEL_TASK)
+      taskSeed.id = 1
+
       // TODO: detect if IDB is empty and then seed. Otherwise, call some custom migration or leave WIP
-      const addRequest = taskStore.add(MODEL_TASK)
+      const addRequest = taskStore.add(taskSeed)
 
       addRequest.onsuccess = (event) => {
         console.log(`Added task ${event.target.result}`)
@@ -123,7 +129,7 @@ class TaskBase extends HTMLElement {
   }
 
   delete(event) {
-    let node = event.target
+    const node = event.target
     // root task delete
     if (node.task.id) {
       // bubbles up to task view
