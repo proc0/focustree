@@ -59,7 +59,15 @@ ul li slot {
 summary {
   list-style-position: outside;
   padding-left: 10px;
-  background-color: var(--color-background-header);
+  background-image: linear-gradient(
+    90deg,
+    var(--color-background-subtitle),
+    var(--color-background)
+  );
+}
+
+summary:hover {
+  cursor: pointer;
 }
 
 summary::marker {
@@ -69,7 +77,6 @@ summary::marker {
 
 summary header {
   color: var(--color-subtitle);
-  background-image: linear-gradient(90deg, var(--color-background-header), var(--color-background));
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -84,10 +91,6 @@ summary header button {
 
 summary header button:hover {
   color: var(--color-hover-text);
-}
-
-summary:hover {
-  cursor: pointer;
 }
 
 details section {
@@ -122,6 +125,7 @@ details section {
 }
 
 input {
+  appearance: none;
   margin-left: 4px;
   background-color: var(--color-background-input);
   color: var(--color-text);
@@ -161,22 +165,25 @@ button:hover {
 }
 
 ::slotted(select) {
+  appearance: base-select;
   display: inline-block;
-  outline: none; // gets rid of that blue "outline" when you click it. sometimes its desired to have this in, but I prefer to take it out
-  font-family: inherit;
-  line-height: inherit;
-  font-size: inherit;
+  outline: none;
   margin: 0 28px;
+  padding: 4px 8px;
   border: 1px solid black;
   background-color: var(--color-background-select);
   border-color: var(--color-border-select);
   color: var(--color-text);
   cursor: pointer;
+  text-align: center;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.28);
   -moz-transition: all 0.25s ease;
   -o-transition: all 0.25s ease;
   -webkit-transition: all 0.25s ease;
   transition: all 0.25s ease;
+  &::picker(select) {
+    appearance: base-select;
+  }
 }
 
 ::slotted(select:hover) {

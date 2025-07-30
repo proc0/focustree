@@ -1,7 +1,6 @@
 const STATE_TASK = {
-  IDLE: 'idle',
+  DEFINED: 'defined',
   DOING: 'doing',
-  FOCUS: 'focus',
   DONE: 'done',
 }
 

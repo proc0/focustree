@@ -11,7 +11,7 @@ const MODEL_TASK = {
   name: 'Le Task',
   note: 'Lorem Ipsum dolor sit amet.',
   subs: [],
-  state: STATE_TASK.IDLE,
+  state: STATE_TASK.DEFINED,
   meta: {
     isOpen: false,
   },
