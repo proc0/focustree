@@ -9,7 +9,7 @@
     <!-- <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="icon.png" /> -->
-    <meta name="theme-color" content="#fafafa" />
+    <meta name="theme-color" content="dimgray" media="(prefers-color-scheme: dark)" />
     <script src="script/consts.js"></script>
     <script src="script/taskView.js"></script>
     <script src="script/taskBase.js"></script>
@@ -37,7 +37,7 @@
           <summary>
             <header>
               <slot name="title-subs">No subtasks</slot
-              ><button name="task-add" title="Add subtask">+</button>
+              ><button name="task-add" title="Add subtask">＋</button>
             </header>
           </summary>
           <section>
@@ -48,8 +48,9 @@
     </template>
     <main>
       <menu>
-        <li><button id="root-add" title="New task">New</button></li>
-        <li><button id="root-save" title="Save tasks">Save</button></li>
+        <li><button id="root-add" title="New">✚</button></li>
+        <li><button id="root-import" title="Import">🡇</button></li>
+        <li><button id="root-export" title="Export">🡅</button></li>
       </menu>
     </main>
     <script src="script/main.js"></script>

@@ -1,0 +1,181 @@
+/* CSS HEX */
+--old-gold: #c5b026ff;
+--dark-moss-green: #436917ff;
+--avocado: #468518ff;
+--asparagus: #63a05eff;
+--black-olive: #393e38ff;
+--drab-dark-brown: #343706ff;
+--platinum: #dee5e8ff;
+
+/* CSS HSL */
+--old-gold: hsla(52, 68%, 46%, 1);
+--dark-moss-green: hsla(88, 64%, 25%, 1);
+--avocado: hsla(95, 69%, 31%, 1);
+--asparagus: hsla(115, 26%, 50%, 1);
+--black-olive: hsla(110, 5%, 23%, 1);
+--drab-dark-brown: hsla(64, 80%, 12%, 1);
+--platinum: hsla(198, 18%, 89%, 1);
+
+/* SCSS HEX */
+$old-gold: #c5b026ff;
+$dark-moss-green: #436917ff;
+$avocado: #468518ff;
+$asparagus: #63a05eff;
+$black-olive: #393e38ff;
+$drab-dark-brown: #343706ff;
+$platinum: #dee5e8ff;
+
+/* SCSS HSL */
+$old-gold: hsla(52, 68%, 46%, 1);
+$dark-moss-green: hsla(88, 64%, 25%, 1);
+$avocado: hsla(95, 69%, 31%, 1);
+$asparagus: hsla(115, 26%, 50%, 1);
+$black-olive: hsla(110, 5%, 23%, 1);
+$drab-dark-brown: hsla(64, 80%, 12%, 1);
+$platinum: hsla(198, 18%, 89%, 1);
+
+/* SCSS RGB */
+$old-gold: rgba(197, 176, 38, 1);
+$dark-moss-green: rgba(67, 105, 23, 1);
+$avocado: rgba(70, 133, 24, 1);
+$asparagus: rgba(99, 160, 94, 1);
+$black-olive: rgba(57, 62, 56, 1);
+$drab-dark-brown: rgba(52, 55, 6, 1);
+$platinum: rgba(222, 229, 232, 1);
+
+/* CSS HEX */
+--bistre: #331e1aff;
+--avocado: #598208ff;
+--apple-green: #85bf15ff;
+--alice-blue: #e2edf3ff;
+--citrine: #e3cc37ff;
+
+/* CSS HSL */
+--bistre: hsla(10, 32%, 15%, 1);
+--avocado: hsla(80, 88%, 27%, 1);
+--apple-green: hsla(80, 80%, 42%, 1);
+--alice-blue: hsla(201, 41%, 92%, 1);
+--citrine: hsla(52, 75%, 55%, 1);
+
+/* SCSS HEX */
+$bistre: #331e1aff;
+$avocado: #598208ff;
+$apple-green: #85bf15ff;
+$alice-blue: #e2edf3ff;
+$citrine: #e3cc37ff;
+
+/* SCSS HSL */
+$bistre: hsla(10, 32%, 15%, 1);
+$avocado: hsla(80, 88%, 27%, 1);
+$apple-green: hsla(80, 80%, 42%, 1);
+$alice-blue: hsla(201, 41%, 92%, 1);
+$citrine: hsla(52, 75%, 55%, 1);
+
+/* SCSS RGB */
+$bistre: rgba(51, 30, 26, 1);
+$avocado: rgba(89, 130, 8, 1);
+$apple-green: rgba(133, 191, 21, 1);
+$alice-blue: rgba(226, 237, 243, 1);
+$citrine: rgba(227, 204, 55, 1);
+
+/* Color Theme Swatches in Hex */
+.Beautiful-green-mossy-forest-in-sweden-1-hex {
+  color: #274001;
+}
+.Beautiful-green-mossy-forest-in-sweden-2-hex {
+  color: #172601;
+}
+.Beautiful-green-mossy-forest-in-sweden-3-hex {
+  color: #3e5902;
+}
+.Beautiful-green-mossy-forest-in-sweden-4-hex {
+  color: #93a603;
+}
+.Beautiful-green-mossy-forest-in-sweden-5-hex {
+  color: #d2d911;
+}
+
+/* Color Theme Swatches in RGBA */
+.Beautiful-green-mossy-forest-in-sweden-1-rgba {
+  color: rgba(38, 63, 1, 1);
+}
+.Beautiful-green-mossy-forest-in-sweden-2-rgba {
+  color: rgba(23, 38, 0, 1);
+}
+.Beautiful-green-mossy-forest-in-sweden-3-rgba {
+  color: rgba(61, 89, 1, 1);
+}
+.Beautiful-green-mossy-forest-in-sweden-4-rgba {
+  color: rgba(146, 165, 3, 1);
+}
+.Beautiful-green-mossy-forest-in-sweden-5-rgba {
+  color: rgba(210, 216, 17, 1);
+}
+
+/* Color Theme Swatches in HSLA */
+.Beautiful-green-mossy-forest-in-sweden-1-hsla {
+  color: hsla(84, 96, 12, 1);
+}
+.Beautiful-green-mossy-forest-in-sweden-2-hsla {
+  color: hsla(84, 96, 7, 1);
+}
+.Beautiful-green-mossy-forest-in-sweden-3-hsla {
+  color: hsla(78, 96, 17, 1);
+}
+.Beautiful-green-mossy-forest-in-sweden-4-hsla {
+  color: hsla(67, 96, 33, 1);
+}
+.Beautiful-green-mossy-forest-in-sweden-5-hsla {
+  color: hsla(61, 85, 45, 1);
+}
+
+/* Color Theme Swatches in Hex */
+.From-Ashes-to-Life:-the-fireborn-fungus-1-hex {
+  color: #f2ae30;
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-2-hex {
+  color: #f2790f;
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-3-hex {
+  color: #f25c05;
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-4-hex {
+  color: #a62103;
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-5-hex {
+  color: #0d0d0d;
+}
+
+/* Color Theme Swatches in RGBA */
+.From-Ashes-to-Life:-the-fireborn-fungus-1-rgba {
+  color: rgba(242, 174, 48, 1);
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-2-rgba {
+  color: rgba(242, 120, 14, 1);
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-3-rgba {
+  color: rgba(242, 91, 4, 1);
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-4-rgba {
+  color: rgba(165, 33, 3, 1);
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-5-rgba {
+  color: rgba(12, 12, 12, 1);
+}
+
+/* Color Theme Swatches in HSLA */
+.From-Ashes-to-Life:-the-fireborn-fungus-1-hsla {
+  color: hsla(39, 88, 56, 1);
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-2-hsla {
+  color: hsla(28, 89, 50, 1);
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-3-hsla {
+  color: hsla(22, 96, 48, 1);
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-4-hsla {
+  color: hsla(11, 96, 33, 1);
+}
+.From-Ashes-to-Life:-the-fireborn-fungus-5-hsla {
+  color: hsla(0, 0, 5, 1);
+}

@@ -14,9 +14,9 @@ window.onload = () => {
     taskBase.addRoot()
   })
 
-  const rootSaveButton = document.getElementById(ID_ROOT_SAVE)
-  rootSaveButton.addEventListener('click', () => {
-    const rootTasks = document.querySelectorAll('task-base > task-node')
-    console.log(rootTasks)
-  })
+  // const rootSaveButton = document.getElementById(ID_ROOT_SAVE)
+  // rootSaveButton.addEventListener('click', () => {
+  //   const rootTasks = document.querySelectorAll('task-base > task-node')
+  //   console.log(rootTasks)
+  // })
 }

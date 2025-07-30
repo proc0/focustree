@@ -7,12 +7,12 @@ div {
   display: flex;
   flex-direction: column;
   margin-top: 1em;
-  margin-bottom: 0.5em;
 }
 
 details {
-  border-left: 1px solid #181818ff;
-  border-bottom: 3px solid #222222;
+  border-top: 1px solid var(--color-secondary-shadow);
+  border-left: 1px solid var(--color-secondary-shadow);
+  border-bottom: 4px solid var(--color-primary-shadow);
 }
 
 ul {
@@ -28,22 +28,22 @@ ul li {
   margin-left: -28px;
 }
 
-ul li slot {
-  display: inline-block;
-  margin: 0 0.5em;
-}
-
 ul li:first-child slot {
   margin: 0 0.3em;
 }
 
 ul li:first-child {
-  color: #749b08ff;
+  color: var(--color-title);
   font-size: 1.5em;
 }
 
 ul li:first-child input {
-  color: #749b08ff;
+  color: var(--color-title);
+}
+
+ul li slot {
+  display: inline-block;
+  margin: 0 0.5em;
 }
 
 /* subtasks */
@@ -51,15 +51,17 @@ ul li:first-child input {
 summary {
   list-style-position: outside;
   padding-left: 10px;
-  background-color: #222222;
+  background-color: var(--color-background-header);
 }
 
 summary::marker {
-  color: #bababa;
+  color: var(--color-marker);
   font-size: 1em;
 }
 
 summary header {
+  color: var(--color-subtitle);
+  background-image: linear-gradient(90deg, var(--color-background-header), var(--color-background));
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -88,7 +90,7 @@ details section {
 
 .leaf details summary header,
 .leaf details summary header button {
-  color: #5e5e5eff;
+  color: var(--color-disabled-subtitle);
 }
 
 .leaf details summary header button:hover {
@@ -108,8 +110,8 @@ details section {
 
 input {
   margin-left: 4px;
-  background-color: #312a2aff;
-  color: #d0d6c9ff;
+  background-color: var(--color-background-input);
+  color: var(--color-text);
   font-size: 1em;
   min-width: 30%;
 }
@@ -126,14 +128,14 @@ ul li:first-child button {
 
 input:focus {
   outline: none !important;
-  border-top: 2px solid #3b0303ff;
-  border-left: 2px solid #3b0303ff;
-  border-right: 2px solid #b13030ff;
-  border-bottom: 2px solid #b13030ff;
+  border-top: 2px solid var(--color-secondary-shadow);
+  border-left: 2px solid var(--color-secondary-shadow);
+  border-right: 2px solid var(--color-primary-accent);
+  border-bottom: 2px solid var(--color-primary-accent);
 }
 
 button {
-  color: #575757ff;
+  color: var(--color-text-button);
   height: 100%;
   width: 30px;
   padding: 6px 0;
@@ -141,8 +143,8 @@ button {
 }
 
 button:hover {
-  color: #d0d6c9ff;
-  background-color: #5e5e5eff;
+  color: var(--color-text-hover-button);
+  background-color: var(--color-hover-background-button);
 }
 
 ::slotted(select) {
@@ -153,9 +155,9 @@ button:hover {
   font-size: inherit;
   margin: 0 28px;
   border: 1px solid black;
-  background-color: #312a2aff;
-  border-color: #222222;
-  color: #bababa;
+  background-color: var(--color-background-select);
+  border-color: var(--color-border-select);
+  color: var(--color-text);
   cursor: pointer;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.28);
   -moz-transition: all 0.25s ease;
@@ -165,6 +167,6 @@ button:hover {
 }
 
 ::slotted(select:hover) {
-  background-color: #4b4040ff;
-  color: #d3d0d0ff;
+  background-color: var(--color-hover-background-select);
+  color: var(--color-hover-text);
 }

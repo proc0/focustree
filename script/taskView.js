@@ -53,7 +53,6 @@ class TaskView extends HTMLElement {
 
     const taskState = document.createElement('select')
     taskState.setAttribute('slot', SLOT_STATE)
-    taskState.classList.add('ui-select')
     for (const state in STATE_TASK) {
       const option = document.createElement('option')
       option.value = STATE_TASK[state]
