@@ -37,6 +37,14 @@ ul li:first-child {
   font-size: 1.5em;
 }
 
+ul li:first-child button {
+  color: var(--color-text-button);
+}
+
+ul li:first-child button:hover {
+  color: var(--color-hover-text);
+}
+
 ul li:first-child input {
   color: var(--color-title);
 }
@@ -69,8 +77,13 @@ summary header {
 }
 
 summary header button {
-  font-size: 1.2em;
-  margin: 0 8px;
+  color: inherit;
+  font-size: 1.5em;
+  margin-left: 4px;
+}
+
+summary header button:hover {
+  color: var(--color-hover-text);
 }
 
 summary:hover {
