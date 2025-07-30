@@ -10,9 +10,9 @@ div {
 }
 
 details {
-  border-top: 1px solid var(--color-secondary-shadow);
-  border-left: 1px solid var(--color-secondary-shadow);
-  border-bottom: 4px solid var(--color-primary-shadow);
+  border-top: 1px solid var(--color-border-details);
+  border-left: 1px solid var(--color-border-details);
+  border-bottom: 4px solid var(--color-shadow);
 }
 
 ul {
@@ -127,7 +127,7 @@ details section {
 input {
   appearance: none;
   margin-left: 4px;
-  background-color: var(--color-background-input);
+  background-color: inherit;
   color: var(--color-text);
   font-size: 1em;
   min-width: 30%;
@@ -145,10 +145,7 @@ ul li:first-child button {
 
 input:focus {
   outline: none !important;
-  border-top: 2px solid var(--color-secondary-shadow);
-  border-left: 2px solid var(--color-secondary-shadow);
-  border-right: 2px solid var(--color-primary-accent);
-  border-bottom: 2px solid var(--color-primary-accent);
+  border: 2px inset var(--color-focus-input);
 }
 
 button {

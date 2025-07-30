@@ -1,28 +1,6 @@
 @import url('reset.css');
 @import url('global.css');
-
-:root {
-   --color-background: #222222;
-   --color-text: #B7C6CD;
-   --color-title: #598208ff;
-   --color-subtitle: #63a05eff;
-   --color-disabled-subtitle: #8b978aff;
-   --color-background-subtitle: #393e38ff;
-   --color-marker: #63a05eff;
-   --color-background-input: #312a2aff;
-   --color-text-button: #6d6d6dff;
-   --color-hover-background-button: #4b4040ff;
-   --color-background-select: #312a2aff;
-   --color-hover-background-select: #4b4040ff;
-   --color-border-select: #312a2aff;
-   --color-hover-text: #bababa;
-   --color-primary-accent: #A62103;  
-   --color-secondary-accent: #93A603;
-   --color-primary-shadow: #0b0e09ff;
-   --color-secondary-shadow: #474747ff;
-   --color-highlight: #c5b026ff;
-   --color-highlight-text: black;
-}
+@import url('theme.css');
 
 html {
   font-family: sans-serif;
@@ -91,13 +69,13 @@ select option:checked {
 
 select:focus {
   background-color: var(--color-highlight) !important;
-  color: var(--color-primary-shadow);
+  color: var(--color-shadow);
   font-weight: bold;
 }
 
 select option:hover {
   background: var(--color-highlight) !important;
-  color: var(--color-primary-shadow);
+  color: var(--color-shadow);
 }
 
 /* main task-base {
