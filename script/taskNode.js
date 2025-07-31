@@ -3,6 +3,7 @@ const QUERY_SUBS_HEADER = 'details summary header'
 const QUERY_BUTTON_ADD = 'button[name="task-add"]'
 const QUERY_BUTTON_EDIT = 'button[name="task-edit"]'
 const QUERY_BUTTON_DELETE = 'button[name="task-delete"]'
+const QUERY_SELECT_STATE = 'slot[name="task-state"]'
 
 class TaskNode extends HTMLElement {
   constructor() {
@@ -50,6 +51,12 @@ class TaskNode extends HTMLElement {
 
       // dispatch parent task to render
       this.dispatch(EVENT_DELETE, parentTask)
+    })
+
+    this.shadowRoot.querySelector(QUERY_SELECT_STATE).addEventListener('change', (event) => {
+      event.stopPropagation()
+      this.task.state.current = Number(event.target.value)
+      this.dispatch(EVENT_STATES, this.task)
     })
 
     // open and close subtasks drawer

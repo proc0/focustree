@@ -8,13 +8,17 @@ const BASE_STORE = 'task'
 const MODEL_TASK = {
   // id: 1, (root only)
   path: [0],
-  name: 'Le Task',
-  note: 'Lorem Ipsum dolor sit amet.',
-  subs: [],
-  state: STATE_TASK.DEFINED,
   meta: {
     isOpen: false,
   },
+  name: 'Le Task',
+  note: 'Lorem Ipsum dolor sit amet.',
+  state: {
+    options: STATES_TASK,
+    current: 0,
+    history: [],
+  },
+  subs: [],
 }
 
 class TaskBase extends HTMLElement {
@@ -62,7 +66,7 @@ class TaskBase extends HTMLElement {
       }
     }
 
-    const saveEvents = [EVENT_BRANCH, EVENT_UPDATE, EVENT_EXPAND]
+    const saveEvents = [EVENT_BRANCH, EVENT_UPDATE, EVENT_EXPAND, EVENT_STATES]
     saveEvents.forEach((eventName) => {
       this.addEventListener(eventName, this.save.bind(this))
     })

@@ -53,16 +53,16 @@ class TaskView extends HTMLElement {
 
     const taskState = document.createElement('select')
     taskState.setAttribute('slot', SLOT_STATE)
-    for (const state in STATE_TASK) {
+    task.state.options.forEach((state, index) => {
       const option = document.createElement('option')
-      option.value = STATE_TASK[state]
-      option.textContent = STATE_TASK[state]
+      option.value = index
+      option.textContent = state
       taskState.appendChild(option)
-      if (STATE_TASK[state] === task.state) {
+      if (index === task.state.current) {
         option.setAttribute('selected', '')
+        taskState.value = index
       }
-    }
-    taskState.value = task.state
+    })
     taskNode.appendChild(taskState)
 
     const container = taskNode.shadowRoot.querySelector('div')
