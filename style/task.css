@@ -6,7 +6,7 @@
 div {
   display: flex;
   flex-direction: column;
-  padding-top: 15px;
+  /* border-bottom: 1px solid #222222; */
 }
 
 details {
@@ -20,16 +20,19 @@ details {
 
   & summary {
     border-bottom: none;
-    box-shadow: 0px 20px 30px var(--color-shadow);
+    box-shadow: none;
   }
 
   &[open] section {
     box-shadow: -20px -5px 30px var(--color-shadow);
+    border-bottom: none;
   }
 }
 
 ul {
   margin-bottom: 8px;
+  margin-top: 1em;
+  margin-left: 0.5em;
 }
 
 ul li {
@@ -72,7 +75,8 @@ summary:hover {
 
 summary::marker {
   color: var(--color-marker);
-  font-size: 1em;
+  font-size: 0.8em;
+  display: flex;
 }
 
 summary header {
@@ -82,6 +86,7 @@ summary header {
   flex-direction: row;
   height: 30px;
   justify-content: flex-start;
+  padding-left: 0.5em;
 }
 
 summary header button {
