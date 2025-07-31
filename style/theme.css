@@ -18,6 +18,7 @@
     --color-highlight-text: black;
 
     --color-text-button: #6d6d6dff;
+    --color-hover-text-button: var(--color-text);
     --color-hover-background-button: #4b4040ff;
 
     --color-background-select: #312a2aff;
@@ -48,6 +49,7 @@
     --color-highlight-text: color(display-p3 0 0 0);
 
     --color-text-button: #6d6d6dff;
+    --color-hover-text-button: var(--color-text);
     --color-hover-background-button: #4b4040ff;
 
     --color-background-select: #312a2aff;
@@ -55,7 +57,7 @@
     --color-hover-background-select: #4b4040ff;
     --color-focus-select: color(display-p3 0.2296 0.2668 0.2166);
 
-    --color-shadow: color(display-p3 0 0 0);
+    --color-shadow: color(display-p3 0 0 0 / 70%);
   }
 }
 

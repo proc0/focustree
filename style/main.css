@@ -3,53 +3,89 @@
 @import url('theme.css');
 
 html {
-  font-family: Tahoma, sans-serif;
   background-color: var(--color-background);
   color: var(--color-text);
+  font-family: Tahoma, sans-serif;
   font-size: 1.1em;
   line-height: 1em;
+  width: 100%;
 }
 
+/* main task-base {
+  display: inline-grid;
+  grid-template-columns: auto auto auto auto;
+}
+
+task-base task-node {
+  margin: 20px;
+} */
+
 main {
-  padding: 2em;
+  padding: 42px;
+  width: 100%;
+}
+
+task-view, task-base {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+task-view {
+  margin-top: 30px;
+}
+
+task-base > task-node {
+  display: flex;
+  margin-bottom: 30px;
 }
 
 main menu {
+  align-items: center;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  margin: 0;
   padding: 0;
-  margin: 12px;
 }
 
 main menu li {
+  display: flex;
   list-style: none;
-  margin-right: 0.5em;
+  
+  &:nth-child(2) {
+    margin-right: 12px;
+    margin-left: auto;
+  }
 }
+
 
 main menu button {
   color: var(--color-text-button);
-  padding: 6px;
   font-size: 2em;
-}
+  padding: 6px 8px;
 
-main menu button:hover {
-  color: var(--color-hover-text);
-  background-color: var(--color-hover-background-button);
-}
+  &:hover {
+    color: var(--color-hover-text);
+    background-color: var(--color-hover-background-button);
+  }
 
-button#root-import {
-  border-color: var(--color-text-button);
-  border-bottom: 4px solid;
-  padding-top: 20px;
-  line-height: 15px;
-}
+  &#root-add {
+    border-radius: 5px;
+  }
 
-button#root-export {
-  border-color: var(--color-text-button);
-  border-top: 4px solid;
-  padding-bottom: 20px;
-  line-height: 15px;
+  &#root-import {
+    border-bottom: 4px solid;
+    border-radius: 5px 5px 0 0;
+    line-height: 15px;
+    padding-top: 20px;
+  }
+
+  &#root-export {
+    border-top: 4px solid;
+    border-radius: 0 0 5px 5px;
+    line-height: 15px;
+    padding-bottom: 20px;
+  }
 }
 
 ::selection {
@@ -64,66 +100,59 @@ button#root-export {
 
 select {
   appearance: base-select;
-  display: inline-block;
-  outline: none;
-  margin: 8px 0 0 28px;
-  padding: 4px 8px;
-  border: 1px solid black;
   background-color: var(--color-background-select);
+  border: 1px solid black;
   border-color: var(--color-border-select);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.28);
   color: var(--color-text);
   cursor: pointer;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.28);
+  display: inline-block;
+  margin: 8px 0 0 28px;
+  outline: none;
+  padding: 4px 8px;
+  transition: all 0.25s ease;
   -moz-transition: all 0.25s ease;
   -o-transition: all 0.25s ease;
   -webkit-transition: all 0.25s ease;
-  transition: all 0.25s ease;
+
   &::picker(select) {
     appearance: base-select;
   }
-}
 
-select:hover {
-  background-color: var(--color-hover-background-select);
-  color: var(--color-hover-text);
+  &:hover {
+    background-color: var(--color-hover-background-select);
+    color: var(--color-hover-text);
+  }
+
+  &:focus {
+    background-color: var(--color-focus-select);
+    /* color: var(--color-shadow); */
+    font-weight: bold;
+  }
 }
 
 select option {
   background-color: var(--color-background-select);
   color: var(--color-text);
-  text-align: left;
   font-weight: normal;
+  text-align: left;
+
+  &:hover {
+    background: var(--color-highlight);
+    color: var(--color-shadow);
+  }
+  
   &::checkmark {
     display: none;
   }
-}
 
-select option:checked {
-  font-weight: bold;
-  &::checkmark {
-    display: none;
+  &:checked {
+    font-weight: bold;
+    &::checkmark {
+      display: none;
+    }
   }
 }
-
-select:focus {
-  background-color: var(--color-focus-select);
-  /* color: var(--color-shadow); */
-  font-weight: bold;
-}
-
-select option:hover {
-  background: var(--color-highlight) !important;
-  color: var(--color-shadow);
-}
-
-/* main task-base {
-  display: inline-grid;
-  grid-template-columns: auto auto auto auto;
-}
-
-task-base task-node {
-  margin: 20px;
-} */
 
 .fade-in {
   opacity: 1;
