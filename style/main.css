@@ -3,7 +3,7 @@
 @import url('theme.css');
 
 html {
-  font-family: sans-serif;
+  font-family: Tahoma, sans-serif;
   background-color: var(--color-background);
   color: var(--color-text);
   font-size: 1.1em;
@@ -29,20 +29,27 @@ main menu li {
 
 main menu button {
   color: var(--color-text-button);
-  padding-bottom: 0.1em;
+  padding: 6px;
   font-size: 2em;
+}
+
+main menu button:hover {
+  color: var(--color-hover-text);
+  background-color: var(--color-hover-background-button);
 }
 
 button#root-import {
   border-color: var(--color-text-button);
   border-bottom: 4px solid;
-  line-height: 20px;
+  padding-top: 20px;
+  line-height: 15px;
 }
 
 button#root-export {
   border-color: var(--color-text-button);
   border-top: 4px solid;
-  line-height: 30px;
+  padding-bottom: 20px;
+  line-height: 15px;
 }
 
 ::selection {
@@ -55,21 +62,52 @@ button#root-export {
   color: var(--color-highlight-text);
 }
 
+select {
+  appearance: base-select;
+  display: inline-block;
+  outline: none;
+  margin: 8px 0 0 28px;
+  padding: 4px 8px;
+  border: 1px solid black;
+  background-color: var(--color-background-select);
+  border-color: var(--color-border-select);
+  color: var(--color-text);
+  cursor: pointer;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.28);
+  -moz-transition: all 0.25s ease;
+  -o-transition: all 0.25s ease;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+  &::picker(select) {
+    appearance: base-select;
+  }
+}
+
+select:hover {
+  background-color: var(--color-hover-background-select);
+  color: var(--color-hover-text);
+}
+
 select option {
   background-color: var(--color-background-select);
   color: var(--color-text);
-  margin: 2px 0 8px 0;
   text-align: left;
   font-weight: normal;
+  &::checkmark {
+    display: none;
+  }
 }
 
 select option:checked {
   font-weight: bold;
+  &::checkmark {
+    display: none;
+  }
 }
 
 select:focus {
-  background-color: var(--color-highlight) !important;
-  color: var(--color-shadow);
+  background-color: var(--color-focus-select);
+  /* color: var(--color-shadow); */
   font-weight: bold;
 }
 

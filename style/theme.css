@@ -1,13 +1,12 @@
 /* color picker: https://css.land/lch/ */
 @media (color-gamut: srgb) {
   :root {
-    --color-background: lch(4.328% 15.498 59.084); /* rgb(9.67% 4.76% 0%) */
+    --color-background: lch(3.328% 52.498 59.084); /* rgb(8.1% 3.7% 0%) */
     --color-title: lch(64.476% 50.595 137.834); /* rgb(37.75% 68.01% 36.04%) */
     --color-text: lch(81.88% 6.85 238.527); /* rgb(75.4% 80.76% 84.04%) */
     --color-hover-text: #bababa;
     --color-accent: lch(49.777% 104.661 127.681); /* rgb(22.7% 52.84% 0%) */
 
-    --color-background-subtitle: lch(27.574% 10.353 137.362); /* rgb(22.02% 26.82% 21.19%) */
     --color-subtitle: lch(64.476% 50.595 137.834); /* rgb(37.75% 68.01% 36.04%) */
     --color-marker: lch(64.476% 50.595 137.834); /* rgb(37.75% 68.01% 36.04%) */
     --color-disabled-subtitle: lch(57.195% 19.312 140.162); /* rgb(45.68% 56.69% 45.08%) */
@@ -24,24 +23,24 @@
     --color-background-select: #312a2aff;
     --color-border-select: #312a2aff;
     --color-hover-background-select: #4b4040ff;
+    --color-focus-select: lch(27.574% 10.353 137.362); /* rgb(22.02% 26.82% 21.19%) */
 
-    --color-shadow: #0b0e09ff;
+    --color-shadow: black;
   }
 }
 
 @media (color-gamut: p3) {
   :root {
-    --color-background: color(display-p3 0.0922 0.0489 0);
+    --color-background: color(display-p3 0.077 0.0381 0);
     --color-title: color(display-p3 0.4509 0.6728 0.3954);
     --color-text: color(display-p3 0.7639 0.8059 0.8367);
     --color-hover-text: #bababa;
     --color-accent: color(display-p3 0.2382 0.5344 0);
 
-    --color-background-subtitle: color(display-p3 0.2296 0.2668 0.2166);
     --color-subtitle: color(display-p3 0.4509 0.6728 0.3954);
     --color-marker: color(display-p3 0.4509 0.6728 0.3954);
     --color-disabled-subtitle: color(display-p3 0.4787 0.5637 0.4606);
-    --color-border-details: #474747ff;
+    --color-border-details: var(--color-accent);
 
     --color-focus-input: color(display-p3 0.8104 0.7367 0.1571 / 57%);
 
@@ -54,8 +53,9 @@
     --color-background-select: #312a2aff;
     --color-border-select: #312a2aff;
     --color-hover-background-select: #4b4040ff;
+    --color-focus-select: color(display-p3 0.2296 0.2668 0.2166);
 
-    --color-shadow: #0b0e09ff;
+    --color-shadow: color(display-p3 0 0 0);
   }
 }
 

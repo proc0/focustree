@@ -10,9 +10,10 @@ div {
 }
 
 details {
-  border-top: 1px solid var(--color-border-details);
-  border-left: 1px solid var(--color-border-details);
-  border-bottom: 4px solid var(--color-shadow);
+  border-radius: 19px;
+  &[open] summary {
+    border-bottom: 1px solid var(--color-border-details);
+  }
 }
 
 ul {
@@ -28,13 +29,13 @@ ul li {
   margin-left: -28px;
 }
 
-ul li:first-child slot {
-  margin: 0 0.3em;
-}
-
 ul li:first-child {
   color: var(--color-title);
   font-size: 1.5em;
+}
+
+ul li:first-child slot {
+  margin: 0 0.3em;
 }
 
 ul li:first-child button {
@@ -59,11 +60,6 @@ ul li slot {
 summary {
   list-style-position: outside;
   padding-left: 10px;
-  background-image: linear-gradient(
-    90deg,
-    var(--color-background-subtitle),
-    var(--color-background)
-  );
 }
 
 summary:hover {
@@ -76,6 +72,7 @@ summary::marker {
 }
 
 summary header {
+  height: 30px;
   color: var(--color-subtitle);
   display: flex;
   flex-direction: row;
@@ -84,9 +81,12 @@ summary header {
 }
 
 summary header button {
+  display: flex;
   color: inherit;
   font-size: 1.5em;
   margin-left: 4px;
+  align-items: center;
+  justify-content: center;
 }
 
 summary header button:hover {
@@ -129,6 +129,7 @@ input {
   margin-left: 4px;
   background-color: inherit;
   color: var(--color-text);
+  font-family: inherit;
   font-size: 1em;
   min-width: 30%;
 }
@@ -154,36 +155,10 @@ button {
   width: 30px;
   padding: 6px 0;
   font-size: 90%;
+  border-radius: 5px;
 }
 
 button:hover {
   color: var(--color-text-hover-button);
   background-color: var(--color-hover-background-button);
-}
-
-::slotted(select) {
-  appearance: base-select;
-  display: inline-block;
-  outline: none;
-  margin: 0 28px;
-  padding: 4px 8px;
-  border: 1px solid black;
-  background-color: var(--color-background-select);
-  border-color: var(--color-border-select);
-  color: var(--color-text);
-  cursor: pointer;
-  text-align: center;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.28);
-  -moz-transition: all 0.25s ease;
-  -o-transition: all 0.25s ease;
-  -webkit-transition: all 0.25s ease;
-  transition: all 0.25s ease;
-  &::picker(select) {
-    appearance: base-select;
-  }
-}
-
-::slotted(select:hover) {
-  background-color: var(--color-hover-background-select);
-  color: var(--color-hover-text);
 }
