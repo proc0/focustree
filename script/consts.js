@@ -11,13 +11,16 @@ const EVENT_BRANCH = 'branch'
 const EVENT_DELETE = 'delete'
 const EVENT_EXPAND = 'expand'
 const EVENT_STATES = 'states'
-const EVENT_MODE = 'mode'
+const EVENT_FOCUS = 'focus'
 
-const TEMPLATE_NODE = 'task-template'
+const TEMPLATE_NODE = 'template-task'
+const TEMPLATE_FOCUS = 'template-focus'
 // custom element names
 const ELEMENT_NODE = 'task-node'
 const ELEMENT_BASE = 'task-base'
 const ELEMENT_VIEW = 'task-view'
+const ELEMENT_FOCUS = 'task-focus'
+// html elements
 const ELEMENT_FIELD = 'span'
 const ELEMENT_LABEL = 'span'
 // slot names, should match html

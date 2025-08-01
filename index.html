@@ -16,7 +16,7 @@
     <script src="script/taskNode.js"></script>
   </head>
   <body>
-    <template id="task-template">
+    <template id="template-task">
       <link rel="stylesheet" href="style/task.css" />
       <div>
         <ul>
@@ -46,6 +46,17 @@
           </section>
         </details>
       </div>
+    </template>
+    <template id="template-focus">
+      <link rel="stylesheet" href="style/focus.css" />
+
+      <dialog open>
+        <slot name="task-name"></slot>
+        <button name="task-done">Done</button>
+        <form method="dialog">
+          <button>OK</button>
+        </form>
+      </dialog>
     </template>
     <main>
       <menu>

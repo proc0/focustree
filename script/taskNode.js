@@ -4,6 +4,7 @@ const QUERY_BUTTON_ADD = 'button[name="task-add"]'
 const QUERY_BUTTON_EDIT = 'button[name="task-edit"]'
 const QUERY_BUTTON_DELETE = 'button[name="task-delete"]'
 const QUERY_SELECT_STATE = 'slot[name="task-state"]'
+const QUERY_SELECT_FOCUS = 'button[name="task-focus"]'
 
 class TaskNode extends HTMLElement {
   constructor() {
@@ -53,6 +54,13 @@ class TaskNode extends HTMLElement {
       this.dispatch(EVENT_DELETE, parentTask)
     })
 
+    this.shadowRoot.querySelector(QUERY_SELECT_FOCUS).addEventListener('click', (event) => {
+      event.stopPropagation()
+
+      this.dispatch(EVENT_FOCUS, this.task)
+    })
+
+    // state change
     this.shadowRoot.querySelector(QUERY_SELECT_STATE).addEventListener('change', (event) => {
       event.stopPropagation()
       this.task.state.current = Number(event.target.value)

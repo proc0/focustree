@@ -14,9 +14,10 @@ const MODEL_TASK = {
   name: 'Le Task',
   note: 'Lorem Ipsum dolor sit amet.',
   state: {
-    options: STATES_TASK,
     current: 0,
+    focused: false,
     history: [],
+    options: STATES_TASK,
   },
   subs: [],
 }
