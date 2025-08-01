@@ -6,7 +6,7 @@ html {
   background-color: var(--color-background);
   color: var(--color-text);
   font-family: Tahoma, sans-serif;
-  font-size: 1.1em;
+  font-size: 1em;
   line-height: 1em;
   width: 100%;
 }
@@ -28,16 +28,21 @@ main {
 task-view, task-base {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  margin: auto;
+}
+
+task-base {
+  min-width: 44%;
 }
 
 task-view {
-  margin-top: 30px;
+  margin: 30px 0;
+  width: 100%;
 }
 
 task-base > task-node {
   display: flex;
-  margin-bottom: 30px;
+  margin-bottom: 1em;
 }
 
 main menu {

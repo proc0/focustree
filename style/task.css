@@ -10,8 +10,7 @@ div {
 }
 
 details {
-  border-radius: 19px;
-  margin-left: 30px;
+  margin-left: 2.2em;
 
   &[open] summary {
     border-bottom: 1px solid var(--color-border-details);
@@ -19,7 +18,6 @@ details {
 }
 
 ul {
-  margin-bottom: 8px;
   margin-top: 1em;
   margin-left: 0.5em;
 }
@@ -33,7 +31,6 @@ ul li {
 ul li:first-child :not(button) {
   color: var(--color-title);
   font-size: 1.5em;
-  line-height: 1.5em;
 }
 
 ul li:first-child button {
@@ -45,11 +42,13 @@ ul li:first-child button {
 }
 
 ul li:first-child button:last-child {
-  margin-left: 4px;
+  padding: 0.3em 0.5em;
+  margin-left: 0.4em;
 }
 
 ul li:first-child input {
   color: var(--color-title);
+  line-height: 1em;
 }
 
 /* subtasks */
@@ -64,7 +63,7 @@ summary:hover {
 
 summary::marker {
   color: var(--color-marker);
-  font-size: 0.8em;
+  font-size: 1em;
   display: flex;
 }
 
@@ -73,18 +72,15 @@ summary header {
   color: var(--color-subtitle);
   display: flex;
   flex-direction: row;
-  height: 30px;
+  height: 2em;
   justify-content: flex-start;
-  padding-left: 0.5em;
 }
 
 summary header button {
   display: flex;
   color: inherit;
   font-size: 1.5em;
-  margin-left: 4px;
-  align-items: center;
-  justify-content: center;
+  margin-left: 0.2em;
 }
 
 summary header button:hover {
@@ -124,7 +120,7 @@ details section {
 }
 
 input {
-  appearance: none;
+  appearance: base-select;
   background-color: inherit;
   color: var(--color-text);
   font-family: inherit;
@@ -137,15 +133,14 @@ input:focus {
 }
 
 button {
-  border-radius: 5px;
+  border-radius: 0.2em;
   color: var(--color-text-button);
   display: flex;
   font-size: 1em;
   height: 100%;
   place-items: center;
   place-content: center;
-  padding: 6px 0;
-  width: 30px;
+  padding: 0.3em;
 }
 
 button:hover {
