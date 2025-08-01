@@ -9,6 +9,10 @@ div {
   /* border-bottom: 1px solid #222222; */
 }
 
+div.focused ul {
+  background-color: var(--color-highlight);
+}
+
 details {
   margin-left: 2.2em;
 

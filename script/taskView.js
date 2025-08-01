@@ -94,15 +94,29 @@ class TaskView extends HTMLElement {
         const prevTask = this.querySelector('task-node[data-focused]')
         // const nextTask = this.focusTree[this.currentFocus]
         if (!nextTask) {
-          nextTask = this.querySelector('task-node[data-focused]').nextSibling
+          nextTask = prevTask.nextSibling
           if (!nextTask) {
-            const parentTask = this.querySelector('task-node[data-focused]').parentElement
+            let focusedTask = prevTask
+            while (!nextTask) {
+              const parentTask = focusedTask.parentElement
 
-            if (parentTask === taskElement) {
-              focusDialog.remove()
-              return
+              if (
+                !parentTask ||
+                parentTask.task.path.toString() === taskElement.task.path.toString()
+              ) {
+                prevTask.task.state.focused = false
+                prevTask.dispatch(EVENT_STATES, prevTask.task)
+                focusDialog.remove()
+                return
+              }
+
+              nextTask = parentTask.nextSibling
+              if (!nextTask) {
+                focusedTask = parentTask
+                focusedTask.task.state.focused = false
+                focusedTask.dispatch(EVENT_STATES, focusedTask.task)
+              }
             }
-            nextTask = parentTask.nextSibling
           }
         }
         // const parentTask = nextTask.parentElement
@@ -111,6 +125,8 @@ class TaskView extends HTMLElement {
 
         nextTask.task.state.current = 1
         nextTask.task.state.focused = true
+        nextTask.focus()
+        nextTask.scrollIntoView()
         nextTask.dispatch(EVENT_STATES, nextTask.task)
         this.deepFocus(nextTask.task)
       } else {
@@ -122,7 +138,7 @@ class TaskView extends HTMLElement {
       // }
     })
 
-    this.append(focusDialog)
+    this.prepend(focusDialog)
   }
 
   render({ detail, target }) {
@@ -177,6 +193,7 @@ class TaskView extends HTMLElement {
 
     if (task.state.focused) {
       taskNode.setAttribute('data-focused', '')
+      taskNode.shadowRoot.querySelector('div').classList.add('focused')
     }
 
     const container = taskNode.shadowRoot.querySelector('div')

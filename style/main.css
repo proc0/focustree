@@ -163,6 +163,14 @@ select option {
   }
 }
 
+dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* margin: auto; */
+}
+
+
 .fade-in {
   opacity: 1;
   animation-name: OpacityFadeIn;
