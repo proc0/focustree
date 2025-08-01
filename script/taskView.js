@@ -69,14 +69,12 @@ class TaskView extends HTMLElement {
 
     // leaf
     if (!task.subs?.length) {
-      taskNode.setAttribute('class', CLASS_LEAF)
-
-      container.setAttribute('class', CLASS_LEAF)
+      container.classList.add(CLASS_LEAF)
       return taskNode
     }
 
     // branch
-    container.setAttribute('class', CLASS_BRANCH)
+    container.classList.add(CLASS_BRANCH)
 
     const subsLength = task.subs.length
     const subsLabel = document.createElement(ELEMENT_LABEL)
