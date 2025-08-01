@@ -14,9 +14,12 @@ window.onload = () => {
     taskBase.addRoot()
   })
 
-  // const rootSaveButton = document.getElementById(ID_ROOT_SAVE)
-  // rootSaveButton.addEventListener('click', () => {
-  //   const rootTasks = document.querySelectorAll('task-base > task-node')
-  //   console.log(rootTasks)
-  // })
+  const rootExport = document.getElementById(ID_ROOT_EXPORT)
+  rootExport.addEventListener(
+    'click',
+    () => {
+      console.log('exporting')
+    },
+    { once: true }
+  )
 }

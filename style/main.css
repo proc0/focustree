@@ -51,7 +51,7 @@ main menu {
 main menu li {
   display: flex;
   list-style: none;
-  
+
   &:nth-child(2) {
     margin-right: 12px;
     margin-left: auto;
@@ -67,6 +67,10 @@ main menu button {
   &:hover {
     color: var(--color-hover-text);
     background-color: var(--color-hover-background-button);
+  }
+
+  &:active {
+    color: var(--color-highlight);
   }
 
   &#root-add {
@@ -107,7 +111,7 @@ select {
   color: var(--color-text);
   cursor: pointer;
   display: inline-block;
-  margin: 8px 0 0 28px;
+  margin: 8px 0;
   outline: none;
   padding: 4px 8px;
   transition: all 0.25s ease;

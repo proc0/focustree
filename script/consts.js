@@ -2,7 +2,8 @@ const STATES_TASK = ['defined', 'doing', 'done']
 
 // main menu
 const ID_ROOT_ADD = 'root-add'
-const ID_ROOT_SAVE = 'root-save'
+const ID_ROOT_IMPORT = 'root-import'
+const ID_ROOT_EXPORT = 'root-export'
 // global events
 const EVENT_RENDER = 'render'
 const EVENT_UPDATE = 'update'
@@ -10,6 +11,7 @@ const EVENT_BRANCH = 'branch'
 const EVENT_DELETE = 'delete'
 const EVENT_EXPAND = 'expand'
 const EVENT_STATES = 'states'
+const EVENT_MODE = 'mode'
 
 const TEMPLATE_NODE = 'task-template'
 // custom element names
