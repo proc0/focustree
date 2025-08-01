@@ -69,6 +69,8 @@ class TaskView extends HTMLElement {
 
     // leaf
     if (!task.subs?.length) {
+      taskNode.setAttribute('class', CLASS_LEAF)
+
       container.setAttribute('class', CLASS_LEAF)
       return taskNode
     }

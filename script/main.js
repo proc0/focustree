@@ -14,9 +14,16 @@ window.onload = () => {
     taskBase.addRoot()
   })
 
-  // const rootSaveButton = document.getElementById(ID_ROOT_SAVE)
-  // rootSaveButton.addEventListener('click', () => {
-  //   const rootTasks = document.querySelectorAll('task-base > task-node')
-  //   console.log(rootTasks)
-  // })
+  const rootEditButton = document.getElementById(ID_ROOT_EDIT)
+  rootEditButton.addEventListener('click', () => {
+    const rootTasks = document.querySelectorAll('task-node.leaf')
+    rootTasks.forEach((task) => {
+      task.dispatchEvent(
+        new CustomEvent(EVENT_MODE, {
+          detail: { mode: 'edit' },
+          bubbles: true,
+        })
+      )
+    })
+  })
 }

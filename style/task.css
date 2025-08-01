@@ -15,17 +15,6 @@ details {
 
   &[open] summary {
     border-bottom: 1px solid var(--color-border-details);
-    box-shadow: none;
-  }
-
-  & summary {
-    border-bottom: none;
-    box-shadow: none;
-  }
-
-  &[open] section {
-    box-shadow: -20px -5px 30px var(--color-shadow);
-    border-bottom: none;
   }
 }
 

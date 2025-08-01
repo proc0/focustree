@@ -13,6 +13,10 @@ class TaskNode extends HTMLElement {
       document.getElementById(TEMPLATE_NODE).content.cloneNode(true)
     )
 
+    this.addEventListener(EVENT_MODE, (event) => {
+      console.log(event.detail, event.currentTarget)
+    })
+
     // click event for editing task fields
     this.shadowRoot.querySelectorAll(QUERY_SLOT_FIELD).forEach((slot) => {
       const editButton = slot.parentElement.querySelector(QUERY_BUTTON_EDIT)

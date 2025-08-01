@@ -184,6 +184,14 @@ class TaskBase extends HTMLElement {
       task.meta.isOpen = true
     }
 
+    if (event.type === EVENT_STATES) {
+      const stateChange = {
+        state: task.state.current,
+        time: Date.now(),
+      }
+      task.state.history.push(stateChange)
+    }
+
     this.store('readwrite', (store) => {
       const putRequest = store.put(root.task, root.task.id)
 
