@@ -52,7 +52,7 @@ main menu li {
   display: flex;
   list-style: none;
 
-  &:nth-child(4) {
+  &:nth-child(2) {
     margin-right: 12px;
     margin-left: auto;
   }
@@ -72,8 +72,8 @@ main menu button {
   &:active {
     color: var(--color-highlight);
   }
-  
-  &#root-add, &#root-focus, &#root-edit {
+
+  &#root-add {
     border-radius: 5px;
   }
 
@@ -111,7 +111,7 @@ select {
   color: var(--color-text);
   cursor: pointer;
   display: inline-block;
-  margin: 8px 0 0 28px;
+  margin: 8px 0;
   outline: none;
   padding: 4px 8px;
   transition: all 0.25s ease;

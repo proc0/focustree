@@ -14,16 +14,12 @@ window.onload = () => {
     taskBase.addRoot()
   })
 
-  const rootEditButton = document.getElementById(ID_ROOT_EDIT)
-  rootEditButton.addEventListener('click', () => {
-    const rootTasks = document.querySelectorAll('task-node.leaf')
-    rootTasks.forEach((task) => {
-      task.dispatchEvent(
-        new CustomEvent(EVENT_MODE, {
-          detail: { mode: 'edit' },
-          bubbles: true,
-        })
-      )
-    })
-  })
+  const rootExport = document.getElementById(ID_ROOT_EXPORT)
+  rootExport.addEventListener(
+    'click',
+    () => {
+      console.log('exporting')
+    },
+    { once: true }
+  )
 }

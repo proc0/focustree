@@ -2,7 +2,8 @@ const STATES_TASK = ['defined', 'doing', 'done']
 
 // main menu
 const ID_ROOT_ADD = 'root-add'
-const ID_ROOT_EDIT = 'root-edit'
+const ID_ROOT_IMPORT = 'root-import'
+const ID_ROOT_EXPORT = 'root-export'
 // global events
 const EVENT_RENDER = 'render'
 const EVENT_UPDATE = 'update'
