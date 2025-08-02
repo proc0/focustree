@@ -9,6 +9,8 @@ const QUERY_SELECT_FOCUS = 'button[name="task-focus"]'
 class TaskNode extends HTMLElement {
   constructor() {
     super()
+    this.equals.bind(this)
+    this.dispatch.bind(this)
 
     this.attachShadow({ mode: 'open' }).appendChild(
       document.getElementById(TEMPLATE_NODE).content.cloneNode(true)
@@ -148,6 +150,10 @@ class TaskNode extends HTMLElement {
     })
 
     input.focus()
+  }
+
+  equals(node) {
+    return node.task && this.task.path.toString() === node.task.path.toString()
   }
 
   getFieldNames(element) {

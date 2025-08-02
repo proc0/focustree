@@ -170,6 +170,14 @@ dialog {
   /* margin: auto; */
 }
 
+::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 1;
+  animation-name: OpacityFadeIn;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.25s;
+}
 
 .fade-in {
   opacity: 1;

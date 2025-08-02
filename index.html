@@ -50,12 +50,21 @@
     <template id="template-focus">
       <link rel="stylesheet" href="style/focus.css" />
 
-      <dialog open>
-        <slot name="task-name"></slot>
-        <button name="task-done">Done</button>
-        <form method="dialog">
-          <button>OK</button>
-        </form>
+      <dialog>
+        <header>
+          <h1>Focus</h1>
+          <slot name="task-name"></slot>
+        </header>
+        <menu>
+          <li>
+            <button name="task-done">Done</button>
+          </li>
+          <li>
+            <form method="dialog">
+              <button name="task-pause">Pause</button>
+            </form>
+          </li>
+        </menu>
       </dialog>
     </template>
     <main>

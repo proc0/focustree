@@ -6,6 +6,9 @@ window.onload = () => {
 
   const taskView = document.createElement(ELEMENT_VIEW)
   const taskBase = document.createElement(ELEMENT_BASE)
+  const focusTemplate = document.getElementById(TEMPLATE_FOCUS).content.cloneNode(true)
+  const dialog = focusTemplate.querySelector('dialog')
+  taskView.prepend(dialog)
 
   taskView.appendChild(taskBase)
   document.querySelector('main').appendChild(taskView)

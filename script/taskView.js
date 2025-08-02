@@ -4,7 +4,6 @@ const CLASS_LEAF = 'leaf'
 class TaskView extends HTMLElement {
   constructor() {
     super()
-    this.isDeepFocus = false
     this.addEventListener(EVENT_RENDER, this.render.bind(this))
     this.addEventListener(EVENT_DELETE, this.delete.bind(this))
     this.addEventListener(EVENT_FOCUS, this.focus.bind(this))
@@ -17,109 +16,119 @@ class TaskView extends HTMLElement {
     }
   }
 
-  deepFocus(task) {
-    const dialog = this.querySelector('dialog')
-
-    dialog.querySelector('[slot="task-name"').textContent = task.name
-  }
-
   focus(event) {
-    const focusTemplate = document.getElementById(TEMPLATE_FOCUS).content.cloneNode(true)
-    const focusDialog = focusTemplate.querySelector('dialog')
-    const taskElement = event.target
-    const task = event.detail.task
-
-    const taskName = document.createElement(ELEMENT_FIELD)
-    taskName.setAttribute('slot', SLOT_NAME)
-    taskName.textContent = task.name
-    focusDialog.appendChild(taskName)
+    // const focusTemplate = document.getElementById(TEMPLATE_FOCUS).content.cloneNode(true)
+    const dialog = this.querySelector('dialog')
+    // this.prepend(dialog)
+    dialog.showModal()
 
     // escape
-    focusDialog.addEventListener('keyup', (event) => {
-      event.preventDefault()
+    dialog.addEventListener('keyup', (e) => {
+      e.stopPropagation()
 
-      if (event.key === 'Escape') {
-        focusDialog.remove()
+      if (e.key === 'Escape') {
+        const currentTask = this.querySelector('task-node[data-focused]')
+        currentTask.task.state.focused = false
+        currentTask.dispatch(EVENT_STATES, currentTask.task)
+        dialog.close()
       }
     })
+    // pause
+    dialog.querySelector('button[name="task-pause"]').addEventListener('click', (e) => {
+      e.stopPropagation()
+      const currentTask = this.querySelector('task-node[data-focused]')
+      currentTask.task.state.focused = false
+      currentTask.dispatch(EVENT_STATES, currentTask.task)
+      dialog.close()
+    })
 
-    this.isDeepFocus = false
-    // update focused task
+    const initialTask = event.target
+    const task = event.detail.task
+
+    this.renderFocus(task)
+
+    // update initial focused task
     task.state.current = 1
     task.state.focused = true
-    taskElement.dispatch(EVENT_STATES, task)
-    focusDialog.querySelector('[name="task-done"]').addEventListener('click', (event) => {
-      if (this.isDeepFocus) {
-        let nextTask = this.querySelector('task-node[data-focused] > task-node')
-        const prevTask = this.querySelector('task-node[data-focused]')
+    initialTask.dispatch(EVENT_STATES, task)
+    // on done button click
+    dialog.querySelector('button[name="task-done"]').addEventListener('click', (e) => {
+      e.stopImmediatePropagation()
+      const currentTask = this.querySelector('task-node[data-focused]')
 
-        // no subtasks
+      // no subtasks and this is the initial task
+      if (!currentTask.querySelector('task-node') && currentTask.equals(initialTask)) {
+        // cleanup focus
+        currentTask.task.state.focused = false
+        currentTask.dispatch(EVENT_STATES, currentTask.task)
+        dialog.close()
+        return
+      }
+
+      let nextTask = this.querySelector('task-node[data-focused] > task-node')
+
+      // no subtasks
+      if (!nextTask) {
+        nextTask = currentTask.nextSibling
+
+        //no sibling task
         if (!nextTask) {
-          nextTask = prevTask.nextSibling
+          let visitedTask = currentTask
 
-          //no sibling task
-          if (!nextTask) {
-            let visitedTask = prevTask
+          // find next uncle task
+          while (!nextTask) {
+            const parentTask = visitedTask.parentElement
 
-            // find next uncle task
-            while (!nextTask) {
-              const parentTask = visitedTask.parentElement
+            // root task or initial focused task
+            if (
+              !parentTask ||
+              parentTask.tagName === ELEMENT_BASE.toUpperCase() ||
+              parentTask.equals(initialTask)
+            ) {
+              // cleanup currently focused task
+              currentTask.task.state.focused = false
+              currentTask.dispatch(EVENT_STATES, currentTask.task)
+              dialog.close()
+              return
+            }
+            // uncle task
+            nextTask = parentTask.nextSibling
 
-              // root task or initial focused task
-              if (
-                !parentTask ||
-                parentTask.task.path.toString() === taskElement.task.path.toString()
-              ) {
-                prevTask.task.state.focused = false
-                prevTask.dispatch(EVENT_STATES, prevTask.task)
-                focusDialog.remove()
-                return
-              }
-              // uncle task
-              nextTask = parentTask.nextSibling
-              // if no uncle task, recurse and look in grandparent task
-              if (!nextTask) {
-                visitedTask = parentTask
-                // update visited task
-                visitedTask.task.state.focused = false
-                visitedTask.dispatch(EVENT_STATES, visitedTask.task)
-              }
+            if (nextTask && nextTask.parentElement.tagName === ELEMENT_BASE.toUpperCase()) {
+              return
+            }
+            // if no uncle task, recurse and look in grandparent task
+            if (!nextTask) {
+              visitedTask = parentTask
+              // cleanup visited task
+              visitedTask.task.state.focused = false
+              visitedTask.dispatch(EVENT_STATES, visitedTask.task)
             }
           }
         }
-        // cleanup previous task
-        prevTask.task.state.focused = false
-        prevTask.dispatch(EVENT_STATES, prevTask.task)
-
-        // update focused task
-        nextTask.task.state.current = 1
-        nextTask.task.state.focused = true
-        // meta focus
-        nextTask.focus()
-        nextTask.scrollIntoView()
-        nextTask.dispatch(EVENT_STATES, nextTask.task)
-        this.deepFocus(nextTask.task)
-      } else {
-        const currentTask = this.querySelector('task-node[data-focused]')
-
-        if (!currentTask.querySelector('task-node')) {
-          // cleanup focus
-          currentTask.task.state.focused = false
-          currentTask.dispatch(EVENT_STATES, currentTask.task)
-          focusDialog.remove()
-          return
-        } else {
-          this.isDeepFocus = true
-        }
       }
-    })
+      // cleanup currently focused task
+      currentTask.task.state.focused = false
+      currentTask.dispatch(EVENT_STATES, currentTask.task)
 
-    this.prepend(focusDialog)
+      // update next focused task
+      nextTask.task.state.current = 1
+      nextTask.task.state.focused = true
+      nextTask.dispatch(EVENT_STATES, nextTask.task)
+      // UI focus
+      nextTask.focus()
+      nextTask.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'center',
+      })
+      this.renderFocus(nextTask.task)
+    })
   }
 
   render({ detail, target }) {
     const task = detail.task
-    const taskNode = this.renderTaskNode(task)
+    const taskNode = this.renderTask(task)
 
     // root add event does not have node to replace
     if (task.id && !detail?.node) {
@@ -133,7 +142,20 @@ class TaskView extends HTMLElement {
     detail.node.replaceWith(taskNode)
   }
 
-  renderTaskNode(task) {
+  renderFocus(task) {
+    const dialog = this.querySelector('dialog')
+
+    dialog.querySelector(`${ELEMENT_FIELD}[slot="${SLOT_NAME}"]`)?.remove()
+
+    const taskName = document.createElement(ELEMENT_FIELD)
+    taskName.setAttribute('slot', SLOT_NAME)
+    taskName.textContent = task.name
+    dialog.querySelector('header').appendChild(taskName)
+
+    dialog.querySelector(`[slot="${SLOT_NAME}"]`).textContent = task.name
+  }
+
+  renderTask(task) {
     const taskNode = document.createElement(ELEMENT_NODE)
     taskNode.task = task
     // fade in tasks, prevents FOUC
@@ -190,7 +212,7 @@ class TaskView extends HTMLElement {
     taskNode.appendChild(subsLabel)
 
     for (const sub in task.subs) {
-      const subTask = this.renderTaskNode(task.subs[sub])
+      const subTask = this.renderTask(task.subs[sub])
       subTask.setAttribute('slot', SLOT_SUBS)
 
       taskNode.appendChild(subTask)
