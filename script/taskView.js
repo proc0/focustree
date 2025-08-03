@@ -4,6 +4,7 @@ const CLASS_LEAF = 'leaf'
 class TaskView extends HTMLElement {
   constructor() {
     super()
+    this.focusTree = null
     this.addEventListener(EVENT_RENDER, this.render.bind(this))
     this.addEventListener(EVENT_DELETE, this.delete.bind(this))
     this.addEventListener(EVENT_FOCUS, this.focus.bind(this))
@@ -44,76 +45,71 @@ class TaskView extends HTMLElement {
 
     const initialTask = event.target
     const task = event.detail.task
-
-    this.renderFocus(task)
-
+    this.focusTree = initialTask
     // update initial focused task
     task.state.current = 1
     task.state.focused = true
+    task.meta.isOpen = true
     initialTask.dispatch(EVENT_STATES, task)
+    initialTask.focus()
+    initialTask.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'center',
+    })
+
+    this.renderFocus(task)
     // on done button click
     dialog.querySelector('button[name="task-done"]').addEventListener('click', (e) => {
       e.stopImmediatePropagation()
       const currentTask = this.querySelector('task-node[data-focused]')
+      let nextTask = currentTask.querySelector('task-node')
 
-      // no subtasks and this is the initial task
-      if (!currentTask.querySelector('task-node') && currentTask.equals(initialTask)) {
-        // cleanup focus
-        currentTask.task.state.focused = false
-        currentTask.dispatch(EVENT_STATES, currentTask.task)
-        dialog.close()
-        return
-      }
-
-      let nextTask = this.querySelector('task-node[data-focused] > task-node')
-
-      // no subtasks
-      if (!nextTask) {
-        nextTask = currentTask.nextSibling
-
-        //no sibling task
-        if (!nextTask) {
-          let visitedTask = currentTask
-
-          // find next uncle task
-          while (!nextTask) {
-            const parentTask = visitedTask.parentElement
-
-            // root task or initial focused task
-            if (
-              !parentTask ||
-              parentTask.tagName === ELEMENT_BASE.toUpperCase() ||
-              parentTask.equals(initialTask)
-            ) {
-              // cleanup currently focused task
-              currentTask.task.state.focused = false
-              currentTask.dispatch(EVENT_STATES, currentTask.task)
-              dialog.close()
-              return
-            }
-            // uncle task
-            nextTask = parentTask.nextSibling
-
-            if (nextTask && nextTask.parentElement.tagName === ELEMENT_BASE.toUpperCase()) {
-              return
-            }
-            // if no uncle task, recurse and look in grandparent task
-            if (!nextTask) {
-              visitedTask = parentTask
-              // cleanup visited task
-              visitedTask.task.state.focused = false
-              visitedTask.dispatch(EVENT_STATES, visitedTask.task)
-            }
-          }
-        }
-      }
-      // cleanup currently focused task
+      // blur task
       currentTask.task.state.focused = false
       currentTask.dispatch(EVENT_STATES, currentTask.task)
+
+      // leaf task
+      if (!nextTask) {
+        // next subtask
+        nextTask = currentTask.nextSibling
+        let parentTask = currentTask.parentElement
+
+        // task with no subtasks or root task
+        if (
+          (!nextTask && currentTask.equals(this.focusTree)) ||
+          parentTask?.tagName === ELEMENT_BASE.toUpperCase() ||
+          parentTask?.equals(this.focusTree)
+        ) {
+          dialog.close()
+          return
+        }
+
+        // if the parent is not the initial focus task
+        if (!nextTask && !parentTask?.equals(this.focusTree)) {
+          // get uncle task
+          nextTask = parentTask.nextSibling
+        }
+
+        // find the next ancestor uncle task that is not initial focus task
+        while (!nextTask) {
+          parentTask = parentTask.parentElement
+          const uncleTask = parentTask.nextSibling
+
+          if (parentTask && parentTask.equals(this.focusTree)) {
+            dialog.close()
+            return
+          }
+
+          nextTask = uncleTask
+        }
+      }
 
       // update next focused task
       nextTask.task.state.current = 1
       nextTask.task.state.focused = true
+      nextTask.task.meta.isOpen = true
+
       nextTask.dispatch(EVENT_STATES, nextTask.task)
       // UI focus
       nextTask.focus()
