@@ -75,7 +75,7 @@ class TaskView extends HTMLElement {
         nextTask = currentTask.nextSibling
         let parentTask = currentTask.parentElement
 
-        // task with no subtasks or root task
+        // quit if no subtasks or root task
         if (
           (!nextTask && currentTask.equals(this.focusTree)) ||
           parentTask?.tagName === ELEMENT_BASE.toUpperCase() ||
@@ -85,17 +85,18 @@ class TaskView extends HTMLElement {
           return
         }
 
-        // if the parent is not the initial focus task
+        // check parent is not the initial focus task
         if (!nextTask && !parentTask?.equals(this.focusTree)) {
           // get uncle task
           nextTask = parentTask.nextSibling
         }
 
-        // find the next ancestor uncle task that is not initial focus task
+        // find the next ancestor uncle task
         while (!nextTask) {
           parentTask = parentTask.parentElement
           const uncleTask = parentTask.nextSibling
 
+          // quit if parent is the initial focus task
           if (parentTask && parentTask.equals(this.focusTree)) {
             dialog.close()
             return
