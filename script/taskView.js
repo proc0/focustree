@@ -23,7 +23,7 @@ class TaskView extends HTMLElement {
 
   focus(event) {
     const dialog = this.querySelector('dialog')
-
+    // clear task names
     dialog.querySelectorAll('h2').forEach((taskName) => taskName.remove())
 
     dialog.showModal()
@@ -58,7 +58,7 @@ class TaskView extends HTMLElement {
 
     // focus complete task
     dialog.querySelector(QUERY_FOCUS_DONE).addEventListener('click', (e) => {
-      e.stopImmediatePropagation()
+      e.stopPropagation()
 
       const currentTask = this.querySelector(QUERY_FOCUS_NODE)
       // DFS - get first subtask
@@ -68,7 +68,7 @@ class TaskView extends HTMLElement {
 
       // no subtasks
       if (!nextTask) {
-        // current focus ~ leaf task
+        // focus level ~ leaf task
         let parentTask = currentTask.parentElement
 
         // current task is initial focus (no more subtasks left)
@@ -81,13 +81,10 @@ class TaskView extends HTMLElement {
         nextTask = currentTask.nextSibling
         // no adjacent tasks
         if (!nextTask) {
-          // current focus ~ singleton leaf task
-          if (
-            // parent task is the initial focus (last subtask of the branch)
-            parentTask.equals(this.focusTree) ||
-            // parent task is a root task
-            parentTask.isRoot()
-          ) {
+          // focus level ~ singleton leaf task
+          // parent task is the initial focus (last subtask of the branch)
+          // or parent task is a root task
+          if (parentTask.equals(this.focusTree) || parentTask.isRoot()) {
             return dialog.close()
           }
           // try uncle task
@@ -95,16 +92,15 @@ class TaskView extends HTMLElement {
         }
 
         // no direct uncle task
-        // current focus ~ deep leaf task
+        // focus level ~ deep leaf task
         while (!nextTask) {
           // find the next valid ancestor task
           parentTask = parentTask.parentElement
-
           // quit if visited ancestor is the initial focus task
           if (parentTask.equals(this.focusTree)) {
             return dialog.close()
           }
-
+          // valid ancestor relative found
           nextTask = parentTask.nextSibling
         }
       }
@@ -132,15 +128,11 @@ class TaskView extends HTMLElement {
 
   renderFocus(task) {
     const dialog = this.querySelector('dialog')
-
-    // dialog.querySelector(`${ELEMENT_FIELD}[slot="${SLOT_NAME}"]`)?.remove()
-
+    // add task name
     const taskName = document.createElement('h2')
     taskName.setAttribute('slot', SLOT_NAME)
     taskName.textContent = task.name
     dialog.querySelector('header').appendChild(taskName)
-
-    // dialog.querySelector(`[slot="${SLOT_NAME}"]`).textContent = task.name
   }
 
   renderTask(task) {
