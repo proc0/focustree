@@ -167,7 +167,7 @@ class TaskNode extends HTMLElement {
     this.task.meta.isOpen = true
     this.dispatch(EVENT_STATES, this.task)
 
-    this.focus()
+    // this.focus()
     this.scrollIntoView({
       behavior: 'smooth',
       block: 'center',

@@ -1,6 +1,10 @@
 const CLASS_BRANCH = 'branch'
 const CLASS_LEAF = 'leaf'
 
+const QUERY_FOCUS_NODE = 'task-node[data-focused]'
+const QUERY_FOCUS_DONE = 'button[name="task-done"]'
+const QUERY_FOCUS_PAUSE = 'button[name="task-pause"]'
+
 class TaskView extends HTMLElement {
   constructor() {
     super()
@@ -19,27 +23,11 @@ class TaskView extends HTMLElement {
 
   focus(event) {
     const dialog = this.querySelector('dialog')
+
+    dialog.querySelectorAll('h2').forEach((taskName) => taskName.remove())
+
     dialog.showModal()
-
-    // escape
-    dialog.addEventListener('keyup', (e) => {
-      e.stopPropagation()
-
-      if (e.key === 'Escape') {
-        const currentTask = this.querySelector('task-node[data-focused]')
-        currentTask.task.state.focused = false
-        currentTask.dispatch(EVENT_STATES, currentTask.task)
-        dialog.close()
-      }
-    })
-    // pause
-    dialog.querySelector('button[name="task-pause"]').addEventListener('click', (e) => {
-      e.stopPropagation()
-      const currentTask = this.querySelector('task-node[data-focused]')
-      currentTask.task.state.focused = false
-      currentTask.dispatch(EVENT_STATES, currentTask.task)
-      dialog.close()
-    })
+    dialog.focus()
 
     const initialTask = event.target
     // save initial task
@@ -47,14 +35,34 @@ class TaskView extends HTMLElement {
 
     initialTask.focusTask()
     this.renderFocus(initialTask.task)
+  }
 
-    // on done button click
-    dialog.querySelector('button[name="task-done"]').addEventListener('click', (e) => {
+  init() {
+    const dialog = document
+      .getElementById(TEMPLATE_FOCUS)
+      .content.cloneNode(true)
+      .querySelector('dialog')
+    this.prepend(dialog)
+
+    // focus exit
+    dialog.addEventListener('close', (e) => {
+      const currentTask = this.querySelector(QUERY_FOCUS_NODE)
+      currentTask.blurTask()
+    })
+
+    // focus exit
+    dialog.querySelector(QUERY_FOCUS_PAUSE).addEventListener('click', (e) => {
+      e.stopPropagation()
+      dialog.close()
+    })
+
+    // focus complete task
+    dialog.querySelector(QUERY_FOCUS_DONE).addEventListener('click', (e) => {
       e.stopImmediatePropagation()
 
-      const currentTask = this.querySelector('task-node[data-focused]')
+      const currentTask = this.querySelector(QUERY_FOCUS_NODE)
       // DFS - get first subtask
-      let nextTask = currentTask.querySelector('task-node')
+      let nextTask = currentTask.querySelector(ELEMENT_NODE)
 
       currentTask.blurTask()
 
@@ -122,14 +130,14 @@ class TaskView extends HTMLElement {
   renderFocus(task) {
     const dialog = this.querySelector('dialog')
 
-    dialog.querySelector(`${ELEMENT_FIELD}[slot="${SLOT_NAME}"]`)?.remove()
+    // dialog.querySelector(`${ELEMENT_FIELD}[slot="${SLOT_NAME}"]`)?.remove()
 
-    const taskName = document.createElement(ELEMENT_FIELD)
+    const taskName = document.createElement('h2')
     taskName.setAttribute('slot', SLOT_NAME)
     taskName.textContent = task.name
     dialog.querySelector('header').appendChild(taskName)
 
-    dialog.querySelector(`[slot="${SLOT_NAME}"]`).textContent = task.name
+    // dialog.querySelector(`[slot="${SLOT_NAME}"]`).textContent = task.name
   }
 
   renderTask(task) {
