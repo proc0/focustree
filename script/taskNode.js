@@ -79,6 +79,11 @@ class TaskNode extends HTMLElement {
     })
   }
 
+  blurTask() {
+    this.task.state.focused = false
+    this.dispatch(EVENT_STATES, this.task)
+  }
+
   commit(event) {
     event.stopPropagation()
     // current button is save
@@ -156,6 +161,20 @@ class TaskNode extends HTMLElement {
     return node.task && this.task.path.toString() === node.task.path.toString()
   }
 
+  focusTask() {
+    this.task.state.current = 1
+    this.task.state.focused = true
+    this.task.meta.isOpen = true
+    this.dispatch(EVENT_STATES, this.task)
+
+    this.focus()
+    this.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'center',
+    })
+  }
+
   getFieldNames(element) {
     const slotName = element.querySelector('slot').getAttribute('name')
     const fieldName = slotName.split('-')[1]
@@ -170,6 +189,10 @@ class TaskNode extends HTMLElement {
     const deleteButton = taskField.querySelector(QUERY_BUTTON_DELETE)
 
     return { slotName, fieldName, currentButton, deleteButton, taskField }
+  }
+
+  isRoot() {
+    return this.parentElement.tagName === ELEMENT_BASE.toUpperCase()
   }
 
   update(event) {

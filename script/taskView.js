@@ -18,9 +18,7 @@ class TaskView extends HTMLElement {
   }
 
   focus(event) {
-    // const focusTemplate = document.getElementById(TEMPLATE_FOCUS).content.cloneNode(true)
     const dialog = this.querySelector('dialog')
-    // this.prepend(dialog)
     dialog.showModal()
 
     // escape
@@ -44,81 +42,63 @@ class TaskView extends HTMLElement {
     })
 
     const initialTask = event.target
-    const task = event.detail.task
+    // save initial task
     this.focusTree = initialTask
-    // update initial focused task
-    task.state.current = 1
-    task.state.focused = true
-    task.meta.isOpen = true
-    initialTask.dispatch(EVENT_STATES, task)
-    initialTask.focus()
-    initialTask.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-      inline: 'center',
-    })
 
-    this.renderFocus(task)
+    initialTask.focusTask()
+    this.renderFocus(initialTask.task)
+
     // on done button click
     dialog.querySelector('button[name="task-done"]').addEventListener('click', (e) => {
       e.stopImmediatePropagation()
+
       const currentTask = this.querySelector('task-node[data-focused]')
+      // DFS - get first subtask
       let nextTask = currentTask.querySelector('task-node')
 
-      // blur task
-      currentTask.task.state.focused = false
-      currentTask.dispatch(EVENT_STATES, currentTask.task)
+      currentTask.blurTask()
 
-      // leaf task
+      // no subtasks
       if (!nextTask) {
-        // next subtask
+        // current focus ~ leaf task
+        // try adjacent task
         nextTask = currentTask.nextSibling
         let parentTask = currentTask.parentElement
 
-        // quit if no subtasks or root task
-        if (
-          (!nextTask && currentTask.equals(this.focusTree)) ||
-          parentTask?.tagName === ELEMENT_BASE.toUpperCase() ||
-          parentTask?.equals(this.focusTree)
-        ) {
-          dialog.close()
-          return
-        }
-
-        // check parent is not the initial focus task
-        if (!nextTask && !parentTask?.equals(this.focusTree)) {
-          // get uncle task
+        // no adjacent tasks
+        if (!nextTask) {
+          // current focus ~ singleton leaf task
+          // quit tree walk when current focus is:
+          // root task with no subtasks
+          // initial focus task (no more subtasks left)
+          // last subtask of the initial focus task
+          if (
+            currentTask.isRoot() ||
+            currentTask.equals(this.focusTree) ||
+            parentTask.equals(this.focusTree)
+          ) {
+            return dialog.close()
+          }
+          // try uncle task
           nextTask = parentTask.nextSibling
         }
 
-        // find the next ancestor uncle task
+        // no direct uncle task
+        // current focus ~ deep leaf task
         while (!nextTask) {
+          // find the next valid ancestor task
           parentTask = parentTask.parentElement
-          const uncleTask = parentTask.nextSibling
 
-          // quit if parent is the initial focus task
-          if (parentTask && parentTask.equals(this.focusTree)) {
-            dialog.close()
-            return
+          // quit if visited ancestor is the initial focus task
+          if (parentTask.equals(this.focusTree)) {
+            return dialog.close()
           }
 
-          nextTask = uncleTask
+          nextTask = parentTask.nextSibling
         }
       }
 
-      // update next focused task
-      nextTask.task.state.current = 1
-      nextTask.task.state.focused = true
-      nextTask.task.meta.isOpen = true
-
-      nextTask.dispatch(EVENT_STATES, nextTask.task)
-      // UI focus
-      nextTask.focus()
-      nextTask.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'center',
-      })
+      nextTask.focusTask()
       this.renderFocus(nextTask.task)
     })
   }
