@@ -1,0 +1,65 @@
+::selection {
+  background-color: var(--color-highlight);
+  color: var(--color-highlight-text);
+}
+
+::-moz-selection {
+  background-color: var(--color-highlight);
+  color: var(--color-highlight-text);
+}
+
+select {
+  appearance: base-select;
+  background-color: var(--color-background-select);
+  border: 1px solid black;
+  border-color: var(--color-border-select);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.28);
+  color: var(--color-text);
+  cursor: pointer;
+  display: inline-block;
+  margin: 8px 0;
+  outline: none;
+  padding: 4px 8px;
+  transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  -o-transition: all 0.25s ease;
+  -webkit-transition: all 0.25s ease;
+
+  &::picker(select) {
+    appearance: base-select;
+  }
+
+  &:hover {
+    background-color: var(--color-hover-background-select);
+    color: var(--color-hover-text);
+  }
+
+  &:focus {
+    background-color: var(--color-focus-select);
+    /* color: var(--color-shadow); */
+    font-weight: bold;
+  }
+}
+
+select option {
+  background-color: var(--color-background-select);
+  color: var(--color-text);
+  font-weight: normal;
+  text-align: left;
+
+  &:hover {
+    background: var(--color-highlight);
+    color: var(--color-shadow);
+  }
+
+  &::checkmark {
+    display: none;
+  }
+
+  &:checked {
+    font-weight: bold;
+    &::checkmark {
+      display: none;
+    }
+  }
+}

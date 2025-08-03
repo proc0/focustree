@@ -143,8 +143,6 @@ class TaskView extends HTMLElement {
   renderTask(task) {
     const taskNode = document.createElement(ELEMENT_NODE)
     taskNode.task = task
-    // fade in tasks, prevents FOUC
-    taskNode.classList.add('fade-in')
 
     // set the task path
     taskNode.shadowRoot.querySelector('div').setAttribute('data-path', task.path)

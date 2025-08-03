@@ -1,24 +1,14 @@
-@import url('global-reset.css');
-@import url('global.css');
+@import url('shared.css');
 
-/* main task */
+/* Main task */
 
 div {
   display: flex;
   flex-direction: column;
-  /* border-bottom: 1px solid #222222; */
-}
 
-div.focused ul {
-  background-color: var(--color-highlight);
-  color: var(--color-shadow) !important;
-}
-
-details {
-  margin-left: 2.2em;
-
-  &[open] summary {
-    border-bottom: 1px solid var(--color-border-details);
+  &.focused ul {
+    background-color: var(--color-highlight);
+    color: var(--color-shadow) !important;
   }
 }
 
@@ -33,91 +23,91 @@ ul li {
   align-items: center;
 }
 
-ul li:first-child :not(button) {
-  color: var(--color-title);
-  font-size: 1.5em;
-}
+/* Task title */
+ul li:first-child {
+  & :not(button) {
+    color: var(--color-title);
+    font-size: 1.5em;
+  }
 
-ul li:first-child button {
-  color: var(--color-text-button);
+  & button {
+    color: var(--color-text-button);
 
-  &:hover {
-    color: var(--color-hover-text);
+    &:hover {
+      color: var(--color-hover-text);
+    }
+  }
+
+  & button:last-child {
+    padding: 0.3em 0.5em;
+    margin-left: 0.4em;
+  }
+
+  & input {
+    color: var(--color-title);
+    line-height: 1em;
   }
 }
 
-ul li:first-child button:last-child {
-  padding: 0.3em 0.5em;
-  margin-left: 0.4em;
+/* Subtasks */
+
+details {
+  margin-left: 2.2em;
+
+  &[open] summary {
+    border-bottom: 1px solid var(--color-border-details);
+  }
 }
 
-ul li:first-child input {
-  color: var(--color-title);
-  line-height: 1em;
-}
-
-/* subtasks */
-
-summary {
+details summary {
   list-style-position: outside;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &::marker {
+    color: var(--color-marker);
+    font-size: 1em;
+    display: flex;
+  }
 }
 
-summary:hover {
-  cursor: pointer;
-}
-
-summary::marker {
-  color: var(--color-marker);
-  font-size: 1em;
-  display: flex;
-}
-
-summary header {
+details summary header {
   align-items: center;
   color: var(--color-subtitle);
   display: flex;
   flex-direction: row;
   height: 2em;
   justify-content: flex-start;
-}
 
-summary header button {
-  display: flex;
-  color: inherit;
-  font-size: 1.5em;
-  margin-left: 0.2em;
-}
-
-summary header button:hover {
-  color: var(--color-hover-text);
+  & button {
+    font-size: 1.5em;
+    margin-left: 0.2em;
+  }
 }
 
 details section {
   font-size: 92%;
 }
 
-/* leaf subtasks */
+/* Leaf subtasks */
 
 .leaf details summary {
   list-style: none;
   box-shadow: none;
   border: none;
+
+  &:hover {
+    cursor: auto;
+  }
+
+  & header {
+    color: var(--color-disabled-subtitle);
+  }
 }
 
-.leaf details summary header,
-.leaf details summary header button {
-  color: var(--color-disabled-subtitle);
-}
-
-.leaf details summary header button:hover {
-  color: white;
-}
-
-.leaf details summary:hover {
-  cursor: auto;
-}
-
-/* interactions */
+/* Interactive elements */
 
 .hidden {
   display: inline;
@@ -130,11 +120,11 @@ input {
   color: var(--color-text);
   font-family: inherit;
   font-size: inherit;
-}
 
-input:focus {
-  outline: none !important;
-  border: 2px inset var(--color-focus-input);
+  &:focus {
+    outline: none !important;
+    border: 2px inset var(--color-focus-input);
+  }
 }
 
 button {
@@ -146,9 +136,9 @@ button {
   place-items: center;
   place-content: center;
   padding: 0.3em;
-}
 
-button:hover {
-  color: var(--color-hover-text-button);
-  background-color: var(--color-hover-background-button);
+  &:hover {
+    color: var(--color-hover-text-button);
+    background-color: var(--color-hover-background-button);
+  }
 }

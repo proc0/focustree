@@ -1,4 +1,6 @@
-/* reset */
+/* shared styles for both main document and shadow elements */
+
+/* Reset */
 
 ul,
 ul li {
@@ -7,10 +9,10 @@ ul li {
   padding: 0;
 }
 
-/* remove default styles from button */
 button {
   border: none;
   background: none;
+  cursor: pointer;
   margin: 0;
   padding: 0;
   user-select: none;

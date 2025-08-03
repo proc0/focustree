@@ -1,4 +1,4 @@
-@import url('global-reset.css');
+/* Reset rules for main document */
 
 /* Box sizing rules */
 *,
@@ -24,7 +24,8 @@ p,
 figure,
 blockquote,
 dl,
-dd {
+dd,
+main {
   margin-block-end: 0;
 }
 
@@ -43,7 +44,7 @@ h4,
 button,
 input,
 label {
-  line-height: 1.1;
+  line-height: 1;
 }
 
 /* Balance text wrapping on headings */

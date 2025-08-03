@@ -1,0 +1,38 @@
+dialog {
+  background: transparent;
+  border: none;
+  color: var(--color-accent);
+  margin-top: 2em;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  transform: translateY(0);
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out,
+    overlay 0.25s ease-out allow-discrete, display 0.25s ease-out allow-discrete;
+  width: 50%;
+}
+
+/* Open state of the dialog  */
+dialog:open {
+  opacity: 1;
+  transform: translateY(1em);
+}
+
+/* Before open state  */
+/* Needs to be after the previous dialog:open rule to take effect,
+    as the specificity is the same */
+@starting-style {
+  dialog:open {
+    opacity: 0;
+    transform: translateY(0);
+  }
+}
+
+::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 1;
+  animation-name: OpacityFadeIn;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.25s;
+}
