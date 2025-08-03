@@ -45,7 +45,7 @@ class TaskView extends HTMLElement {
     this.prepend(dialog)
 
     // focus exit
-    dialog.addEventListener('close', (e) => {
+    dialog.addEventListener('close', () => {
       const currentTask = this.querySelector(QUERY_FOCUS_NODE)
       currentTask.blurTask()
     })
@@ -69,21 +69,24 @@ class TaskView extends HTMLElement {
       // no subtasks
       if (!nextTask) {
         // current focus ~ leaf task
-        // try adjacent task
-        nextTask = currentTask.nextSibling
         let parentTask = currentTask.parentElement
 
+        // current task is initial focus (no more subtasks left)
+        // or current task is a root task with no subtasks
+        if (currentTask.equals(this.focusTree) || currentTask.isRoot()) {
+          return dialog.close()
+        }
+
+        // try adjacent task
+        nextTask = currentTask.nextSibling
         // no adjacent tasks
         if (!nextTask) {
           // current focus ~ singleton leaf task
-          // quit tree walk when current focus is:
-          // root task with no subtasks
-          // initial focus task (no more subtasks left)
-          // last subtask of the initial focus task
           if (
-            currentTask.isRoot() ||
-            currentTask.equals(this.focusTree) ||
-            parentTask.equals(this.focusTree)
+            // parent task is the initial focus (last subtask of the branch)
+            parentTask.equals(this.focusTree) ||
+            // parent task is a root task
+            parentTask.isRoot()
           ) {
             return dialog.close()
           }
