@@ -2,13 +2,10 @@ window.onload = () => {
   customElements.define(ELEMENT_NODE, TaskNode)
   customElements.define(ELEMENT_BASE, TaskBase)
   customElements.define(ELEMENT_VIEW, TaskView)
-  // customElements.define(ELEMENT_FOCUS, TaskView)
 
   const taskView = document.createElement(ELEMENT_VIEW)
   const taskBase = document.createElement(ELEMENT_BASE)
-  // const focusTemplate = document.getElementById(TEMPLATE_FOCUS).content.cloneNode(true)
-  // const dialog = focusTemplate.querySelector('dialog')
-  // taskView.prepend(dialog)
+
   taskView.init()
   taskView.appendChild(taskBase)
   document.querySelector('main').appendChild(taskView)
@@ -19,11 +16,7 @@ window.onload = () => {
   })
 
   const rootExport = document.getElementById(ID_ROOT_EXPORT)
-  rootExport.addEventListener(
-    'click',
-    () => {
-      console.log('exporting')
-    },
-    { once: true }
-  )
+  rootExport.addEventListener('click', () => {
+    console.log('exporting')
+  })
 }

@@ -1,4 +1,11 @@
-const STATES_TASK = ['defined', 'doing', 'done']
+// define states here and add them to the state list
+// more states can be added
+const STATE_READY = 'ready'
+const STATE_ACTIVE = 'active'
+const STATE_PAUSE = 'pause'
+const STATE_DONE = 'done'
+
+const STATES_TASK = [STATE_READY, STATE_ACTIVE, STATE_PAUSE, STATE_DONE]
 
 // main menu
 const ID_ROOT_ADD = 'root-add'
