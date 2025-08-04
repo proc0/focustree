@@ -27,6 +27,9 @@
     --color-focus-select: lch(27.574% 10.353 137.362); /* rgb(22.02% 26.82% 21.19%) */
 
     --color-shadow: black;
+
+    --color-background-done: #222222;
+    --color-text-done: #bababa;
   }
 }
 
@@ -58,6 +61,9 @@
     --color-focus-select: color(display-p3 0.2296 0.2668 0.2166);
 
     --color-shadow: color(display-p3 0 0 0 / 70%);
+
+    --color-background-done: #222222;
+    --color-text-done: #bababa;
   }
 }
 

@@ -10,11 +10,20 @@ div {
     background-color: var(--color-highlight);
     color: var(--color-shadow) !important;
   }
+
+  &.done ul {
+    background: linear-gradient(to bottom, var(--color-background-done), var(--color-background));
+    box-shadow: inset 0px 30px 30px var(--color-shadow);
+    color: var(--color-text-done);
+  }
+
+  /* &.done details summary ::marker {
+    background-color: var(--color-background-done);
+  } */
 }
 
 ul {
-  margin-top: 1em;
-  margin-left: 0.5em;
+  padding: 1em 0.5em 0;
 }
 
 ul li {
@@ -52,7 +61,7 @@ ul li:first-child {
 /* Subtasks */
 
 details {
-  margin-left: 2.2em;
+  padding-left: 2.2em;
 
   &[open] summary {
     border-bottom: 1px solid var(--color-border-details);
