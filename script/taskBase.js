@@ -2,14 +2,11 @@ const BASE_NAME = 'taskbase'
 const BASE_VERSION = 1
 const BASE_STORE = 'task'
 
-// TODO: review how to distinguish root
-// from subtasks, should it be a meta prop?
-// what is id useful for in subtasks?
 const MODEL_TASK = {
   // id: 1, (root only)
   path: [0],
   meta: {
-    isOpen: false,
+    opened: false,
   },
   name: 'Le Task',
   note: 'Lorem Ipsum dolor sit amet.',
@@ -47,23 +44,66 @@ class TaskBase extends HTMLElement {
         console.error(event.target.error)
       }
 
-      // create an objectStore for tasks
-      const taskStore = taskBase.createObjectStore(BASE_STORE, {
-        autoIncrement: true,
-      })
+      // DB does not exist
+      if (!taskBase.objectStoreNames.contains(BASE_STORE)) {
+        // create an objectStore for tasks
+        const taskStore = taskBase.createObjectStore(BASE_STORE, {
+          keypath: 'id',
+          autoIncrement: true,
+        })
 
-      const taskSeed = structuredClone(MODEL_TASK)
-      taskSeed.id = 1
+        taskStore.createIndex('name', 'name')
 
-      // TODO: detect if IDB is empty and then seed. Otherwise, call some custom migration or leave WIP
-      const addRequest = taskStore.add(taskSeed)
+        const taskSeed = structuredClone(MODEL_TASK)
+        // only root tasks have id
+        taskSeed.id = 1
 
-      addRequest.onsuccess = (event) => {
-        console.log(`Added task ${event.target.result}`)
-      }
+        const addRequest = taskStore.add(taskSeed)
 
-      addRequest.onerror = (event) => {
-        console.error(event.target.error)
+        addRequest.onsuccess = (event) => {
+          console.log(`Added task ${event.target.result}`)
+        }
+
+        addRequest.onerror = (event) => {
+          console.error(event.target.error)
+        }
+      } else {
+        // version upgrade
+        const store = target.transaction.objectStore(BASE_STORE)
+
+        const request = (store.openCursor().onsuccess = ({ target }) => {
+          const cursor = target.result
+
+          if (!cursor) {
+            return console.log('Tasks migration complete.')
+          }
+
+          const task = cursor.value
+          // TODO: add general migration function
+          // checks each key for renaming by comparing order
+          // traverses tree recursively to update
+          // example migration mapping:
+          task.meta = {
+            opened: task.meta.isOpen,
+          }
+
+          // migrate task
+          const putRequest = store.put(task, task.id)
+
+          putRequest.onsuccess = (success) => {
+            console.log(`Migrated task ${success.target.result}`)
+          }
+
+          putRequest.onerror = (event) => {
+            console.error(event.target.error)
+          }
+
+          cursor.continue()
+        })
+
+        request.onerror = ({ target }) => {
+          console.error(target.error)
+        }
       }
     }
 
@@ -84,7 +124,7 @@ class TaskBase extends HTMLElement {
 
         // another request to save the DB key in id
         const putRequest = store.put(task, task.id)
-
+        // only root tasks have id
         putRequest.onsuccess = () => {
           console.log(`Added task ${task.id}`)
           this.dispatchEvent(
@@ -182,7 +222,7 @@ class TaskBase extends HTMLElement {
       newTask.path = [...task.path, task.subs.length]
       task.subs.push(newTask)
       // open drawer
-      task.meta.isOpen = true
+      task.meta.opened = true
     }
 
     if (event.type === EVENT_STATES) {

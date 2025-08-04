@@ -73,8 +73,8 @@ class TaskNode extends HTMLElement {
     this.shadowRoot.querySelector(QUERY_SUBS_HEADER).addEventListener('click', (event) => {
       event.stopPropagation()
       // get the details tag, somehow null open attribute means it is open
-      const isOpen = event.currentTarget.parentElement.parentElement.getAttribute('open') === null
-      this.task.meta.isOpen = isOpen
+      const opened = event.currentTarget.parentElement.parentElement.getAttribute('open') === null
+      this.task.meta.opened = opened
       this.dispatch(EVENT_EXPAND, this.task)
     })
   }
@@ -164,7 +164,7 @@ class TaskNode extends HTMLElement {
   focusTask() {
     this.task.state.current = 1
     this.task.state.focused = true
-    this.task.meta.isOpen = true
+    this.task.meta.opened = true
     this.dispatch(EVENT_STATES, this.task)
 
     // this.focus()

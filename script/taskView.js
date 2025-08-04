@@ -196,7 +196,7 @@ class TaskView extends HTMLElement {
       taskNode.appendChild(subTask)
     }
 
-    if (task.meta.isOpen) {
+    if (task.meta.opened) {
       taskNode.shadowRoot.querySelector('details').setAttribute('open', '')
     }
 
