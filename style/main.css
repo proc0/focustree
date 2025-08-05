@@ -38,26 +38,30 @@ main.focused {
     filter: blur(7px);
   }
 
+  & task-base {
+    margin: 0;
+  }
+
   /* & task-base {
     background: linear-gradient(270deg, var(--color-accent), black);
   } */
 
 }
 
-task-view, task-base {
+task-view {
   display: flex;
-  flex-direction: column;
-  margin: auto;
+  margin: 30px 0;
+  width: 100%;
 }
 
 task-base {
+  display: flex;
+  flex-direction: column;
+  margin: 0 25%;
+  transition: all 0.25s ease-out;
   min-width: 44%;
-  /* background-color: var(--color-background); */
-}
-
-task-view {
-  margin: 30px 0;
   width: 100%;
+  /* background-color: var(--color-background); */
 }
 
 task-base > task-node {

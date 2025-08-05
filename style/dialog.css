@@ -11,7 +11,7 @@ dialog {
   transform: translateY(0);
   transition: opacity 0.25s ease-out, transform 0.25s ease-out,
     overlay 0.25s ease-out allow-discrete, display 0.25s ease-out allow-discrete;
-  width: 50%;
+  width: 100%;
 }
 
 /* Open state of the dialog  */
@@ -58,19 +58,20 @@ dialog > header {
 dialog > ul {
   display: flex;
   flex-direction: column;
+  justify-self: flex-end;
   place-items: flex-end;
   margin-top: 5em;
   background: linear-gradient(270deg, black, transparent);
 
   & li {
     display: flex;
-    font-size: 2em;
     color: var(--color-accent);
     text-align: left;
   }
 
-  & li:not(:last-child) {
+  & li:not(:first-child) {
     margin-left: 0.5em;
+    font-size: 1.5em;
     &:before {
       padding-right: 0.5em;
       font-weight: bold;
@@ -78,9 +79,10 @@ dialog > ul {
     }
   }
 
-  & li:last-child {
+  & li:first-child {
     color: var(--color-highlight);
     padding: 0.2em;
+    font-size: 2em;
     margin-left: 0.5em;
     border-radius: 0.2em;
     font-weight: bold;

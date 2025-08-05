@@ -18,9 +18,11 @@ class TaskView extends HTMLElement {
     const dialog = this.querySelector('dialog')
     dialog.close()
     const taskId = this.focusTask.task.id
-    this.querySelector(`task-node[data-id="${taskId}"]`).scrollIntoView({
-      behavior: 'smooth',
-    })
+    if (taskId) {
+      this.querySelector(`task-node[data-id="${taskId}"]`).scrollIntoView({
+        behavior: 'smooth',
+      })
+    }
 
     document.querySelector('main').classList.remove('focused')
   }
@@ -145,7 +147,7 @@ class TaskView extends HTMLElement {
     const taskName = document.createElement('li')
     taskName.setAttribute('slot', SLOT_NAME)
     taskName.textContent = task.name
-    dialog.querySelector('ul').appendChild(taskName)
+    dialog.querySelector('ul').prepend(taskName)
   }
 
   renderTree(task) {
@@ -154,7 +156,9 @@ class TaskView extends HTMLElement {
 
     // set the task path
     taskNode.shadowRoot.querySelector('div').setAttribute('data-path', task.path)
-    taskNode.setAttribute('data-id', task.id)
+    if (task.id) {
+      taskNode.setAttribute('data-id', task.id)
+    }
 
     // fields
     const taskName = document.createElement(ELEMENT_FIELD)
