@@ -19,7 +19,7 @@
     <template id="template-task">
       <link rel="stylesheet" href="style/task.css" />
       <div>
-        <ul>
+        <ul part="task-container">
           <li>
             <button name="task-edit" title="Edit">✎</button>
             <slot name="task-name"></slot>
@@ -35,9 +35,9 @@
             <button name="task-sync" title="Sync">↴</button>
           </li>
         </ul>
-        <details>
+        <details part="subs-container">
           <summary>
-            <header>
+            <header part="subs-header">
               <slot name="title-subs">No subtasks</slot
               ><button name="task-add" title="Add subtask">+</button>
             </header>
@@ -51,26 +51,29 @@
     <template id="template-focus">
       <dialog>
         <header>
-          <h1>Focus</h1>
-          <slot name="task-name"></slot>
+          <h1>FOCUS</h1>
+          <h2>👁</h2>
         </header>
+        <ul>
+          <slot name="task-name"></slot>
+        </ul>
         <menu>
-          <li>
+          <item>
             <button name="task-done" title="Done">Done</button>
-          </li>
-          <li>
+          </item>
+          <item>
             <form method="dialog">
               <button name="task-pause" title="Pause">Pause</button>
             </form>
-          </li>
+          </item>
         </menu>
       </dialog>
     </template>
     <main>
       <menu>
-        <li><button id="root-add" title="New">✚</button></li>
-        <li><button id="root-import" title="Import">🡇</button></li>
-        <li><button id="root-export" title="Export">🡅</button></li>
+        <item><button id="root-add" title="New">✚</button></item>
+        <item><button id="root-import" title="Import">🡇</button></item>
+        <item><button id="root-export" title="Export">🡅</button></item>
       </menu>
     </main>
     <script src="script/main.js"></script>

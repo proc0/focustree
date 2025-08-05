@@ -2,9 +2,11 @@ dialog {
   background: transparent;
   border: none;
   color: var(--color-accent);
+  height: 100%;
   margin-top: 2em;
   opacity: 0;
   position: fixed;
+  text-align: center;
   top: 0;
   transform: translateY(0);
   transition: opacity 0.25s ease-out, transform 0.25s ease-out,
@@ -28,11 +30,75 @@ dialog:open {
   }
 }
 
-::backdrop {
+/* ::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 1;
   animation-name: OpacityFadeIn;
   animation-iteration-count: 1;
   animation-timing-function: ease-in;
   animation-duration: 0.25s;
+} */
+
+dialog > header {
+  & h1 {
+    text-align: center;
+    font-weight: normal;
+  }
+
+  & h2 {
+    font-size: 5em;
+  }
+}
+
+dialog > ul {
+  display: flex;
+  flex-direction: column;
+  place-items: flex-end;
+
+  & li {
+    display: flex;
+    font-size: 2em;
+  }
+
+  & li:not(:last-child) {
+    &:before {
+      content: '✓';
+    }
+  }
+
+  & li:last-child {
+    &:before {
+      content: '◎';
+    }
+  }
+}
+
+dialog > menu {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 10em;
+  margin: 0 0 10em 0;
+  width: 100%;
+  justify-content: space-around;
+
+  & item {
+    display: flex;
+    list-style: none;
+
+    & button {
+      color: var(--color-text-button);
+      padding: 0.5em;
+      font-size: 3em;
+
+      &:active {
+        color: var(--color-highlight);
+      }
+
+      &:hover {
+        color: var(--color-hover-text);
+        background-color: var(--color-hover-background-button);
+      }
+    }
+  }
 }

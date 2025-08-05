@@ -9,6 +9,7 @@ div {
 
   &.focused ul {
     border: 1px solid var(--color-highlight);
+    filter: none !important;
   }
 
   &.done ul li {

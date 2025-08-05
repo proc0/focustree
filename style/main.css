@@ -27,6 +27,19 @@ main {
   width: 100%;
 }
 
+main.focused {
+  background-color: var(--color-shadow);
+
+  & task-node:not([data-focused])::part(task-container) {
+    filter: blur(3px);
+  }
+
+  & task-node:not([data-focused])::part(subs-header) {
+    filter: blur(3px);
+  }
+
+}
+
 task-view, task-base {
   display: flex;
   flex-direction: column;
@@ -35,6 +48,7 @@ task-view, task-base {
 
 task-base {
   min-width: 44%;
+  background-color: var(--color-background);
 }
 
 task-view {

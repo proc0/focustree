@@ -8,10 +8,16 @@ const QUERY_FOCUS_PAUSE = 'button[name="task-pause"]'
 class TaskView extends HTMLElement {
   constructor() {
     super()
-    this.focusTree = null
+    this.focusTask = null
     this.addEventListener(EVENT_RENDER, this.render.bind(this))
     this.addEventListener(EVENT_DELETE, this.delete.bind(this))
-    this.addEventListener(EVENT_FOCUS, this.focus.bind(this))
+    this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
+  }
+
+  blurTree() {
+    const dialog = this.querySelector('dialog')
+    dialog.close()
+    document.querySelector('main').classList.remove('focused')
   }
 
   delete({ detail, target }) {
@@ -21,17 +27,19 @@ class TaskView extends HTMLElement {
     }
   }
 
-  focus(event) {
+  focusTree(event) {
+    document.querySelector('main').classList.add('focused')
+
     const dialog = this.querySelector('dialog')
     // clear task names
-    dialog.querySelectorAll('h2').forEach((taskName) => taskName.remove())
+    dialog.querySelectorAll('ul li').forEach((taskName) => taskName.remove())
 
     dialog.showModal()
     dialog.focus()
 
     const initialTask = event.target
     // save initial task
-    this.focusTree = initialTask
+    this.focusTask = initialTask
 
     initialTask.focusTask()
     this.renderFocus(initialTask.task)
@@ -53,7 +61,7 @@ class TaskView extends HTMLElement {
     // focus exit
     dialog.querySelector(QUERY_FOCUS_PAUSE).addEventListener('click', (e) => {
       e.stopPropagation()
-      dialog.close()
+      this.blurTree()
     })
 
     // focus complete task
@@ -73,8 +81,8 @@ class TaskView extends HTMLElement {
 
         // current task is initial focus (no more subtasks left)
         // or current task is a root task with no subtasks
-        if (currentTask.equals(this.focusTree) || currentTask.isRoot()) {
-          return dialog.close()
+        if (currentTask.equals(this.focusTask) || currentTask.isRoot()) {
+          return this.blurTree()
         }
 
         // try adjacent task
@@ -84,8 +92,8 @@ class TaskView extends HTMLElement {
           // focus level ~ singleton leaf task
           // parent task is the initial focus (last subtask of the branch)
           // or parent task is a root task
-          if (parentTask.equals(this.focusTree) || parentTask.isRoot()) {
-            return dialog.close()
+          if (parentTask.equals(this.focusTask) || parentTask.isRoot()) {
+            return this.blurTree()
           }
           // try uncle task
           nextTask = parentTask.nextSibling
@@ -97,8 +105,8 @@ class TaskView extends HTMLElement {
           // find the next valid ancestor task
           parentTask = parentTask.parentElement
           // quit if visited ancestor is the initial focus task
-          if (parentTask.equals(this.focusTree)) {
-            return dialog.close()
+          if (parentTask.equals(this.focusTask)) {
+            return this.blurTree()
           }
           // valid ancestor relative found
           nextTask = parentTask.nextSibling
@@ -112,7 +120,7 @@ class TaskView extends HTMLElement {
 
   render({ detail, target }) {
     const task = detail.task
-    const taskNode = this.renderTask(task)
+    const taskNode = this.renderTree(task)
 
     // root add event does not have node to replace
     if (task.id && !detail?.node) {
@@ -129,19 +137,18 @@ class TaskView extends HTMLElement {
   renderFocus(task) {
     const dialog = this.querySelector('dialog')
     // add task name
-    const taskName = document.createElement('h2')
+    const taskName = document.createElement('li')
     taskName.setAttribute('slot', SLOT_NAME)
     taskName.textContent = task.name
-    dialog.querySelector('header').appendChild(taskName)
+    dialog.querySelector('ul').appendChild(taskName)
   }
 
-  renderTask(task) {
+  renderTree(task) {
     const taskNode = document.createElement(ELEMENT_NODE)
     taskNode.task = task
 
     // set the task path
     taskNode.shadowRoot.querySelector('div').setAttribute('data-path', task.path)
-    taskNode.shadowRoot.querySelector('div').setAttribute('part', 'task-container')
 
     // fields
     const taskName = document.createElement(ELEMENT_FIELD)
@@ -197,7 +204,7 @@ class TaskView extends HTMLElement {
     taskNode.appendChild(subsLabel)
 
     for (const sub in task.subs) {
-      const subTask = this.renderTask(task.subs[sub])
+      const subTask = this.renderTree(task.subs[sub])
       subTask.setAttribute('slot', SLOT_SUBS)
 
       taskNode.appendChild(subTask)
