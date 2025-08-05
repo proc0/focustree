@@ -8,11 +8,11 @@ div {
   flex-direction: column;
 
   &.focused ul {
-    /* border: 1px solid var(--color-highlight); */
-    background-color: var(--color-highlight);
+    border: 1px solid var(--color-highlight);
+    background-color: var(--color-background);
     /* color: black !important; */
     filter: none !important;
-    transform: scale(1.15);
+    /* transform: scale(1.15); */
 
     /* & li:first-child {
       &:slot {
