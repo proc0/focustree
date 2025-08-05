@@ -1,4 +1,5 @@
 @import url('shared.css');
+@import url('select.css');
 
 /* Main task */
 
@@ -7,19 +8,19 @@ div {
   flex-direction: column;
 
   &.focused ul {
-    background-color: var(--color-highlight);
-    color: var(--color-shadow) !important;
+    border: 1px solid var(--color-highlight);
   }
 
-  &.done ul {
-    background: linear-gradient(to bottom, var(--color-background-done), var(--color-background));
-    box-shadow: inset 0px 30px 30px var(--color-shadow);
-    color: var(--color-text-done);
-  }
+  &.done ul li {
+    & :not(button) {
+      color: var(--color-text-done);
+    }
 
-  /* &.done details summary ::marker {
-    background-color: var(--color-background-done);
-  } */
+    & button,
+    & input {
+      color: var(--color-text-done);
+    }
+  }
 }
 
 ul {
@@ -58,6 +59,12 @@ ul li:first-child {
   }
 }
 
+ul li:last-child {
+  & button:last-child {
+    font-size: 1.5em;
+    padding: 0.1em 0.3em;
+  }
+}
 /* Subtasks */
 
 details {

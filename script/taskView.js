@@ -141,6 +141,7 @@ class TaskView extends HTMLElement {
 
     // set the task path
     taskNode.shadowRoot.querySelector('div').setAttribute('data-path', task.path)
+    taskNode.shadowRoot.querySelector('div').setAttribute('part', 'task-container')
 
     // fields
     const taskName = document.createElement(ELEMENT_FIELD)
@@ -167,6 +168,8 @@ class TaskView extends HTMLElement {
         taskState.value = index
       }
     })
+    // set class to current state name
+    taskState.classList.add(currentState)
     taskNode.appendChild(taskState)
 
     const container = taskNode.shadowRoot.querySelector('div')

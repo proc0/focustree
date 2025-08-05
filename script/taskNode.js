@@ -5,6 +5,7 @@ const QUERY_BUTTON_EDIT = 'button[name="task-edit"]'
 const QUERY_BUTTON_DELETE = 'button[name="task-delete"]'
 const QUERY_SELECT_STATE = 'slot[name="task-state"]'
 const QUERY_SELECT_FOCUS = 'button[name="task-focus"]'
+const QUERY_SELECT_SYNC = 'button[name="task-sync"]'
 
 class TaskNode extends HTMLElement {
   constructor() {
@@ -67,6 +68,12 @@ class TaskNode extends HTMLElement {
       event.stopPropagation()
       this.task.state.current = Number(event.target.value)
       this.dispatch(EVENT_STATES, this.task)
+    })
+
+    // sync state
+    this.shadowRoot.querySelector(QUERY_SELECT_SYNC).addEventListener('click', (event) => {
+      event.stopPropagation()
+      this.dispatch(EVENT_SYNC, this.task)
     })
 
     // open and close subtasks drawer

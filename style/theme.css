@@ -29,7 +29,7 @@
     --color-shadow: black;
 
     --color-background-done: #222222;
-    --color-text-done: #bababa;
+    --color-text-done: #424242ff;
   }
 }
 
@@ -63,7 +63,7 @@
     --color-shadow: color(display-p3 0 0 0 / 70%);
 
     --color-background-done: #222222;
-    --color-text-done: #bababa;
+    --color-text-done: #424242ff;
   }
 }
 

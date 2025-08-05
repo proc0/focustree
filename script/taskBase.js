@@ -107,7 +107,7 @@ class TaskBase extends HTMLElement {
       }
     }
 
-    const saveEvents = [EVENT_BRANCH, EVENT_UPDATE, EVENT_EXPAND, EVENT_STATES]
+    const saveEvents = [EVENT_BRANCH, EVENT_UPDATE, EVENT_EXPAND, EVENT_STATES, EVENT_SYNC]
     saveEvents.forEach((eventName) => {
       this.addEventListener(eventName, this.save.bind(this))
     })
@@ -231,6 +231,22 @@ class TaskBase extends HTMLElement {
         time: Date.now(),
       }
       task.state.history.push(stateChange)
+    }
+
+    if (event.type === EVENT_SYNC) {
+      // DFS sync all states to the event task
+      const syncStates = (t) => {
+        t.state.current = task.state.current
+
+        if (!t.subs.length) return
+
+        t.subs.forEach((s) => {
+          s.state.current = task.state.current
+          syncStates(s)
+        })
+      }
+
+      syncStates(task)
     }
 
     this.store('readwrite', (store) => {

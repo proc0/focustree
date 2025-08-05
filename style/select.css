@@ -39,6 +39,12 @@ select {
     /* color: var(--color-shadow); */
     font-weight: bold;
   }
+
+  &.done,
+  &.done option {
+    background-color: var(--color-background-done);
+    color: var(--color-text-done);
+  }
 }
 
 select option {
