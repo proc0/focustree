@@ -35,8 +35,12 @@ main.focused {
   }
 
   & task-node:not([data-focused])::part(subs-header) {
-    filter: blur(3px);
+    filter: blur(7px);
   }
+
+  /* & task-base {
+    background: linear-gradient(270deg, var(--color-accent), black);
+  } */
 
 }
 
@@ -48,7 +52,7 @@ task-view, task-base {
 
 task-base {
   min-width: 44%;
-  background-color: var(--color-background);
+  /* background-color: var(--color-background); */
 }
 
 task-view {

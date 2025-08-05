@@ -40,13 +40,18 @@ dialog:open {
 } */
 
 dialog > header {
+  display: flex;
+  justify-content: center;
   & h1 {
-    text-align: center;
     font-weight: normal;
-  }
-
-  & h2 {
-    font-size: 5em;
+    font-size: 10em;
+    color: var(--color-highlight);
+    text-shadow: 0 -8px 0 var(--color-accent);
+    padding: 0;
+    width: 1em;
+    display: flex;
+    justify-self: center;
+    margin: -0.4em;
   }
 }
 
@@ -54,21 +59,36 @@ dialog > ul {
   display: flex;
   flex-direction: column;
   place-items: flex-end;
+  margin-top: 5em;
+  background: linear-gradient(270deg, black, transparent);
 
   & li {
     display: flex;
     font-size: 2em;
+    color: var(--color-accent);
+    text-align: left;
   }
 
   & li:not(:last-child) {
+    margin-left: 0.5em;
     &:before {
+      padding-right: 0.5em;
+      font-weight: bold;
       content: '✓';
     }
   }
 
   & li:last-child {
+    color: var(--color-highlight);
+    padding: 0.2em;
+    margin-left: 0.5em;
+    border-radius: 0.2em;
+    font-weight: bold;
+
     &:before {
-      content: '◎';
+      padding-right: 0.5em;
+      color: var(--color-highlight);
+      content: '➣';
     }
   }
 }
