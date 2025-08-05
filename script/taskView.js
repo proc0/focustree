@@ -17,6 +17,11 @@ class TaskView extends HTMLElement {
   blurTree() {
     const dialog = this.querySelector('dialog')
     dialog.close()
+    const taskId = this.focusTask.task.id
+    this.querySelector(`task-node[data-id="${taskId}"]`).scrollIntoView({
+      behavior: 'smooth',
+    })
+
     document.querySelector('main').classList.remove('focused')
   }
 
@@ -149,6 +154,7 @@ class TaskView extends HTMLElement {
 
     // set the task path
     taskNode.shadowRoot.querySelector('div').setAttribute('data-path', task.path)
+    taskNode.setAttribute('data-id', task.id)
 
     // fields
     const taskName = document.createElement(ELEMENT_FIELD)

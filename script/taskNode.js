@@ -177,8 +177,8 @@ class TaskNode extends HTMLElement {
     // this.focus()
     this.scrollIntoView({
       behavior: 'smooth',
-      block: 'center',
-      // inline: 'center',
+      // block: 'top',
+      // inline: 'top',
     })
   }
 
