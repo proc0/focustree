@@ -146,6 +146,82 @@ class TaskBase extends HTMLElement {
     })
   }
 
+  export() {
+    console.log('Exporting tasks...')
+
+    this.store('readonly', (store) => {
+      const readRequest = store.getAll()
+
+      readRequest.onsuccess = ({ target }) => {
+        const tasks = target.result
+        console.log(tasks)
+        const a = document.createElement('a')
+        a.href = URL.createObjectURL(
+          new Blob([JSON.stringify(tasks, null, 2)], {
+            type: 'text/plain',
+          })
+        )
+        a.setAttribute('download', 'tasks.json')
+        this.appendChild(a)
+        a.click()
+        this.removeChild(a)
+      }
+
+      return readRequest
+    })
+  }
+
+  import() {
+    console.log('Importing tasks...')
+    const input = document.createElement('input')
+    input.setAttribute('type', 'file')
+    input.addEventListener('change', (event) => {
+      const file = event.target.files[0]
+
+      if (!file) {
+        conosole.Error('No file selected. Please choose a file.')
+        return
+      }
+
+      const reader = new FileReader()
+
+      reader.onload = () => {
+        const tasks = JSON.parse(reader.result)
+        console.log(tasks)
+
+        this.store('readwrite', (store) => {
+          tasks.forEach((task) => {
+            const addRequest = store.add(task, task.id)
+
+            addRequest.onsuccess = ({ target }) => {
+              console.log(`Imported task ${target.result}`)
+              this.dispatchEvent(
+                new CustomEvent(EVENT_RENDER, {
+                  bubbles: true,
+                  detail: {
+                    task,
+                  },
+                })
+              )
+            }
+
+            addRequest.onerror = (event) => {
+              console.error(event.target.error)
+            }
+          })
+        })
+        input.remove()
+      }
+
+      reader.onerror = () => {
+        conosole.Error('Error reading the file. Please try again.')
+      }
+      reader.readAsText(file)
+    })
+
+    input.click()
+  }
+
   load() {
     console.log('Loading tasks...')
 
@@ -278,6 +354,10 @@ class TaskBase extends HTMLElement {
     const store = this.taskBase.transaction(BASE_STORE, operation).objectStore(BASE_STORE)
 
     const request = order(store)
+
+    if (!request) {
+      return
+    }
 
     request.onerror = ({ target }) => {
       console.error(target.error)

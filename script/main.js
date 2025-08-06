@@ -17,6 +17,11 @@ window.onload = () => {
 
   const rootExport = document.getElementById(ID_ROOT_EXPORT)
   rootExport.addEventListener('click', () => {
-    console.log('exporting')
+    taskBase.export()
+  })
+
+  const rootImport = document.getElementById(ID_ROOT_IMPORT)
+  rootImport.addEventListener('click', () => {
+    taskBase.import()
   })
 }
