@@ -19,10 +19,19 @@ class TaskView extends HTMLElement {
     dialog.close()
 
     const taskId = this.focusTask.task.id
+    const taskPath = this.focusTask.task.path.toString()
+
     if (taskId) {
       this.querySelector(`task-node[data-id="${taskId}"]`).scrollIntoView({
         behavior: 'smooth',
       })
+    } else {
+      document
+        .querySelector(`task-node[data-path="${taskPath}"]`)
+        .shadowRoot.querySelector('ul')
+        .scrollIntoView({
+          behavior: 'smooth',
+        })
     }
 
     // cleanup
@@ -168,8 +177,11 @@ class TaskView extends HTMLElement {
     const taskNode = document.createElement(ELEMENT_NODE)
     taskNode.task = task
 
+    const container = taskNode.shadowRoot.querySelector('div')
+
     // set the task path
-    taskNode.shadowRoot.querySelector('div').setAttribute('data-path', task.path)
+    taskNode.setAttribute('data-path', task.path)
+    // container.setAttribute('part', 'task-body')
     if (task.id) {
       taskNode.setAttribute('data-id', task.id)
     }
@@ -202,8 +214,6 @@ class TaskView extends HTMLElement {
     // set class to current state name
     taskState.classList.add(currentState)
     taskNode.appendChild(taskState)
-
-    const container = taskNode.shadowRoot.querySelector('div')
 
     // state class and attributes on container
     container.classList.add(currentState)
