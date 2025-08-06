@@ -31,7 +31,7 @@ main {
 }
 
 main.focused {
-    background-color: var(--color-shadow);
+    /* background-color: var(--color-shadow); */
 
   & task-node:not([data-focused])::part(task-container) {
     filter: blur(3px);
