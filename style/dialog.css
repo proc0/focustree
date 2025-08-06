@@ -12,6 +12,7 @@ dialog {
   transition: opacity 0.25s ease-out, transform 0.25s ease-out,
     overlay 0.25s ease-out allow-discrete, display 0.25s ease-out allow-discrete;
   width: 100%;
+  overflow: hidden;
 }
 
 /* Open state of the dialog  */
@@ -57,6 +58,8 @@ dialog > ul {
   place-items: flex-end;
   padding: 0 55% 0 0;
   margin-top: 5em;
+  height: 50%;
+  overflow: hidden;
 
   & li {
     display: flex;
