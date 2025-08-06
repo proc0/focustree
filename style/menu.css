@@ -2,8 +2,12 @@ main > menu {
   align-items: center;
   display: flex;
   justify-content: flex-start;
-  margin: 0;
+  margin: 2em 0;
   padding: 0;
+  position: fixed;
+  top: 0;
+  width: 94%;
+  z-index: 1;
 }
 
 main > menu item {

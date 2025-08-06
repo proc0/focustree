@@ -23,7 +23,7 @@ task-base task-node {
 } */
 
 main {
-  padding: 42px;
+  padding: 3%;
   width: 100%;
 }
 
@@ -39,7 +39,11 @@ main.focused {
   }
 
   & task-base {
-    margin: 0;
+    margin: 0 0 0 50%;
+  }
+
+  & > menu {
+    visibility: hidden;
   }
 
   /* & task-base {

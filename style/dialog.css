@@ -41,27 +41,22 @@ dialog:open {
 
 dialog > header {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
+  text-align: right;
+  padding: 0 50% 0 0;
   & h1 {
-    font-weight: normal;
-    font-size: 10em;
+    font-size: 3em;
     color: var(--color-highlight);
-    text-shadow: 0 -8px 0 var(--color-accent);
-    padding: 0;
-    width: 1em;
-    display: flex;
-    justify-self: center;
-    margin: -0.4em;
+    padding: 0 1em 0 0;
   }
 }
 
 dialog > ul {
   display: flex;
   flex-direction: column;
-  justify-self: flex-end;
   place-items: flex-end;
+  padding: 0 50% 0 0;
   margin-top: 5em;
-  background: linear-gradient(270deg, black, transparent);
 
   & li {
     display: flex;
@@ -69,7 +64,7 @@ dialog > ul {
     text-align: left;
   }
 
-  & li:not(:first-child) {
+  & li {
     margin-left: 0.5em;
     font-size: 1.5em;
     &:before {
@@ -79,7 +74,7 @@ dialog > ul {
     }
   }
 
-  & li:first-child {
+  /* & li:first-child {
     color: var(--color-highlight);
     padding: 0.2em;
     font-size: 2em;
@@ -92,7 +87,7 @@ dialog > ul {
       color: var(--color-highlight);
       content: '➣';
     }
-  }
+  } */
 }
 
 dialog > menu {

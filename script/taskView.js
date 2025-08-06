@@ -17,6 +17,7 @@ class TaskView extends HTMLElement {
   blurTree() {
     const dialog = this.querySelector('dialog')
     dialog.close()
+
     const taskId = this.focusTask.task.id
     if (taskId) {
       this.querySelector(`task-node[data-id="${taskId}"]`).scrollIntoView({
@@ -24,6 +25,9 @@ class TaskView extends HTMLElement {
       })
     }
 
+    // cleanup
+    dialog.querySelectorAll('ul li').forEach((taskName) => taskName.remove())
+    dialog.querySelector('header h1').remove()
     document.querySelector('main').classList.remove('focused')
   }
 
@@ -38,8 +42,6 @@ class TaskView extends HTMLElement {
     document.querySelector('main').classList.add('focused')
 
     const dialog = this.querySelector('dialog')
-    // clear task names
-    dialog.querySelectorAll('ul li').forEach((taskName) => taskName.remove())
 
     dialog.showModal()
     dialog.focus()
@@ -143,11 +145,23 @@ class TaskView extends HTMLElement {
 
   renderFocus(task) {
     const dialog = this.querySelector('dialog')
-    // add task name
-    const taskName = document.createElement('li')
-    taskName.setAttribute('slot', SLOT_NAME)
-    taskName.textContent = task.name
-    dialog.querySelector('ul').prepend(taskName)
+    const focusTitleEl = dialog.querySelector('header h1')
+    // try to get the current focus task name
+    const focusTaskName = focusTitleEl?.textContent
+
+    if (!focusTaskName) {
+      const focusTitle = document.createElement('h1')
+      focusTitle.setAttribute('slot', 'task-focus-name')
+      focusTitle.textContent = task.name
+      dialog.querySelector('header').prepend(focusTitle)
+    } else {
+      focusTitleEl.textContent = task.name
+      // completed task list
+      const taskName = document.createElement('li')
+      taskName.setAttribute('slot', SLOT_NAME)
+      taskName.textContent = focusTaskName
+      dialog.querySelector('ul').prepend(taskName)
+    }
   }
 
   renderTree(task) {
