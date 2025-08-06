@@ -26,8 +26,7 @@ class TaskView extends HTMLElement {
         behavior: 'smooth',
       })
     } else {
-      document
-        .querySelector(`task-node[data-path="${taskPath}"]`)
+      this.querySelector(`task-node[data-path="${taskPath}"]`)
         .shadowRoot.querySelector('ul')
         .scrollIntoView({
           behavior: 'smooth',
@@ -143,7 +142,10 @@ class TaskView extends HTMLElement {
     // root add event does not have node to replace
     if (task.id && !detail?.node) {
       // append root tasks to task-base
-      return target.appendChild(taskNode)
+      target.appendChild(taskNode)
+      // TODO: scroll adding root into view (requires more info from event?)
+      // return taskNode.scrollIntoView({ behavior: 'smooth' })
+      return
     }
 
     // branching subtask
@@ -181,8 +183,8 @@ class TaskView extends HTMLElement {
 
     // set the task path
     taskNode.setAttribute('data-path', task.path)
-    // container.setAttribute('part', 'task-body')
     if (task.id) {
+      // only root tasks have id
       taskNode.setAttribute('data-id', task.id)
     }
 
