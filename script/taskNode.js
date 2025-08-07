@@ -86,7 +86,11 @@ class TaskNode extends HTMLElement {
     })
   }
 
-  blurTask() {
+  blurTask(state) {
+    if (!state || !this.task.state.focused) {
+      return
+    }
+    this.task.state.current = state
     this.task.state.focused = false
     this.dispatch(EVENT_STATES, this.task)
   }
@@ -169,20 +173,17 @@ class TaskNode extends HTMLElement {
   }
 
   focusTask() {
-    this.task.state.current = 1
-    this.task.state.focused = true
-    this.task.meta.opened = true
-    this.dispatch(EVENT_STATES, this.task)
-    const elementRect = this.shadowRoot.querySelector('div').getBoundingClientRect()
-    const absoluteElementTop = elementRect.top + window.pageYOffset
-    const middle = absoluteElementTop - window.innerHeight / 2 + 200
+    if (this.task.state.current !== 1) {
+      this.task.state.current = 1
+      this.task.state.focused = true
+      this.task.meta.opened = true
+      this.dispatch(EVENT_STATES, this.task)
+    }
+
+    const taskContainer = this.shadowRoot.querySelector('div').getBoundingClientRect()
+    const containerY = taskContainer.top + window.pageYOffset
+    const middle = containerY - window.innerHeight / 2 + 200
     window.scrollTo(0, middle)
-    // this.focus()
-    // this.scrollIntoView({
-    //   behavior: 'smooth',
-    //   block: 'center',
-    //   // inline: 'center',
-    // })
   }
 
   getFieldNames(element) {

@@ -8,8 +8,8 @@ const MODEL_TASK = {
   meta: {
     opened: false,
   },
-  name: 'Le Task',
-  note: 'Lorem Ipsum dolor sit amet.',
+  name: '<Task Name>',
+  note: '',
   state: {
     current: 0,
     focused: false,
@@ -306,6 +306,11 @@ class TaskBase extends HTMLElement {
         state: task.state.current,
         time: Date.now(),
       }
+      // limit history to prevent large db size
+      if (task.state.history.length > 99) {
+        task.state.history.splice(50)
+      }
+
       task.state.history.push(stateChange)
     }
 

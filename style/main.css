@@ -16,14 +16,6 @@ html {
 body {
   width: 100%;
 }
-/* main task-base {
-  display: inline-grid;
-  grid-template-columns: auto auto auto auto;
-}
-
-task-base task-node {
-  margin: 20px;
-} */
 
 main {
   padding: 3%;
@@ -31,7 +23,6 @@ main {
 }
 
 main.focused {
-    /* background-color: var(--color-shadow); */
 
   & task-node:not([data-focused])::part(task-container) {
     filter: blur(3px);
@@ -48,11 +39,6 @@ main.focused {
   & > menu {
     visibility: hidden;
   }
-
-  /* & task-base {
-    background: linear-gradient(270deg, var(--color-accent), black);
-  } */
-
 }
 
 task-view {
@@ -68,7 +54,6 @@ task-base {
   transition: all 0.25s ease-out;
   min-width: 44%;
   width: 100%;
-  /* background-color: var(--color-background); */
 }
 
 task-base > task-node {

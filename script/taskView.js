@@ -70,7 +70,7 @@ class TaskView extends HTMLElement {
     this.prepend(dialog)
 
     // focus exit
-    dialog.addEventListener('close', () => {
+    dialog.addEventListener('close', (e) => {
       const currentTask = this.querySelector(QUERY_FOCUS_NODE)
       currentTask.blurTask()
     })
@@ -78,6 +78,8 @@ class TaskView extends HTMLElement {
     // focus exit
     dialog.querySelector(QUERY_FOCUS_PAUSE).addEventListener('click', (e) => {
       e.stopPropagation()
+      const currentTask = this.querySelector(QUERY_FOCUS_NODE)
+      currentTask.blurTask(2)
       this.blurTree()
     })
 
@@ -89,7 +91,7 @@ class TaskView extends HTMLElement {
       // DFS - get first subtask
       let nextTask = currentTask.querySelector(ELEMENT_NODE)
 
-      currentTask.blurTask()
+      currentTask.blurTask(3)
 
       // no subtasks
       if (!nextTask) {
