@@ -1,6 +1,8 @@
 # Focus Tree
 
+<p align="center">
 ![FocusTree](FocusTree.png)
+</p>
 
 Task manager, action tracker, habit builder
 
