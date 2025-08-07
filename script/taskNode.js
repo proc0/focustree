@@ -87,10 +87,9 @@ class TaskNode extends HTMLElement {
   }
 
   blurTask(state) {
-    if (!state || !this.task.state.focused) {
-      return
+    if (state) {
+      this.task.state.current = state
     }
-    this.task.state.current = state
     this.task.state.focused = false
     this.dispatch(EVENT_STATES, this.task)
   }
@@ -173,12 +172,10 @@ class TaskNode extends HTMLElement {
   }
 
   focusTask() {
-    if (this.task.state.current !== 1) {
-      this.task.state.current = 1
-      this.task.state.focused = true
-      this.task.meta.opened = true
-      this.dispatch(EVENT_STATES, this.task)
-    }
+    this.task.state.current = 1
+    this.task.state.focused = true
+    this.task.meta.opened = true
+    this.dispatch(EVENT_STATES, this.task)
 
     const taskContainer = this.shadowRoot.querySelector('div').getBoundingClientRect()
     const containerY = taskContainer.top + window.pageYOffset
