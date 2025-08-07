@@ -18,9 +18,11 @@ Local usage: clone or download, and open index.html in a browser.
 - Simple and straight forward implementation
 - No accounts needed, full control over task data
 
+![FocusTree screenshot](assets/FocusTree_screenshot.png)
+
 ## A simple task app with full control
 
-I built this as a proof of concept to test out a different use cases for task trees. I also needed a way to focus on very large task trees without needing to remember what the next steps are. Additionally, I'm tired of accounts and login in everywhere, so all the data is local but it can be easily backed up and imported again.
+I built this as a proof of concept to test out different use cases for task trees. I also needed a way to focus on very large task trees without needing to remember what the next steps are. Additionally, I'm tired of accounts and login in everywhere, so all the data is local but it can be easily backed up and imported again.
 
 ## Stack
 
