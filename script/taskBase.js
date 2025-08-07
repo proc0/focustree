@@ -8,8 +8,8 @@ const MODEL_TASK = {
   meta: {
     opened: false,
   },
-  name: '<Task Name>',
-  note: '',
+  name: '[Task]',
+  note: '[note]',
   state: {
     current: 0,
     focused: false,
@@ -54,7 +54,7 @@ class TaskBase extends HTMLElement {
 
         taskStore.createIndex('name', 'name')
 
-        const taskSeed = structuredClone(MODEL_TASK)
+        const taskSeed = structuredClone(TUTORIAL || MODEL_TASK)
         // only root tasks have id
         taskSeed.id = 1
 

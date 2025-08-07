@@ -1,19 +1,34 @@
 # Focus Tree
 
-![FocusTree](FocusTree.png)
+![FocusTree](assets/FocusTree.png)
 
 Task manager, action tracker, habit builder
 
+## Usage
+
+### [Live App](https://proc0.github.io/focustree/)
+
+Local usage: clone or download, and open index.html in a browser.
+
 ## Features
 
-- Create infinite task trees
-- Focus Mode - focus on any task tree and walk through it step by step
+- Manage tasks, track actions or steps, create reusable task trees
+- Focus on any task tree and walk through it step by step
 - Export and import task trees for unlimited use cases
-- Dead simple and transparent implementation for maximum flexibility
+- Simple and straight forward implementation
+- No accounts needed, full control over task data
 
-## Tech features
+## A simple task app with full control
 
-- VanillaJS, HTML5, CSS3
-- Extremely simple, no dependencies
-- IndexedDB, local first (local only for now. Can be easily made to sync with PouchDB)
-- Using supported DOM features like Slots and ShadowRoot to support rich functionality
+I built this as a proof of concept to test out a different use cases for task trees. I also needed a way to focus on very large task trees without needing to remember what the next steps are. Additionally, I'm tired of accounts and login in everywhere, so all the data is local but it can be easily backed up and imported again.
+
+## Stack
+
+- VanillaJS, HTML, CSS, IndexedDB
+- Zero dependencies
+- Native HTML components
+- Slots, custom elements, and shadow DOM
+
+## Feedback
+
+Feedback is welcome!
