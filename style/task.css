@@ -28,6 +28,24 @@ div {
     }
   }
 
+  &.done details[open] summary {
+    border-bottom: 1px solid var(--color-text-done);
+  }
+
+  &.done details summary {
+    &::marker {
+      color: var(--color-text-done);
+    }
+
+    & header {
+      color: var(--color-text-done);
+
+      & button {
+        color: var(--color-text-done);
+      }
+    }
+  }
+
   &.pause ul li {
     & :not(button) {
       color: var(--color-accent);
@@ -36,6 +54,24 @@ div {
     & button,
     & input {
       color: var(--color-accent);
+    }
+  }
+
+  &.pause details[open] summary {
+    border-bottom: 1px solid var(--color-accent);
+  }
+
+  &.pause details summary {
+    &::marker {
+      color: var(--color-accent);
+    }
+
+    & header {
+      color: var(--color-accent);
+
+      & button {
+        color: var(--color-accent);
+      }
     }
   }
 }
