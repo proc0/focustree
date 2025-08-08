@@ -27,6 +27,17 @@ div {
       color: var(--color-text-done);
     }
   }
+
+  &.pause ul li {
+    & :not(button) {
+      color: var(--color-accent);
+    }
+
+    & button,
+    & input {
+      color: var(--color-accent);
+    }
+  }
 }
 
 ul {
