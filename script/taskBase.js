@@ -1,5 +1,5 @@
 const BASE_NAME = 'taskbase'
-const BASE_VERSION = 1
+const BASE_VERSION = 2
 const BASE_STORE = 'task'
 
 const MODEL_TASK = {
@@ -19,6 +19,16 @@ const MODEL_TASK = {
   subs: [],
 }
 
+// V2 task history model
+// records how much time was spent focusing
+// and whether or not it was paused
+// {
+//   stateStart,
+//   stateEnd,
+//   timeStart,
+//   timeEnd,
+// }
+
 class TaskBase extends HTMLElement {
   constructor() {
     super()
@@ -35,7 +45,7 @@ class TaskBase extends HTMLElement {
       this.load()
     }
 
-    initBase.onupgradeneeded = ({ target }) => {
+    initBase.onupgradeneeded = ({ target, oldVersion }) => {
       console.log('TaskBase upgrade needed.')
 
       const taskBase = target.result
@@ -71,6 +81,29 @@ class TaskBase extends HTMLElement {
         // version upgrade
         const store = target.transaction.objectStore(BASE_STORE)
 
+        const traverseTask = (task, transform) => {
+          transform(task)
+          if (!task.subs.length) return
+
+          task.subs.forEach((sub) => {
+            traverseTask(sub, transform)
+          })
+        }
+        // pick migration function according to version
+        let migration = (a) => a
+        if (oldVersion === 1) {
+          console.log(`Migrating TaskBase from ${oldVersion} to ${taskBase.version}...`)
+          // version 2 changes task state history model
+          migration = (task) => {
+            task.state.history = task.state.history.map((entry) => ({
+              stateStart: entry.state,
+              stateEnd: entry.state,
+              timeStart: entry.time,
+              timeEnd: entry.time,
+            }))
+          }
+        }
+
         const request = (store.openCursor().onsuccess = ({ target }) => {
           const cursor = target.result
 
@@ -79,15 +112,10 @@ class TaskBase extends HTMLElement {
           }
 
           const task = cursor.value
-          // TODO: add general migration function
-          // checks each key for renaming by comparing order
-          // traverses tree recursively to update
-          // example migration mapping:
-          task.meta = {
-            opened: task.meta.isOpen,
-          }
+          // migrate task and subtasks
+          traverseTask(task, migration)
 
-          // migrate task
+          // save task migration
           const putRequest = store.put(task, task.id)
 
           putRequest.onsuccess = (success) => {
@@ -302,16 +330,10 @@ class TaskBase extends HTMLElement {
     }
 
     if (event.type === EVENT_STATES) {
-      const stateChange = {
-        state: task.state.current,
-        time: Date.now(),
-      }
       // limit history to prevent large db size
       if (task.state.history.length > 99) {
         task.state.history.splice(50)
       }
-
-      task.state.history.push(stateChange)
     }
 
     if (event.type === EVENT_SYNC) {

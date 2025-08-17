@@ -1,0 +1,302 @@
+[
+  {
+    "path": [
+      0
+    ],
+    "meta": {
+      "opened": true
+    },
+    "name": "FocusTree Meta",
+    "note": "Task list for Focus Tree app.",
+    "state": {
+      "current": 0,
+      "focused": false,
+      "history": [],
+      "options": [
+        "ready",
+        "active",
+        "pause",
+        "done"
+      ]
+    },
+    "subs": [
+      {
+        "path": [
+          0,
+          0
+        ],
+        "meta": {
+          "opened": false
+        },
+        "name": "Add a way to move tasks",
+        "note": "There needs to be a way to move tasks from one parent to another, and/or change the order of the leaf tasks.",
+        "state": {
+          "current": 0,
+          "focused": false,
+          "history": [],
+          "options": [
+            "ready",
+            "active",
+            "pause",
+            "done"
+          ]
+        },
+        "subs": []
+      },
+      {
+        "path": [
+          0,
+          1
+        ],
+        "meta": {
+          "opened": false
+        },
+        "name": "Make task note optional and hide empty",
+        "note": "And also make note a textarea with more lines so you can see what is being typed.",
+        "state": {
+          "current": 0,
+          "focused": false,
+          "history": [],
+          "options": [
+            "ready",
+            "active",
+            "pause",
+            "done"
+          ]
+        },
+        "subs": []
+      },
+      {
+        "path": [
+          0,
+          2
+        ],
+        "meta": {
+          "opened": true
+        },
+        "name": "Add parent task type or make task leafs completable only",
+        "note": "There needs to be a more comprehensive way to complete tasks, and having parent task be done before you complete leaf task does not make sense. Either add a parent task type and a way to pick task type, or make only leaf tasks completable (the latter needs some thinking if it makes the use cases less flexible).",
+        "state": {
+          "current": 3,
+          "focused": false,
+          "history": [
+            {
+              "stateStart": 1,
+              "stateEnd": 1,
+              "timeStart": 1755408701595,
+              "timeEnd": 1755408701595
+            },
+            {
+              "stateStart": 1,
+              "stateEnd": 1,
+              "timeStart": 1755408869026,
+              "timeEnd": 1755408869026
+            },
+            {
+              "stateStart": 3,
+              "stateEnd": 3,
+              "timeStart": 1755408876055,
+              "timeEnd": 1755408876055
+            }
+          ],
+          "options": [
+            "ready",
+            "active",
+            "pause",
+            "done"
+          ]
+        },
+        "subs": [
+          {
+            "path": [
+              0,
+              2,
+              0
+            ],
+            "meta": {
+              "opened": true
+            },
+            "name": "Write migration function and DB version to 3.",
+            "note": "[note]",
+            "state": {
+              "current": 3,
+              "focused": false,
+              "history": [
+                {
+                  "stateStart": 1,
+                  "stateEnd": 1,
+                  "timeStart": 1755408869026,
+                  "timeEnd": 1755408869026
+                },
+                {
+                  "stateStart": 1,
+                  "stateEnd": 1,
+                  "timeStart": 1755408876055,
+                  "timeEnd": 1755408876055
+                },
+                {
+                  "stateStart": 3,
+                  "stateEnd": 3,
+                  "timeStart": 1755408876055,
+                  "timeEnd": 1755408876055
+                },
+                {
+                  "stateStart": 3,
+                  "stateEnd": 3,
+                  "timeStart": 1755408876058,
+                  "timeEnd": 1755408876058
+                }
+              ],
+              "options": [
+                "ready",
+                "active",
+                "pause",
+                "done"
+              ]
+            },
+            "subs": []
+          }
+        ]
+      },
+      {
+        "path": [
+          0,
+          3
+        ],
+        "meta": {
+          "opened": true
+        },
+        "name": "Fix task history to record the total time",
+        "note": "Task state history should record how long a task took to complete. It probably is splitting time field into startTime, and endTime",
+        "state": {
+          "current": 3,
+          "focused": false,
+          "history": [
+            {
+              "stateStart": 1,
+              "timeStart": 1755411926419,
+              "stateEnd": 3,
+              "timeEnd": 1755411932453
+            }
+          ],
+          "options": [
+            "ready",
+            "active",
+            "pause",
+            "done"
+          ]
+        },
+        "subs": [
+          {
+            "path": [
+              0,
+              3,
+              0
+            ],
+            "meta": {
+              "opened": true
+            },
+            "name": "Write migration function and change version to 2",
+            "note": "[note]",
+            "state": {
+              "current": 3,
+              "focused": false,
+              "history": [
+                {
+                  "stateStart": 1,
+                  "timeStart": 1755411930843,
+                  "stateEnd": 3,
+                  "timeEnd": 1755411932453
+                }
+              ],
+              "options": [
+                "ready",
+                "active",
+                "pause",
+                "done"
+              ]
+            },
+            "subs": []
+          }
+        ]
+      },
+      {
+        "path": [
+          0,
+          4
+        ],
+        "meta": {
+          "opened": true
+        },
+        "name": "Add this bug list as json to the repo.",
+        "note": "[note]",
+        "state": {
+          "current": 3,
+          "focused": false,
+          "history": [
+            {
+              "stateStart": 1,
+              "timeStart": 1755411971969,
+              "stateEnd": 3,
+              "timeEnd": 1755411972893
+            }
+          ],
+          "options": [
+            "ready",
+            "active",
+            "pause",
+            "done"
+          ]
+        },
+        "subs": []
+      },
+      {
+        "path": [
+          0,
+          5
+        ],
+        "meta": {
+          "opened": false
+        },
+        "name": "Add Link task type",
+        "note": "Add a task that just links to another task during Focus mode.",
+        "state": {
+          "current": 0,
+          "focused": false,
+          "history": [],
+          "options": [
+            "ready",
+            "active",
+            "pause",
+            "done"
+          ]
+        },
+        "subs": []
+      },
+      {
+        "path": [
+          0,
+          6
+        ],
+        "meta": {
+          "opened": false
+        },
+        "name": "Refactor task states to be able to rename the states easily",
+        "note": "Task states should be easy to rename, maybe expose UI in future, but for now just have a constant that changes and tasks reflect the label",
+        "state": {
+          "current": 0,
+          "focused": false,
+          "history": [],
+          "options": [
+            "ready",
+            "active",
+            "pause",
+            "done"
+          ]
+        },
+        "subs": []
+      }
+    ],
+    "id": 2
+  }
+]

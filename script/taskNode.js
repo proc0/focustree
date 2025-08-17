@@ -89,6 +89,10 @@ class TaskNode extends HTMLElement {
   blurTask(state) {
     if (state) {
       this.task.state.current = state
+      // complete the history entry
+      const lastIndex = this.task.state.history.length - 1
+      this.task.state.history[lastIndex].stateEnd = state
+      this.task.state.history[lastIndex].timeEnd = Date.now()
     }
     this.task.state.focused = false
     this.dispatch(EVENT_STATES, this.task)
@@ -175,6 +179,11 @@ class TaskNode extends HTMLElement {
     this.task.state.current = 1
     this.task.state.focused = true
     this.task.meta.opened = true
+    // add history entry
+    this.task.state.history.push({
+      stateStart: this.task.state.current,
+      timeStart: Date.now(),
+    })
     this.dispatch(EVENT_STATES, this.task)
 
     const taskContainer = this.shadowRoot.querySelector('div').getBoundingClientRect()
