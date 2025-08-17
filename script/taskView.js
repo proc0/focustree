@@ -79,7 +79,18 @@ class TaskView extends HTMLElement {
     dialog.querySelector(QUERY_FOCUS_PAUSE).addEventListener('click', (e) => {
       e.stopPropagation()
       const currentTask = this.querySelector(QUERY_FOCUS_NODE)
+      // pause current task
       currentTask.blurTask(2)
+
+      let parentTask = currentTask.parentElement
+      // pause parent task
+      parentTask.blurTask(2)
+      // pause all the ancestors as well
+      while (!parentTask.equals(this.focusTask)) {
+        parentTask = parentTask.parentElement
+        parentTask.blurTask(2)
+      }
+      // exit focus
       this.blurTree()
     })
 
