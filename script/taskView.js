@@ -91,23 +91,30 @@ class TaskView extends HTMLElement {
       // DFS - get first subtask
       let nextTask = currentTask.querySelector(ELEMENT_NODE)
 
-      currentTask.blurTask(3)
+      // do not set task as done (3) unless it has children
+      // this only removes focus
+      currentTask.blurTask()
 
       // no subtasks
       if (!nextTask) {
+        // set task as done because no children
+        currentTask.blurTask(3)
         // focus level ~ leaf task
         let parentTask = currentTask.parentElement
-
         // current task is initial focus (no more subtasks left)
         // or current task is a root task with no subtasks
         if (currentTask.equals(this.focusTask) || currentTask.isRoot()) {
+          currentTask.blurTask(3)
           return this.blurTree()
         }
 
+        // currentTask.blurTask(3)
         // try adjacent task
         nextTask = currentTask.nextSibling
         // no adjacent tasks
         if (!nextTask) {
+          // set parent task as done since all children tasks are done
+          parentTask.blurTask(3)
           // focus level ~ singleton leaf task
           // parent task is the initial focus (last subtask of the branch)
           // or parent task is a root task
@@ -127,6 +134,8 @@ class TaskView extends HTMLElement {
           if (parentTask.equals(this.focusTask)) {
             return this.blurTree()
           }
+          // set parent task as done since all children tasks are done
+          parentTask.blurTask(3)
           // valid ancestor relative found
           nextTask = parentTask.nextSibling
         }
