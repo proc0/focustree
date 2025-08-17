@@ -83,10 +83,12 @@ class TaskView extends HTMLElement {
       currentTask.blurTask(2)
 
       let parentTask = currentTask.parentElement
-      // pause parent task
-      parentTask.blurTask(2)
-      // pause all the ancestors as well
-      while (!parentTask.equals(this.focusTask)) {
+      // pause parent task if active
+      if (parentTask.task.state.current === 1) {
+        parentTask.blurTask(2)
+      }
+      // pause all the ancestors as well, only if ancestor is active
+      while (!parentTask.equals(this.focusTask) && parentTask.task.state.current === 1) {
         parentTask = parentTask.parentElement
         parentTask.blurTask(2)
       }
