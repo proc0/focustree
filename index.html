@@ -16,16 +16,27 @@
   </head>
   <body>
     <template id="template-task-compact">
-      <link rel="stylesheet" href="style/task.css" />
+      <link rel="stylesheet" href="style/compact.css" />
       <div>
         <details part="subs-container">
           <summary>
             <header part="subs-header">
               <button name="task-focus" title="Focus">👁</button>
-              <slot name="task-name"></slot><button name="task-edit" title="Edit">✎</button
-              ><button name="task-add" title="Add subtask">+</button><slot name="task-state"></slot
-              ><button name="task-sync" title="Sync">↴</button
-              ><button name="task-delete" title="Delete">✕</button>
+              <slot name="task-name"></slot>
+              <menu>
+                <li>
+                  <button name="task-edit" title="Edit">✎</button>
+                </li>
+                <li>
+                  <button name="task-add" title="Add subtask">+</button>
+                </li>
+                <li>
+                  <slot name="task-state"></slot><button name="task-sync" title="Sync">↴</button>
+                </li>
+                <li>
+                  <button name="task-delete" title="Delete">✕</button>
+                </li>
+              </menu>
             </header>
           </summary>
           <section>

@@ -1,0 +1,180 @@
+@import url('shared.css');
+@import url('select.css');
+
+/* Main task */
+
+div {
+  display: flex;
+  flex-direction: column;
+
+  &.focused ul {
+    border: 1px solid var(--color-highlight);
+    background-color: var(--color-background);
+    filter: none !important;
+  }
+
+  &.focused details section {
+    font-size: 100% !important;
+  }
+
+  &.done ul li {
+    & :not(button) {
+      color: var(--color-text-done);
+    }
+
+    & button,
+    & input {
+      color: var(--color-text-done);
+    }
+  }
+
+  &.done details[open] summary {
+    border-bottom: 1px solid var(--color-text-done);
+  }
+
+  &.done details summary {
+    &::marker {
+      color: var(--color-text-done);
+    }
+
+    & header {
+      color: var(--color-text-done);
+
+      & button {
+        color: var(--color-text-done);
+      }
+    }
+  }
+
+  &.pause ul li {
+    & :not(button) {
+      color: var(--color-accent);
+    }
+
+    & button,
+    & input {
+      color: var(--color-accent);
+    }
+  }
+
+  &.pause details[open] summary {
+    border-bottom: 1px solid var(--color-accent);
+  }
+
+  &.pause details summary {
+    &::marker {
+      color: var(--color-accent);
+    }
+
+    & header {
+      color: var(--color-accent);
+
+      & button {
+        color: var(--color-accent);
+      }
+    }
+  }
+}
+
+menu {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  padding: 0 0.2em 0;
+}
+
+menu li {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Subtasks */
+
+details {
+  padding-left: 2.2em;
+
+  &[open] summary {
+    border-bottom: 1px solid var(--color-border-details);
+  }
+}
+
+details summary {
+  list-style-position: outside;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &::marker {
+    color: var(--color-marker);
+    font-size: 1em;
+    display: flex;
+  }
+}
+
+details summary header {
+  align-items: center;
+  color: var(--color-subtitle);
+  display: flex;
+  flex-direction: row;
+  height: 2em;
+  justify-content: flex-start;
+}
+
+details section {
+  font-size: 92%;
+}
+
+/* Leaf subtasks */
+
+.leaf details summary {
+  list-style: none;
+  box-shadow: none;
+  border: none;
+
+  &:hover {
+    cursor: auto;
+  }
+
+  & header {
+    color: var(--color-disabled-subtitle);
+  }
+}
+
+/* Interactive elements */
+
+.hidden {
+  display: inline;
+  visibility: hidden;
+}
+
+input {
+  appearance: base-select;
+  background-color: inherit;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: inherit;
+
+  &:focus {
+    outline: none !important;
+    border: 2px inset var(--color-focus-input);
+  }
+}
+
+button {
+  border-radius: 0.2em;
+  color: var(--color-text-button);
+  display: flex;
+  font-size: 1em;
+  height: 100%;
+  place-items: center;
+  place-content: center;
+  padding: 0.3em;
+  margin-left: 0.2em;
+
+  &:hover {
+    color: var(--color-hover-text-button);
+    background-color: var(--color-hover-background-button);
+  }
+}
