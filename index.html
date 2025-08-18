@@ -15,6 +15,25 @@
     <script src="script/taskNode.js"></script>
   </head>
   <body>
+    <template id="template-task-compact">
+      <link rel="stylesheet" href="style/task.css" />
+      <div>
+        <details part="subs-container">
+          <summary>
+            <header part="subs-header">
+              <button name="task-focus" title="Focus">👁</button>
+              <slot name="task-name"></slot><button name="task-edit" title="Edit">✎</button
+              ><button name="task-add" title="Add subtask">+</button><slot name="task-state"></slot
+              ><button name="task-sync" title="Sync">↴</button
+              ><button name="task-delete" title="Delete">✕</button>
+            </header>
+          </summary>
+          <section>
+            <slot name="task-subs"></slot>
+          </section>
+        </details>
+      </div>
+    </template>
     <template id="template-task">
       <link rel="stylesheet" href="style/task.css" />
       <div>

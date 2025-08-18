@@ -22,6 +22,7 @@ const EVENT_FOCUS = 'focus'
 const EVENT_SYNC = 'sync'
 
 const TEMPLATE_NODE = 'template-task'
+const TEMPLATE_COMPACT = 'template-task-compact'
 const TEMPLATE_FOCUS = 'template-focus'
 // custom element names
 const ELEMENT_NODE = 'task-node'

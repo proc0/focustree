@@ -14,7 +14,7 @@ class TaskNode extends HTMLElement {
     this.dispatch.bind(this)
 
     this.attachShadow({ mode: 'open' }).appendChild(
-      document.getElementById(TEMPLATE_NODE).content.cloneNode(true)
+      document.getElementById(TEMPLATE_COMPACT).content.cloneNode(true)
     )
 
     // click event for editing task fields
