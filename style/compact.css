@@ -87,6 +87,11 @@ menu li {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+
+  & button[name='task-delete'],
+  & button[name='task-edit'] {
+    font-size: 1em;
+  }
 }
 
 /* Subtasks */
@@ -119,6 +124,7 @@ details summary header {
   display: flex;
   flex-direction: row;
   height: 2em;
+  font-size: 1.2em;
   justify-content: flex-start;
 }
 
@@ -166,7 +172,7 @@ button {
   border-radius: 0.2em;
   color: var(--color-text-button);
   display: flex;
-  font-size: 1em;
+  font-size: 1.5em;
   height: 100%;
   place-items: center;
   place-content: center;
@@ -177,4 +183,11 @@ button {
     color: var(--color-hover-text-button);
     background-color: var(--color-hover-background-button);
   }
+}
+
+::slotted(select) {
+  background: transparent !important;
+  border-radius: 0;
+  padding: 0 !important;
+  margin: 0 0 0 0.2em !important;
 }

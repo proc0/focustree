@@ -14,7 +14,7 @@ select {
   border: 1px solid black;
   border-color: var(--color-border-select);
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.28);
-  color: var(--color-text);
+  color: var(--color-subtitle);
   cursor: pointer;
   display: inline-block;
   margin: 8px 0;
