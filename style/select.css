@@ -70,19 +70,22 @@ select option {
   }
 }
 
-/* task-node {
-  &:has(select:open) {
-    &:host(menu) {
-      background: red !important;
+/* workaround for select component not jiving with shadow 
+* selectors, when select is open menu should be visible
+*/
+/* TODO: constrain this to compact mode once there is a class on task-view */
+task-node {
+  &:has(> select:open) {
+    &::part(task-menu) {
       visibility: visible;
       opacity: 1;
       width: auto;
     }
-  }
-} */
 
-/* summary > ::slotted(menu):has(select) {
-  visibility: visible;
-  opacity: 1;
-  width: auto;
-} */
+    &::part(menu-item) {
+      visibility: visible !important;
+      opacity: 1 !important;
+      width: auto !important;
+    }
+  }
+}

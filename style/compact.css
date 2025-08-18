@@ -91,19 +91,6 @@ menu {
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
 }
-// use ::part
-/* :host-context(select) {
-  background: red !important;
-  visibility: visible;
-  opacity: 1;
-  width: auto;
-} */
-/* menu li slot:has-slotted {
-  background: red !important;
-  visibility: visible;
-  opacity: 1;
-  width: auto;
-} */
 
 menu li {
   display: flex;
@@ -183,12 +170,6 @@ details summary {
 
   & menu:hover,
   & menu:hover button {
-    visibility: visible;
-    opacity: 1;
-    width: auto;
-  }
-
-  & menu:hover ::slotted(select):open & {
     visibility: visible;
     opacity: 1;
     width: auto;
