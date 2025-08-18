@@ -69,3 +69,20 @@ select option {
     }
   }
 }
+
+/* task-node {
+  &:has(select:open) {
+    &:host(menu) {
+      background: red !important;
+      visibility: visible;
+      opacity: 1;
+      width: auto;
+    }
+  }
+} */
+
+/* summary > ::slotted(menu):has(select) {
+  visibility: visible;
+  opacity: 1;
+  width: auto;
+} */

@@ -21,23 +21,24 @@
         <details part="subs-container">
           <summary>
             <header part="subs-header">
-              <button name="task-focus" title="Focus">👁</button>
               <slot name="task-name"></slot>
-              <menu>
-                <li>
-                  <button name="task-edit" title="Edit">✎</button>
-                </li>
-                <li>
-                  <button name="task-add" title="Add subtask">+</button>
-                </li>
-                <li>
-                  <slot name="task-state"></slot><button name="task-sync" title="Sync">↴</button>
-                </li>
-                <li>
-                  <button name="task-delete" title="Delete">✕</button>
-                </li>
-              </menu>
             </header>
+            <button name="task-focus" title="Focus">👁</button>
+            <button name="task-menu" title="Menu">☰</button>
+            <menu>
+              <li>
+                <button name="task-edit" title="Edit">✎</button>
+              </li>
+              <li>
+                <button name="task-add" title="Add subtask">+</button>
+              </li>
+              <li>
+                <slot name="task-state"></slot><button name="task-sync" title="Sync">↴</button>
+              </li>
+              <li>
+                <button name="task-delete" title="Delete">✕</button>
+              </li>
+            </menu>
           </summary>
           <section>
             <slot name="task-subs"></slot>
