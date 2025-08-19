@@ -9,7 +9,7 @@ const MODEL_TASK = {
     opened: false,
   },
   name: '[Task]',
-  note: '[note]',
+  note: '',
   state: {
     current: 0,
     focused: false,

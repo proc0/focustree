@@ -213,15 +213,23 @@ class TaskView extends HTMLElement {
     }
 
     // fields
-    const taskName = document.createElement(ELEMENT_FIELD)
-    taskName.setAttribute('slot', SLOT_NAME)
-    taskName.textContent = task.name
-    taskNode.appendChild(taskName)
+    if (taskNode.shadowRoot.querySelector('slot[name="task-name"]')) {
+      const taskName = document.createElement(ELEMENT_FIELD)
+      taskName.setAttribute('slot', SLOT_NAME)
+      taskName.textContent = task.name
+      // TODO: add compact mode check
+      if (task.note && task.note.length) {
+        taskName.setAttribute('data-note', task.note)
+      }
+      taskNode.appendChild(taskName)
+    }
 
-    const taskNote = document.createElement(ELEMENT_FIELD)
-    taskNote.setAttribute('slot', SLOT_NOTE)
-    taskNote.textContent = task.note
-    taskNode.appendChild(taskNote)
+    if (taskNode.shadowRoot.querySelector('slot[name="task-note"]')) {
+      const taskNote = document.createElement(ELEMENT_FIELD)
+      taskNote.setAttribute('slot', SLOT_NOTE)
+      taskNote.textContent = task.note
+      taskNode.appendChild(taskNote)
+    }
 
     const taskState = document.createElement('select')
     taskState.setAttribute('slot', SLOT_STATE)
