@@ -6,6 +6,10 @@
 div {
   display: flex;
   flex-direction: column;
+  transition: opacity, visibility 0.25s ease;
+  -moz-transition: opacity, visibility 0.25s ease;
+  -o-transition: opacity, visibility 0.25s ease;
+  -webkit-transition: opacity, visibility 0.25s ease;
 
   &.focused ul {
     border: 1px solid var(--color-highlight);
@@ -33,7 +37,7 @@ div {
   }
 
   &.done details summary {
-    &::marker {
+    &::before {
       color: var(--color-text-done);
     }
 
@@ -87,9 +91,10 @@ menu {
   visibility: hidden;
   opacity: 0;
   width: 0;
-  transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
+  transition: opacity 350ms ease;
+  -moz-transition: opacity 350ms ease;
+  -o-transition: opacity 350ms ease;
+  -webkit-transition: opacity 350ms ease;
 }
 
 menu li {
@@ -140,10 +145,10 @@ details summary {
     /* Anchor the shape to the summary */
     position-anchor: --summary;
     position-area: self-start;
-    transition: transform 0.35s ease;
-    -moz-transition: transform 0.35s ease;
-    -o-transition: transform 0.35s ease;
-    -webkit-transition: transform 0.35s ease;
+    transition: transform 350ms ease;
+    -moz-transition: transform 350ms ease;
+    -o-transition: transform 350ms ease;
+    -webkit-transition: transform 350ms ease;
   }
 
   &::marker {
@@ -240,9 +245,14 @@ button {
   place-content: center;
   padding: 0.3em;
   margin-left: 0.2em;
+
   transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+
+  transition-delay: 250ms;
+  transition-property: visibility, opacity, width;
   &:hover {
     color: var(--color-hover-text-button);
     background-color: var(--color-hover-background-button);
@@ -254,4 +264,11 @@ button {
   border-radius: 0;
   padding: 0 !important;
   margin: 0 0 0 0.2em !important;
+}
+
+/* Flash of Unstyled Content fix */
+summary button,
+div {
+  visibility: visible !important;
+  opacity: 1 !important;
 }

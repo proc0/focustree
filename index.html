@@ -16,6 +16,14 @@
   </head>
   <body>
     <template id="template-task-compact">
+      <style>
+        /* Flash of Unstyled Content fix */
+        summary button,
+        div {
+          visibility: hidden;
+          opacity: 0;
+        }
+      </style>
       <link rel="stylesheet" href="style/compact.css" />
       <div>
         <details part="subs-container">
