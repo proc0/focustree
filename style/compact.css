@@ -181,6 +181,41 @@ details summary header {
   align-items: center;
   color: var(--color-subtitle);
   display: flex;
+  position: relative;
+  
+  &:hover:before {
+    opacity: 1;
+    transition: visibility, opacity 100ms ease-in-out;
+    visibility: visible;
+
+    transition-delay: 500ms;
+    transition-property: visibility, opacity;
+  }
+  &:before {
+    background-color: var(--color-background-select);
+    content: attr(data-note);
+    position: absolute;
+    display: flex;
+    font-size: 0.8em;
+    top: -2em;
+    left: -2em;
+    padding: 0.2em 1em;
+    color: var(--color-text);
+    max-width: 200%;
+    white-space: break-spaces;
+
+    border-radius: 0.2em;
+    -moz-border-radius: 0.2em;
+    -webkit-border-radius: 0.2em;
+
+    box-shadow: 2px 2px 16px var(--color-shadow));
+    -moz-box-shadow: 2px 2px 16px var(--color-shadow));
+    -webkit-box-shadow: 2px 2px 16px var(--color-shadow));
+
+    opacity: 0;
+    z-index: 99999;
+    visibility: hidden;
+  }
 }
 
 details section {
@@ -199,7 +234,7 @@ details section {
   }
 
   &:hover {
-    cursor: auto;
+    cursor: default;
   }
 
   & header {
