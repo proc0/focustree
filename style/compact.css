@@ -11,7 +11,7 @@ div {
   -o-transition: opacity, visibility 0.25s ease;
   -webkit-transition: opacity, visibility 0.25s ease;
 
-  &.focused ul {
+  &.focused summary {
     border: 1px solid var(--color-highlight);
     background-color: var(--color-background);
     filter: none !important;
@@ -21,11 +21,7 @@ div {
     font-size: 100% !important;
   }
 
-  &.done ul li {
-    & :not(button) {
-      color: var(--color-text-done);
-    }
-
+  &.done menu item {
     & button,
     & input {
       color: var(--color-text-done);
@@ -43,18 +39,14 @@ div {
 
     & header {
       color: var(--color-text-done);
+    }
 
-      & button {
-        color: var(--color-text-done);
-      }
+    & button {
+      color: var(--color-text-done);
     }
   }
 
-  &.pause ul li {
-    & :not(button) {
-      color: var(--color-accent);
-    }
-
+  &.pause menu item {
     & button,
     & input {
       color: var(--color-accent);
@@ -66,16 +58,16 @@ div {
   }
 
   &.pause details summary {
-    &::marker {
+    &::before {
       color: var(--color-accent);
     }
 
     & header {
       color: var(--color-accent);
+    }
 
-      & button {
-        color: var(--color-accent);
-      }
+    & button {
+      color: var(--color-accent);
     }
   }
 }
@@ -97,7 +89,7 @@ menu {
   -webkit-transition: opacity 350ms ease;
 }
 
-menu li {
+menu item {
   display: flex;
   justify-content: flex-start;
   align-items: center;

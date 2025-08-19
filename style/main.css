@@ -67,7 +67,8 @@ task-node {
   animation-name: OpacityFadeIn;
   animation-iteration-count: 1;
   animation-timing-function: ease-in;
-  animation-duration: 0.05s;
+  animation-duration: 100ms;
+  animation-fill-mode: forwards;
 }
 
 @keyframes OpacityFadeIn {
