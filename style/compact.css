@@ -80,17 +80,20 @@ menu {
   background-color: var(--color-background-select);
   display: flex;
   flex-direction: row;
-  border-radius: 0.2em;
-  box-shadow: inset 0 0 3px var(--color-shadow);
+  border-radius: 0.2rem;
+  box-shadow: inset 0 0 0.2rem var(--color-shadow);
   height: 100%;
-  padding: 0 0.2em 0;
+  padding: 0;
+  margin: 0;
   visibility: hidden;
   opacity: 0;
-  width: 0;
   transition: opacity 350ms ease;
   -moz-transition: opacity 350ms ease;
   -o-transition: opacity 350ms ease;
   -webkit-transition: opacity 350ms ease;
+
+  transition-delay: 250ms;
+  transition-property: visibility, opacity;
 }
 
 menu item {
@@ -100,18 +103,22 @@ menu item {
 
   & button[name='task-delete'],
   & button[name='task-edit'] {
-    font-size: 1em;
+    font-size: 1rem;
   }
 
   & button {
     visibility: hidden;
+    width: 2rem;
+    height: 2rem;
+    transition-delay: 250ms;
+    transition-property: visibility, opacity;
   }
 }
 
 /* Subtasks */
 
 details {
-  padding-left: 2.2em;
+  padding-left: 2rem;
 
   &[open] summary {
     border-bottom: 1px solid var(--color-border-details);
@@ -121,8 +128,8 @@ details {
 details summary {
   list-style-position: outside;
   flex-direction: row;
-  height: 2em;
-  font-size: 1.2em;
+  height: 2rem;
+  font-size: 1.3rem;
   justify-content: flex-start;
   align-items: center;
   position: relative;
@@ -135,10 +142,10 @@ details summary {
   &::before {
     /* Custom marker dimensions */
     content: '▶';
-    font-size: 0.8em;
-    margin-right: 0.5em;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
     color: var(--color-marker);
-    margin-left: -1.4em;
+    margin-left: -1.4rem;
 
     /* Anchor the shape to the summary */
     position-anchor: --summary;
@@ -150,63 +157,25 @@ details summary {
   }
 
   & button[name='task-menu'] {
-    font-size: 1.2em;
-
+    font-size: 1.2rem;
+    margin: 0;
+    /* opens the menu */
     &:hover + menu,
     &:hover + menu button {
       visibility: visible;
       opacity: 1;
-      width: auto;
     }
-
+    /* keeps the menu button visible while menu open */
     &:has(+ menu:hover) {
       color: var(--color-hover-text-button);
       background-color: var(--color-hover-background-button);
     }
   }
-
+  /* keeps the menu and menu items visible while menu open */
   & menu:hover,
   & menu:hover button {
     visibility: visible;
     opacity: 1;
-    width: auto;
-  }
-
-  &:after {
-    background-color: var(--color-background-select);
-    content: attr(data-note);
-    position: absolute;
-    margin-bottom: 5em;
-    margin-left: -0.7em;
-    font-size: 0.8em;
-    max-height: 3em;
-    padding: 0.5em;
-    max-width: 100%;
-    color: var(--color-text);
-    white-space: break-spaces;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    text-wrap: nowrap;
-    transition: visibility, opacity 100ms ease-in-out;
-    transition-delay: 100ms;
-    transition-property: visibility, opacity;
-
-    border-radius: 0.2em;
-    -moz-border-radius: 0.2em;
-    -webkit-border-radius: 0.2em;
-
-    box-shadow: 2px 2px 16px var(--color-shadow);
-    -moz-box-shadow: 2px 2px 16px var(--color-shadow);
-    -webkit-box-shadow: 2px 2px 16px var(--color-shadow);
-
-    opacity: 0;
-    z-index: 99999;
-    visibility: hidden;
-  }
-
-  &:hover:after {
-    opacity: 1;
-    visibility: visible;
   }
 }
 
@@ -219,6 +188,7 @@ details summary header {
   color: var(--color-subtitle);
   display: flex;
   position: relative;
+  padding-left: 0.25rem;
 }
 
 details section {
@@ -278,15 +248,14 @@ input {
 }
 
 button {
-  border-radius: 0.2em;
+  border-radius: 0.2rem;
   color: var(--color-text-button);
   display: flex;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   height: 100%;
   place-items: center;
   place-content: center;
-  padding: 0.3em;
-  margin-left: 0.2em;
+  margin-left: 0.2rem;
 
   transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
@@ -303,11 +272,67 @@ button {
 
 ::slotted(select) {
   background: transparent !important;
-  border-radius: 0;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   padding: 0 !important;
-  margin: 0 0 0 0.2em !important;
+  margin: 0 0 0 0.2rem !important;
 }
 
+::slotted(select[open]) {
+  padding: 0 !important;
+}
+menu button {
+  padding: 0.3em;
+}
+
+summary > button {
+  width: 2rem;
+  height: 2rem;
+  line-height: 1.4rem;
+}
+
+[part='task-note'] {
+  margin-left: 0.2rem;
+  font-size: 1rem;
+
+  &:after {
+    background-color: var(--color-background-select);
+    content: attr(data-note);
+    position: absolute;
+    bottom: 1.5rem;
+    left: auto;
+    font-size: 0.8rem;
+    max-height: 3em;
+    padding: 0.5em;
+    max-width: 100%;
+    color: var(--color-text);
+    white-space: break-spaces;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-wrap: nowrap;
+    transition: visibility, opacity 100ms ease-in-out;
+    transition-delay: 100ms;
+    transition-property: visibility, opacity;
+
+    border-radius: 0.2em;
+    -moz-border-radius: 0.2em;
+    -webkit-border-radius: 0.2em;
+
+    box-shadow: 2px 2px 16px var(--color-shadow);
+    -moz-box-shadow: 2px 2px 16px var(--color-shadow);
+    -webkit-box-shadow: 2px 2px 16px var(--color-shadow);
+
+    opacity: 0;
+    z-index: 99999;
+    visibility: hidden;
+  }
+
+  &:hover:after {
+    opacity: 1;
+    visibility: visible;
+  }
+}
 /* Flash of Unstyled Content fix */
 div,
 summary button {

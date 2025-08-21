@@ -233,7 +233,9 @@ class TaskView extends HTMLElement {
       taskName.textContent = task.name
       // TODO: add compact mode check
       if (task.note && task.note.length) {
-        taskNode.shadowRoot.querySelector('summary').setAttribute('data-note', task.note)
+        taskNode.shadowRoot.querySelector('[part="task-note"]').setAttribute('data-note', task.note)
+      } else {
+        taskNode.shadowRoot.querySelector('[part="task-note"]').remove()
       }
       taskNode.appendChild(taskName)
     }
