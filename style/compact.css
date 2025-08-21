@@ -293,8 +293,8 @@ button {
 }
 
 /* Flash of Unstyled Content fix */
-summary button,
-div {
+div,
+summary button {
   visibility: visible !important;
   opacity: 1 !important;
 }
