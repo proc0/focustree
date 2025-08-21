@@ -32,6 +32,10 @@ main.focused {
     filter: blur(7px);
   }
 
+  & task-node:not([data-focused])::part(subs-summary):before {
+    display: none;
+  }
+
   & task-base {
     margin: 0 0 0 50%;
   }

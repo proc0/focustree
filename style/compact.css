@@ -15,6 +15,10 @@ div {
     border: 1px solid var(--color-highlight);
     background-color: var(--color-background);
     filter: none !important;
+
+    &:before {
+      display: none;
+    }
   }
 
   &.focused details section {
@@ -184,7 +188,7 @@ details summary {
     overflow: hidden;
     text-wrap: nowrap;
     transition: visibility, opacity 100ms ease-in-out;
-    transition-delay: 500ms;
+    transition-delay: 100ms;
     transition-property: visibility, opacity;
 
     border-radius: 0.2em;
@@ -223,21 +227,33 @@ details section {
 
 /* Leaf subtasks */
 
-.leaf details summary {
-  list-style: none;
-  box-shadow: none;
-  border: none;
+.leaf {
+  & details summary {
+    list-style: none;
+    box-shadow: none;
+    border: none;
 
-  &::before {
-    display: none;
+    &::before {
+      display: none;
+    }
+
+    &:hover {
+      cursor: default;
+    }
+
+    & header {
+      color: var(--color-disabled-subtitle);
+    }
   }
 
-  &:hover {
-    cursor: default;
+  &.focused summary {
+    border: 1px solid var(--color-highlight);
+    background-color: var(--color-background);
+    filter: none !important;
   }
 
-  & header {
-    color: var(--color-disabled-subtitle);
+  &.focused details section {
+    font-size: 100% !important;
   }
 }
 

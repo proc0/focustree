@@ -27,7 +27,7 @@ class TaskView extends HTMLElement {
       })
     } else {
       this.querySelector(`task-node[data-path="${taskPath}"]`)
-        .shadowRoot.querySelector('ul')
+        .shadowRoot.querySelector('div')
         .scrollIntoView({
           behavior: 'smooth',
         })
@@ -83,6 +83,10 @@ class TaskView extends HTMLElement {
       currentTask.blurTask(2)
 
       let parentTask = currentTask.parentElement
+
+      if (!parentTask.task) {
+        return this.blurTree()
+      }
       // pause parent task if active
       if (parentTask.task.state.current === 1) {
         parentTask.blurTask(2)
