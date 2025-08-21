@@ -121,6 +121,7 @@ details summary {
   font-size: 1.2em;
   justify-content: flex-start;
   align-items: center;
+  position: relative;
   display: flex;
 
   &:hover {
@@ -133,6 +134,7 @@ details summary {
     font-size: 0.8em;
     margin-right: 0.5em;
     color: var(--color-marker);
+    margin-left: -1.4em;
 
     /* Anchor the shape to the summary */
     position-anchor: --summary;
@@ -141,12 +143,6 @@ details summary {
     -moz-transition: transform 350ms ease;
     -o-transition: transform 350ms ease;
     -webkit-transition: transform 350ms ease;
-  }
-
-  &::marker {
-    color: var(--color-marker);
-    font-size: 1em;
-    display: flex;
   }
 
   & button[name='task-menu'] {
@@ -171,6 +167,43 @@ details summary {
     opacity: 1;
     width: auto;
   }
+
+  &:after {
+    background-color: var(--color-background-select);
+    content: attr(data-note);
+    position: absolute;
+    margin-bottom: 5em;
+    margin-left: -0.7em;
+    font-size: 0.8em;
+    max-height: 3em;
+    padding: 0.5em;
+    max-width: 100%;
+    color: var(--color-text);
+    white-space: break-spaces;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-wrap: nowrap;
+    transition: visibility, opacity 100ms ease-in-out;
+    transition-delay: 500ms;
+    transition-property: visibility, opacity;
+
+    border-radius: 0.2em;
+    -moz-border-radius: 0.2em;
+    -webkit-border-radius: 0.2em;
+
+    box-shadow: 2px 2px 16px var(--color-shadow);
+    -moz-box-shadow: 2px 2px 16px var(--color-shadow);
+    -webkit-box-shadow: 2px 2px 16px var(--color-shadow);
+
+    opacity: 0;
+    z-index: 99999;
+    visibility: hidden;
+  }
+
+  &:hover:after {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 details[open] summary::before {
@@ -182,40 +215,6 @@ details summary header {
   color: var(--color-subtitle);
   display: flex;
   position: relative;
-  
-  &:hover:before {
-    opacity: 1;
-    transition: visibility, opacity 100ms ease-in-out;
-    visibility: visible;
-
-    transition-delay: 500ms;
-    transition-property: visibility, opacity;
-  }
-  &:before {
-    background-color: var(--color-background-select);
-    content: attr(data-note);
-    position: absolute;
-    display: flex;
-    font-size: 0.8em;
-    top: -2em;
-    left: -2em;
-    padding: 0.2em 1em;
-    color: var(--color-text);
-    max-width: 200%;
-    white-space: break-spaces;
-
-    border-radius: 0.2em;
-    -moz-border-radius: 0.2em;
-    -webkit-border-radius: 0.2em;
-
-    box-shadow: 2px 2px 16px var(--color-shadow));
-    -moz-box-shadow: 2px 2px 16px var(--color-shadow));
-    -webkit-box-shadow: 2px 2px 16px var(--color-shadow));
-
-    opacity: 0;
-    z-index: 99999;
-    visibility: hidden;
-  }
 }
 
 details section {
@@ -292,46 +291,6 @@ button {
   padding: 0 !important;
   margin: 0 0 0 0.2em !important;
 }
-
-/* 
-[data-note]:hover:after {
-  opacity: 1;
-  transition: all 0.1s ease 0.5s;
-  visibility: visible;
-}
-[data-note]:after {
-  content: attr(data-note);
-  position: absolute;
-  bottom: -1.6em;
-  left: 100%;
-  padding: 4px 4px 4px 8px;
-  color: #222;
-  white-space: nowrap;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  -moz-box-shadow: 0px 0px 4px #222;
-  -webkit-box-shadow: 0px 0px 4px #222;
-  box-shadow: 0px 0px 4px #222;
-  background-image: -moz-linear-gradient(top, #f8f8f8, #cccccc);
-  background-image: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(0, #f8f8f8),
-    color-stop(1, #cccccc)
-  );
-  background-image: -webkit-linear-gradient(top, #f8f8f8, #cccccc);
-  background-image: -moz-linear-gradient(top, #f8f8f8, #cccccc);
-  background-image: -ms-linear-gradient(top, #f8f8f8, #cccccc);
-  background-image: -o-linear-gradient(top, #f8f8f8, #cccccc);
-  opacity: 0;
-  z-index: 99999;
-  visibility: hidden;
-}
-[data-note] {
-  position: relative;
-} */
 
 /* Flash of Unstyled Content fix */
 summary button,

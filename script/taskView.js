@@ -181,6 +181,7 @@ class TaskView extends HTMLElement {
   renderFocus(task) {
     const dialog = this.querySelector('dialog')
     const focusTitleEl = dialog.querySelector('header h1')
+    const focusNoteEl = dialog.querySelector('header p')
     // try to get the current focus task name
     const focusTaskName = focusTitleEl?.textContent
 
@@ -196,6 +197,15 @@ class TaskView extends HTMLElement {
       taskName.setAttribute('slot', SLOT_NAME)
       taskName.textContent = focusTaskName
       dialog.querySelector('ul').prepend(taskName)
+    }
+
+    if (!focusNoteEl && task.note && task.note.length) {
+      const focusNote = document.createElement('p')
+      focusNote.setAttribute('slot', 'task-focus-note')
+      focusNote.textContent = task.note
+      dialog.querySelector('header').appendChild(focusNote)
+    } else {
+      focusNoteEl.textContent = task.note
     }
   }
 
@@ -219,7 +229,7 @@ class TaskView extends HTMLElement {
       taskName.textContent = task.name
       // TODO: add compact mode check
       if (task.note && task.note.length) {
-        taskNode.shadowRoot.querySelector('summary header').setAttribute('data-note', task.note)
+        taskNode.shadowRoot.querySelector('summary').setAttribute('data-note', task.note)
       }
       taskNode.appendChild(taskName)
     }
