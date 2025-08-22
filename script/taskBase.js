@@ -332,8 +332,6 @@ class TaskBase extends HTMLElement {
       // create new task and add path
       const newTask = structuredClone(MODEL_TASK)
       newTask.path = [...task.path, task.subs.length]
-      // set edit if editing
-      newTask.meta.editing = task.meta.editing
       task.subs.push(newTask)
       // open drawer
       task.meta.opened = true
