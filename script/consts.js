@@ -20,7 +20,9 @@ const EVENT_EXPAND = 'expand'
 const EVENT_STATES = 'states'
 const EVENT_FOCUS = 'focus'
 const EVENT_SYNC = 'sync'
+const EVENT_EDIT = 'edit'
 
+// templates
 const TEMPLATE_NODE = 'template-task'
 const TEMPLATE_COMPACT = 'template-task-compact'
 const TEMPLATE_FOCUS = 'template-focus'

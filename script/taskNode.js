@@ -6,25 +6,58 @@ const QUERY_BUTTON_DELETE = 'button[name="task-delete"]'
 const QUERY_SELECT_STATE = 'slot[name="task-state"]'
 const QUERY_SELECT_FOCUS = 'button[name="task-focus"]'
 const QUERY_SELECT_SYNC = 'button[name="task-sync"]'
+const QUERY_SELECT_SAVE = 'button[name="task-save"]'
 
 class TaskNode extends HTMLElement {
   constructor() {
     super()
+  }
+
+  init(task) {
+    this.task = task
     this.equals.bind(this)
     this.dispatch.bind(this)
 
     this.attachShadow({ mode: 'open' }).appendChild(
-      document.getElementById(TEMPLATE_COMPACT).content.cloneNode(true)
+      document
+        .getElementById(task.meta.editing ? TEMPLATE_NODE : TEMPLATE_COMPACT)
+        .content.cloneNode(true)
     )
 
-    // click event for editing task fields
-    this.shadowRoot.querySelectorAll(QUERY_SLOT_FIELD).forEach((slot) => {
-      const editButton = slot.parentElement.querySelector(QUERY_BUTTON_EDIT)
+    if (task.meta.editing) {
+      // click event for editing task fields
+      this.shadowRoot.querySelectorAll(QUERY_SLOT_FIELD).forEach((slot) => {
+        const editButton = slot.parentElement.querySelector(QUERY_BUTTON_EDIT)
 
-      if (editButton) {
-        editButton.addEventListener('click', this.edit.bind(this))
-      }
-    })
+        if (editButton) {
+          editButton.addEventListener('click', this.edit.bind(this))
+        }
+      })
+
+      this.shadowRoot.querySelector(QUERY_SELECT_SAVE).addEventListener('click', (event) => {
+        event.stopPropagation()
+        this.task.meta.editing = false
+        this.dispatchEvent(
+          new CustomEvent(EVENT_EDIT, {
+            bubbles: true,
+            detail: { task: this.task, node: this },
+          })
+        )
+      })
+    } else {
+      this.shadowRoot.querySelector(QUERY_BUTTON_EDIT).addEventListener('click', (event) => {
+        event.stopPropagation()
+        this.task.meta.editing = true
+        // this.dispatch(EVENT_EDIT, this.task)
+
+        this.dispatchEvent(
+          new CustomEvent(EVENT_EDIT, {
+            bubbles: true,
+            detail: { task: this.task, node: this },
+          })
+        )
+      })
+    }
 
     // update fields with new input
     this.addEventListener(EVENT_UPDATE, this.update.bind(this))

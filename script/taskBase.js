@@ -7,8 +7,9 @@ const MODEL_TASK = {
   path: [0],
   meta: {
     opened: false,
+    editing: false,
   },
-  name: '[Task]',
+  name: 'Edit name.',
   note: '',
   state: {
     current: 0,
@@ -135,7 +136,14 @@ class TaskBase extends HTMLElement {
       }
     }
 
-    const saveEvents = [EVENT_BRANCH, EVENT_UPDATE, EVENT_EXPAND, EVENT_STATES, EVENT_SYNC]
+    const saveEvents = [
+      EVENT_BRANCH,
+      EVENT_EDIT,
+      EVENT_EXPAND,
+      EVENT_STATES,
+      EVENT_SYNC,
+      EVENT_UPDATE,
+    ]
     saveEvents.forEach((eventName) => {
       this.addEventListener(eventName, this.save.bind(this))
     })
@@ -324,6 +332,8 @@ class TaskBase extends HTMLElement {
       // create new task and add path
       const newTask = structuredClone(MODEL_TASK)
       newTask.path = [...task.path, task.subs.length]
+      // set edit if editing
+      newTask.meta.editing = task.meta.editing
       task.subs.push(newTask)
       // open drawer
       task.meta.opened = true

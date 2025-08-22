@@ -9,9 +9,11 @@ class TaskView extends HTMLElement {
   constructor() {
     super()
     this.focusTask = null
+    this.editMode = false
     this.addEventListener(EVENT_RENDER, this.render.bind(this))
     this.addEventListener(EVENT_DELETE, this.delete.bind(this))
     this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
+    this.addEventListener(EVENT_EDIT, this.render.bind(this))
   }
 
   blurTree() {
@@ -147,12 +149,12 @@ class TaskView extends HTMLElement {
         while (!nextTask) {
           // find the next valid ancestor task
           parentTask = parentTask.parentElement
+          // set parent task as done since all children tasks are done
+          parentTask.blurTask(3)
           // quit if visited ancestor is the initial focus task
           if (parentTask.equals(this.focusTask)) {
             return this.blurTree()
           }
-          // set parent task as done since all children tasks are done
-          parentTask.blurTask(3)
           // valid ancestor relative found
           nextTask = parentTask.nextSibling
         }
@@ -215,7 +217,7 @@ class TaskView extends HTMLElement {
 
   renderTree(task) {
     const taskNode = document.createElement(ELEMENT_NODE)
-    taskNode.task = task
+    taskNode.init(task, this.editMode)
 
     const container = taskNode.shadowRoot.querySelector('div')
 
@@ -231,16 +233,23 @@ class TaskView extends HTMLElement {
       const taskName = document.createElement(ELEMENT_FIELD)
       taskName.setAttribute('slot', SLOT_NAME)
       taskName.textContent = task.name
-      // TODO: add compact mode check
+
+      taskNode.appendChild(taskName)
+    }
+
+    if (!task.meta.editing) {
       if (task.note && task.note.length) {
         taskNode.shadowRoot.querySelector('[part="task-note"]').setAttribute('data-note', task.note)
       } else {
         taskNode.shadowRoot.querySelector('[part="task-note"]').remove()
       }
-      taskNode.appendChild(taskName)
     }
 
-    if (taskNode.shadowRoot.querySelector('slot[name="task-note"]')) {
+    if (
+      taskNode.shadowRoot.querySelector('slot[name="task-note"]') &&
+      task.note &&
+      task.note.length
+    ) {
       const taskNote = document.createElement(ELEMENT_FIELD)
       taskNote.setAttribute('slot', SLOT_NOTE)
       taskNote.textContent = task.note

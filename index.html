@@ -67,12 +67,13 @@
           </li>
           <li>
             <button name="task-edit" title="Edit">✎</button>
-            <slot name="task-note"></slot>
+            <slot name="task-note">Add a note.</slot>
           </li>
           <li>
             <button name="task-focus" title="Focus">👁</button>
             <slot name="task-state"></slot>
             <button name="task-sync" title="Sync">↴</button>
+            <button name="task-save" title="Save">✔</button>
           </li>
         </ul>
         <details part="subs-container">
