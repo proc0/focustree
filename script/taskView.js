@@ -262,7 +262,7 @@ class TaskView extends HTMLElement {
     task.state.options.forEach((state, index) => {
       const option = document.createElement('option')
       option.value = index
-      option.textContent = state
+      option.textContent = state.toUpperCase()
       taskState.appendChild(option)
       if (index === task.state.current) {
         currentState = state

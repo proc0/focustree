@@ -23,6 +23,7 @@ const EVENT_SYNC = 'sync'
 const EVENT_EDIT = 'edit'
 
 // templates
+//TODO: refactor names and make consistent
 const TEMPLATE_NODE = 'template-task'
 const TEMPLATE_COMPACT = 'template-task-compact'
 const TEMPLATE_FOCUS = 'template-focus'

@@ -8,13 +8,14 @@ select {
   background-color: var(--color-background-select);
   border: 1px solid black;
   border-color: var(--color-border-select);
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 0 0.2rem var(--color-shadow);
   color: var(--color-subtitle);
+  font-size: 1rem;
   cursor: pointer;
   display: inline-flex;
-  margin: 8px 0;
+  margin: 0.5rem 0;
   outline: none;
-  padding: 4px 8px;
+  padding: 0 0.5rem;
   transition: all 0.25s ease;
   -moz-transition: all 0.25s ease;
   -o-transition: all 0.25s ease;
@@ -23,7 +24,10 @@ select {
   &::picker(select) {
     appearance: base-select;
   }
-
+  &::picker-icon {
+    margin-top: 0.1rem;
+    font-size: 0.9rem;
+  }
   &:hover {
     background-color: var(--color-hover-background-select);
     color: var(--color-hover-text);
@@ -48,6 +52,7 @@ select option {
   &:hover {
     background: var(--color-highlight);
     color: var(--color-shadow);
+    background-opacity: 0.5;
   }
 
   &::checkmark {
