@@ -90,7 +90,7 @@ menu {
   padding: 0;
   margin: 0;
   position: absolute;
-  right: 2rem;
+  right: 2.2rem;
   visibility: hidden;
   opacity: 0;
   z-index: -10;
@@ -108,17 +108,21 @@ menu item {
   justify-content: flex-start;
   align-items: center;
 
-  & button[name='task-delete'],
-  & button[name='task-edit'] {
-    font-size: 1rem;
-  }
-
   & button {
     visibility: hidden;
     width: 2rem;
     height: 2rem;
     transition-delay: 250ms;
     transition-property: visibility, opacity;
+  }
+
+  & button[name='task-delete'],
+  & button[name='task-edit'] {
+    font-size: 1rem;
+  }
+
+  & button[name='task-focus'] {
+    line-height: 0;
   }
 }
 
@@ -272,7 +276,7 @@ button {
   height: 100%;
   place-items: center;
   place-content: center;
-  margin-left: 0.2rem;
+  margin-right: 0.2rem;
 
   transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;

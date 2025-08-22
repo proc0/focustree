@@ -6,22 +6,10 @@ window.onload = () => {
   const taskView = document.createElement(ELEMENT_VIEW)
   const taskBase = document.createElement(ELEMENT_BASE)
 
-  taskView.init()
-  taskView.appendChild(taskBase)
+  taskView.init().appendChild(taskBase)
   document.querySelector('main').appendChild(taskView)
 
-  const rootAddButton = document.getElementById(ID_ROOT_ADD)
-  rootAddButton.addEventListener('click', () => {
-    taskBase.addRoot()
-  })
-
-  const rootExport = document.getElementById(ID_ROOT_EXPORT)
-  rootExport.addEventListener('click', () => {
-    taskBase.export()
-  })
-
-  const rootImport = document.getElementById(ID_ROOT_IMPORT)
-  rootImport.addEventListener('click', () => {
-    taskBase.import()
-  })
+  document.getElementById(ID_ROOT_ADD).addEventListener('click', () => taskBase.addRoot())
+  document.getElementById(ID_ROOT_EXPORT).addEventListener('click', () => taskBase.export())
+  document.getElementById(ID_ROOT_IMPORT).addEventListener('click', () => taskBase.import())
 }

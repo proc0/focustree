@@ -163,6 +163,8 @@ class TaskView extends HTMLElement {
       nextTask.focusTask()
       this.renderFocus(nextTask.task)
     })
+
+    return this
   }
 
   render({ detail, target }) {
