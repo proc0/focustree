@@ -32,9 +32,27 @@
               <slot name="task-name"></slot>
               <span part="task-note">🛈</span>
             </header>
-            <button name="task-focus" part="focus-button" title="Focus">👁</button>
             <button name="task-menu" part="menu-button" title="Menu">☰</button>
             <menu part="task-menu">
+              <item>
+                <button name="task-delete" part="menu-item" title="Delete">✕</button>
+              </item>
+              <item>
+                <button name="task-move-down" part="menu-item" title="Move down">⤓</button>
+              </item>
+              <item>
+                <button name="task-move-up" part="menu-item" title="Move up">⤒</button>
+              </item>
+              <item>
+                <button name="task-sync" part="menu-item" title="Sync state">↯</button>
+                <slot name="task-state"></slot>
+              </item>
+              <item>
+                <button name="task-copy" part="menu-item" title="Copy">❐</button>
+              </item>
+              <item>
+                <button name="task-cut" part="menu-item" title="Cut">✂</button>
+              </item>
               <item>
                 <button name="task-edit" part="menu-item" title="Edit">✎</button>
               </item>
@@ -42,11 +60,7 @@
                 <button name="task-add" part="menu-item" title="Add subtask">+</button>
               </item>
               <item>
-                <slot name="task-state"></slot
-                ><button name="task-sync" part="menu-item" title="Sync">↴</button>
-              </item>
-              <item>
-                <button name="task-delete" part="menu-item" title="Delete">✕</button>
+                <button name="task-focus" part="focus-button" title="Focus">👁</button>
               </item>
             </menu>
           </summary>
@@ -72,7 +86,7 @@
           <li>
             <button name="task-focus" title="Focus">👁</button>
             <slot name="task-state"></slot>
-            <button name="task-sync" title="Sync">↴</button>
+            <button name="task-sync" title="Sync state">↯</button>
             <button name="task-save" title="Save">✔</button>
           </li>
         </ul>

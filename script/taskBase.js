@@ -7,9 +7,9 @@ const MODEL_TASK = {
   path: [0],
   meta: {
     opened: false,
-    editing: false,
+    editing: true,
   },
-  name: 'Edit name.',
+  name: 'New Task: Edit name.',
   note: '',
   state: {
     current: 0,

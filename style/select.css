@@ -24,6 +24,7 @@ select {
   &::picker(select) {
     appearance: base-select;
   }
+
   &::picker-icon {
     margin-top: 0.1rem;
     font-size: 0.9rem;
@@ -37,11 +38,11 @@ select {
     background-color: var(--color-focus-select);
   }
 
-  &.done,
+  /* &.done,
   &.done option {
     background-color: var(--color-background-done);
     color: var(--color-text-done);
-  }
+  } */
 }
 
 select option {
@@ -80,6 +81,7 @@ task-node {
     &::part(task-menu) {
       visibility: visible;
       opacity: 1;
+      z-index: 10;
     }
 
     &::part(menu-item) {
