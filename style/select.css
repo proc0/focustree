@@ -83,5 +83,10 @@ task-node {
       opacity: 1 !important;
       width: auto !important;
     }
+
+    &::part(menu-button) {
+      color: var(--color-hover-text-button);
+      background-color: var(--color-hover-background-button);
+    }
   }
 }
