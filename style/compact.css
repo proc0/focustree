@@ -19,6 +19,10 @@ div {
     &:before {
       display: none;
     }
+
+    & [part='task-note'] {
+      visibility: hidden;
+    }
   }
 
   &.focused details section {

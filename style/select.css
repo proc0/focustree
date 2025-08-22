@@ -75,13 +75,11 @@ task-node {
     &::part(task-menu) {
       visibility: visible;
       opacity: 1;
-      width: auto;
     }
 
     &::part(menu-item) {
       visibility: visible !important;
       opacity: 1 !important;
-      width: auto !important;
     }
 
     &::part(menu-button) {
