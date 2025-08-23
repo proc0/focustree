@@ -15,7 +15,7 @@
     <script src="script/taskNode.js"></script>
   </head>
   <body>
-    <template id="template-task-compact">
+    <template id="template-task">
       <style>
         /* Flash of Unstyled Content fix */
         summary button,
@@ -24,7 +24,7 @@
           opacity: 0;
         }
       </style>
-      <link rel="stylesheet" href="style/compact.css" />
+      <link rel="stylesheet" href="style/task.css" />
       <div>
         <details part="tree-container">
           <summary part="tree-summary">
@@ -70,8 +70,8 @@
         </details>
       </div>
     </template>
-    <template id="template-task">
-      <link rel="stylesheet" href="style/task.css" />
+    <template id="template-edit">
+      <link rel="stylesheet" href="style/edit.css" />
       <div>
         <ul part="task-container">
           <li>

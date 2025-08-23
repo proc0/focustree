@@ -27,7 +27,7 @@ const EVENT_EDIT = 'edit'
 // templates
 //TODO: refactor names and make consistent
 const TEMPLATE_NODE = 'template-task'
-const TEMPLATE_COMPACT = 'template-task-compact'
+const TEMPLATE_EDIT = 'template-edit'
 const TEMPLATE_FOCUS = 'template-focus'
 // custom element names
 const ELEMENT_NODE = 'task-node'

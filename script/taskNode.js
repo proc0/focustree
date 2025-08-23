@@ -20,7 +20,7 @@ class TaskNode extends HTMLElement {
 
     this.attachShadow({ mode: 'open' }).appendChild(
       document
-        .getElementById(task.meta.editing ? TEMPLATE_NODE : TEMPLATE_COMPACT)
+        .getElementById(task.meta.editing ? TEMPLATE_EDIT : TEMPLATE_NODE)
         .content.cloneNode(true)
     )
 
