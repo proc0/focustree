@@ -26,9 +26,9 @@
       </style>
       <link rel="stylesheet" href="style/compact.css" />
       <div>
-        <details part="subs-container">
-          <summary part="subs-summary">
-            <header part="subs-header">
+        <details part="tree-container">
+          <summary part="tree-summary">
+            <header part="tree-header">
               <slot name="task-name"></slot>
               <span part="task-note">🛈</span>
             </header>
@@ -65,7 +65,7 @@
             </menu>
           </summary>
           <section>
-            <slot name="task-subs"></slot>
+            <slot name="task-tree"></slot>
           </section>
         </details>
       </div>
@@ -90,15 +90,15 @@
             <button name="task-save" title="Save">✔</button>
           </li>
         </ul>
-        <details part="subs-container">
+        <details part="tree-container">
           <summary>
-            <header part="subs-header">
-              <slot name="title-subs">No subtasks</slot
+            <header part="tree-header">
+              <slot name="title-tree">No subtasks</slot
               ><button name="task-add" title="Add subtask">+</button>
             </header>
           </summary>
           <section>
-            <slot name="task-subs"></slot>
+            <slot name="task-tree"></slot>
           </section>
         </details>
       </div>

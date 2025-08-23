@@ -1,5 +1,5 @@
 const QUERY_SLOT_FIELD = 'ul li slot'
-const QUERY_SUBS_HEADER = 'details summary header'
+const QUERY_TREE_HEADER = 'details summary header'
 const QUERY_BUTTON_ADD = 'button[name="task-add"]'
 const QUERY_BUTTON_EDIT = 'button[name="task-edit"]'
 const QUERY_BUTTON_DELETE = 'button[name="task-delete"]'
@@ -79,9 +79,9 @@ class TaskNode extends HTMLElement {
 
       // since we are deleting this task, get parent task
       const parentTask = this.parentElement.task
-      for (const index in parentTask.subs) {
-        if (parentTask.subs[index].path.join('') === this.task.path.join('')) {
-          parentTask.subs.splice(index, 1)
+      for (const index in parentTask.tree) {
+        if (parentTask.tree[index].path.join('') === this.task.path.join('')) {
+          parentTask.tree.splice(index, 1)
           break
         }
       }
@@ -99,7 +99,7 @@ class TaskNode extends HTMLElement {
     // state change
     this.shadowRoot.querySelector(QUERY_SELECT_STATE).addEventListener('change', (event) => {
       event.stopPropagation()
-      this.task.state.current = Number(event.target.value)
+      this.task.state = Number(event.target.value)
       this.dispatch(EVENT_STATES, this.task)
     })
 
@@ -110,7 +110,7 @@ class TaskNode extends HTMLElement {
     })
 
     // open and close subtasks drawer
-    this.shadowRoot.querySelector(QUERY_SUBS_HEADER).addEventListener('click', (event) => {
+    this.shadowRoot.querySelector(QUERY_TREE_HEADER).addEventListener('click', (event) => {
       event.stopPropagation()
       // get the details tag, somehow null open attribute means it is open
       const opened = event.currentTarget.parentElement.parentElement.getAttribute('open') === null
@@ -121,13 +121,13 @@ class TaskNode extends HTMLElement {
 
   blurTask(state) {
     if (state) {
-      this.task.state.current = state
+      this.task.state = state
       // complete the history entry
-      const lastIndex = this.task.state.history.length - 1
-      this.task.state.history[lastIndex].stateEnd = state
-      this.task.state.history[lastIndex].timeEnd = Date.now()
+      const lastIndex = this.task.data.record.length - 1
+      this.task.data.record[lastIndex].stateEnd = state
+      this.task.data.record[lastIndex].timeEnd = Date.now()
     }
-    this.task.state.focused = false
+    this.task.meta.focused = false
     this.dispatch(EVENT_STATES, this.task)
   }
 
@@ -209,12 +209,12 @@ class TaskNode extends HTMLElement {
   }
 
   focusTask() {
-    this.task.state.current = 1
-    this.task.state.focused = true
+    this.task.state = 1
+    this.task.meta.focused = true
     this.task.meta.opened = true
     // add history entry
-    this.task.state.history.push({
-      stateStart: this.task.state.current,
+    this.task.data.record.push({
+      stateStart: this.task.state,
       timeStart: Date.now(),
     })
     this.dispatch(EVENT_STATES, this.task)

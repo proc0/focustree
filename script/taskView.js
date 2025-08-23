@@ -90,11 +90,11 @@ class TaskView extends HTMLElement {
         return this.blurTree()
       }
       // pause parent task if active
-      if (parentTask.task.state.current === 1) {
+      if (parentTask.task.state === 1) {
         parentTask.blurTask(2)
       }
       // pause all the ancestors as well, only if ancestor is active
-      while (!parentTask.equals(this.focusTask) && parentTask.task.state.current === 1) {
+      while (!parentTask.equals(this.focusTask) && parentTask.task.state === 1) {
         parentTask = parentTask.parentElement
         parentTask.blurTask(2)
       }
@@ -181,7 +181,7 @@ class TaskView extends HTMLElement {
     }
 
     // branching subtask
-    taskNode.setAttribute('slot', SLOT_SUBS)
+    taskNode.setAttribute('slot', SLOT_TREE)
     // replace node with updated node
     detail.node.replaceWith(taskNode)
   }
@@ -261,16 +261,17 @@ class TaskView extends HTMLElement {
     const taskState = document.createElement('select')
     taskState.setAttribute('slot', SLOT_STATE)
     let currentState = ''
-    task.state.options.forEach((state, index) => {
+    task.data.states.forEach((state, index) => {
       const option = document.createElement('option')
       option.value = index
       option.textContent = state.toUpperCase()
-      taskState.appendChild(option)
-      if (index === task.state.current) {
+      // set current state
+      if (index === task.state) {
         currentState = state
         option.setAttribute('selected', '')
         taskState.value = index
       }
+      taskState.appendChild(option)
     })
     // set class to current state name
     taskState.classList.add(currentState)
@@ -278,13 +279,13 @@ class TaskView extends HTMLElement {
 
     // state class and attributes on container
     container.classList.add(currentState)
-    if (task.state.focused) {
+    if (task.meta.focused) {
       taskNode.setAttribute('data-focused', '')
       container.classList.add('focused')
     }
 
     // leaf
-    if (!task.subs?.length) {
+    if (!task.tree.length) {
       container.classList.add(CLASS_LEAF)
       return taskNode
     }
@@ -292,15 +293,15 @@ class TaskView extends HTMLElement {
     // branch
     container.classList.add(CLASS_BRANCH)
 
-    const subsLength = task.subs.length
-    const subsLabel = document.createElement(ELEMENT_LABEL)
-    subsLabel.setAttribute('slot', SLOT_TITLE_SUBS)
-    subsLabel.textContent = `${TEXT_SUBS} (${subsLength})`
-    taskNode.appendChild(subsLabel)
+    const treeLength = task.tree.length
+    const treeLabel = document.createElement(ELEMENT_LABEL)
+    treeLabel.setAttribute('slot', SLOT_TITLE_TREE)
+    treeLabel.textContent = `${TEXT_TREE} (${treeLength})`
+    taskNode.appendChild(treeLabel)
 
-    for (const sub in task.subs) {
-      const subTask = this.renderTree(task.subs[sub])
-      subTask.setAttribute('slot', SLOT_SUBS)
+    for (const sub in task.tree) {
+      const subTask = this.renderTree(task.tree[sub])
+      subTask.setAttribute('slot', SLOT_TREE)
 
       taskNode.appendChild(subTask)
     }

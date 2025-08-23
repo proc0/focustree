@@ -28,11 +28,11 @@ main.focused {
     filter: blur(3px);
   }
 
-  & task-node:not([data-focused])::part(subs-header) {
+  & task-node:not([data-focused])::part(tree-header) {
     filter: blur(7px);
   }
 
-  & task-node:not([data-focused])::part(subs-summary):before {
+  & task-node:not([data-focused])::part(tree-summary):before {
     display: none;
   }
 

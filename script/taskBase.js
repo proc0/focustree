@@ -1,23 +1,24 @@
 const BASE_NAME = 'taskbase'
-const BASE_VERSION = 2
+const BASE_VERSION = 4
 const BASE_STORE = 'task'
 
 const MODEL_TASK = {
   // id: 1, (root only)
-  path: [0],
+  data: {
+    record: [],
+    states: STATES_TASK,
+  },
   meta: {
-    opened: false,
     editing: true,
+    grafted: false,
+    focused: false,
+    opened: false,
   },
   name: 'New Task: Edit name.',
   note: '',
-  state: {
-    current: 0,
-    focused: false,
-    history: [],
-    options: STATES_TASK,
-  },
-  subs: [],
+  path: [0],
+  state: 0,
+  tree: [],
 }
 
 // V2 task history model
@@ -84,9 +85,9 @@ class TaskBase extends HTMLElement {
 
         const traverseTask = (task, transform) => {
           transform(task)
-          if (!task.subs.length) return
+          if (!task.tree.length) return
 
-          task.subs.forEach((sub) => {
+          task.tree.forEach((sub) => {
             traverseTask(sub, transform)
           })
         }
@@ -102,6 +103,54 @@ class TaskBase extends HTMLElement {
               timeStart: entry.time,
               timeEnd: entry.time,
             }))
+            // V3
+            task.tree = task.subs
+            delete task.subs
+            // V4
+            const currentState = task.state.current
+            task.data = {
+              record: task.state.history,
+              states: task.state.options,
+            }
+            task.meta.focused = task.state.focused
+            task.meta.grafted = false
+            delete task.state
+            task.state = currentState
+          }
+        }
+
+        if (oldVersion === 2) {
+          console.log(`Migrating TaskBase from ${oldVersion} to ${taskBase.version}...`)
+          // version 3 changes task subs to task tree
+          migration = (task) => {
+            task.tree = task.subs
+            delete task.subs
+            //V4 changes
+            const currentState = task.state.current
+            task.data = {
+              record: task.state.history,
+              states: task.state.options,
+            }
+            task.meta.focused = task.state.focused
+            task.meta.grafted = false
+            delete task.state
+            task.state = currentState
+          }
+        }
+
+        if (oldVersion === 3) {
+          console.log(`Migrating TaskBase from ${oldVersion} to ${taskBase.version}...`)
+          // version 3 changes task subs to task tree
+          migration = (task) => {
+            const currentState = task.state.current
+            task.data = {
+              record: task.state.history,
+              states: task.state.options,
+            }
+            task.meta.focused = task.state.focused
+            task.meta.grafted = false
+            delete task.state
+            task.state = currentState
           }
         }
 
@@ -331,28 +380,28 @@ class TaskBase extends HTMLElement {
     if (event.type === EVENT_BRANCH) {
       // create new task and add path
       const newTask = structuredClone(MODEL_TASK)
-      newTask.path = [...task.path, task.subs.length]
-      task.subs.push(newTask)
+      newTask.path = [...task.path, task.tree.length]
+      task.tree.push(newTask)
       // open drawer
       task.meta.opened = true
     }
 
     if (event.type === EVENT_STATES) {
       // limit history to prevent large db size
-      if (task.state.history.length > 99) {
-        task.state.history.splice(50)
+      if (task.data.record.length > 99) {
+        task.data.record.splice(50)
       }
     }
 
     if (event.type === EVENT_SYNC) {
       // DFS sync all states to the event task
       const syncStates = (t) => {
-        t.state.current = task.state.current
+        t.state = task.state
 
-        if (!t.subs.length) return
+        if (!t.tree.length) return
 
-        t.subs.forEach((s) => {
-          s.state.current = task.state.current
+        t.tree.forEach((s) => {
+          s.state = task.state
           syncStates(s)
         })
       }
