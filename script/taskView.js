@@ -62,7 +62,7 @@ class TaskView extends HTMLElement {
     // branching subtask
     treeNode.setAttribute('slot', SLOT_TREE)
     // replace node with updated node
-    detail.node.replaceWith(taskNode)
+    detail.node.replaceWith(treeNode)
   }
 
   renderTree(task) {
