@@ -1,3 +1,5 @@
+//placeholder
+TUTORIAL = null
 // define states here and add them to the state list
 // more states can be added
 const STATE_READY = 'ready'
