@@ -2,46 +2,17 @@ const CLASS_BRANCH = 'branch'
 const CLASS_LEAF = 'leaf'
 
 const QUERY_FOCUS_NODE = 'task-node[data-focused]'
-const QUERY_FOCUS_DONE = 'button[name="task-done"]'
-const QUERY_FOCUS_PAUSE = 'button[name="task-pause"]'
 
 class TaskView extends HTMLElement {
   constructor() {
     super()
-    this.focusTask = null
-    this.editMode = false
     this.addEventListener(EVENT_RENDER, this.render.bind(this))
-    this.addEventListener(EVENT_DELETE, this.delete.bind(this))
+    this.addEventListener(EVENT_DELETE, this.deleteTree.bind(this))
     this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
     this.addEventListener(EVENT_EDIT, this.render.bind(this))
   }
 
-  blurTree() {
-    const dialog = this.querySelector('dialog')
-    dialog.close()
-
-    const taskId = this.focusTask.task.id
-    const taskPath = this.focusTask.task.path.toString()
-
-    if (taskId) {
-      this.querySelector(`task-node[data-id="${taskId}"]`).scrollIntoView({
-        behavior: 'smooth',
-      })
-    } else {
-      this.querySelector(`task-node[data-path="${taskPath}"]`)
-        .shadowRoot.querySelector('div')
-        .scrollIntoView({
-          behavior: 'smooth',
-        })
-    }
-
-    // cleanup
-    dialog.querySelectorAll('ul li').forEach((taskName) => taskName.remove())
-    dialog.querySelector('header h1').remove()
-    document.querySelector('main').classList.remove('focused')
-  }
-
-  delete({ detail, target }) {
+  deleteTree({ detail, target }) {
     // root task delete
     if (detail?.task.id) {
       target.remove()
@@ -49,176 +20,54 @@ class TaskView extends HTMLElement {
   }
 
   focusTree(event) {
-    document.querySelector('main').classList.add('focused')
-
-    const dialog = this.querySelector('dialog')
-
-    dialog.showModal()
-    dialog.focus()
-
     const initialTask = event.target
-    // save initial task
-    this.focusTask = initialTask
-
+    // focus initial task
     initialTask.focusTask()
-    this.renderFocus(initialTask.task)
+    // show focus modal
+    this.querySelector('dialog').showFocus(initialTask)
   }
 
-  init() {
-    const dialog = document
-      .getElementById(TEMPLATE_FOCUS)
-      .content.cloneNode(true)
-      .querySelector('dialog')
-    this.prepend(dialog)
+  getTaskNode(task) {
+    // if no task, return the focused task
+    if (!task) {
+      return this.querySelector(QUERY_FOCUS_NODE)
+    }
 
-    // focus exit
-    dialog.addEventListener('close', (e) => {
-      const currentTask = this.querySelector(QUERY_FOCUS_NODE)
-      currentTask.blurTask()
-    })
+    const taskId = task.id
+    const taskPath = task.path.toString()
 
-    // focus exit
-    dialog.querySelector(QUERY_FOCUS_PAUSE).addEventListener('click', (e) => {
-      e.stopPropagation()
-      const currentTask = this.querySelector(QUERY_FOCUS_NODE)
-      // pause current task
-      currentTask.blurTask(2)
+    let taskNode = null
+    if (taskId) {
+      taskNode = this.querySelector(`task-node[data-id="${taskId}"]`)
+    } else {
+      taskNode = this.querySelector(`task-node[data-path="${taskPath}"]`)
+    }
 
-      let parentTask = currentTask.parentElement
-
-      if (!parentTask.task) {
-        return this.blurTree()
-      }
-      // pause parent task if active
-      if (parentTask.task.state === 1) {
-        parentTask.blurTask(2)
-      }
-      // pause all the ancestors as well, only if ancestor is active
-      while (!parentTask.equals(this.focusTask) && parentTask.task.state === 1) {
-        parentTask = parentTask.parentElement
-        parentTask.blurTask(2)
-      }
-      // exit focus
-      this.blurTree()
-    })
-
-    // focus complete task
-    dialog.querySelector(QUERY_FOCUS_DONE).addEventListener('click', (e) => {
-      e.stopPropagation()
-
-      const currentTask = this.querySelector(QUERY_FOCUS_NODE)
-      // DFS - get first subtask
-      let nextTask = currentTask.querySelector(TAG_NODE)
-
-      // do not set task as done (3) unless it has children
-      // this only removes focus
-      currentTask.blurTask()
-
-      // no subtasks
-      if (!nextTask) {
-        // set task as done because no children
-        currentTask.blurTask(3)
-        // focus level ~ leaf task
-        let parentTask = currentTask.parentElement
-        // current task is initial focus (no more subtasks left)
-        // or current task is a root task with no subtasks
-        if (currentTask.equals(this.focusTask) || currentTask.isRoot()) {
-          currentTask.blurTask(3)
-          return this.blurTree()
-        }
-
-        // currentTask.blurTask(3)
-        // try adjacent task
-        nextTask = currentTask.nextSibling
-        // no adjacent tasks
-        if (!nextTask) {
-          // set parent task as done since all children tasks are done
-          parentTask.blurTask(3)
-          // focus level ~ singleton leaf task
-          // parent task is the initial focus (last subtask of the branch)
-          // or parent task is a root task
-          if (parentTask.equals(this.focusTask) || parentTask.isRoot()) {
-            return this.blurTree()
-          }
-          // try uncle task
-          nextTask = parentTask.nextSibling
-        }
-
-        // no direct uncle task
-        // focus level ~ deep leaf task
-        while (!nextTask) {
-          // find the next valid ancestor task
-          parentTask = parentTask.parentElement
-          // set parent task as done since all children tasks are done
-          parentTask.blurTask(3)
-          // quit if visited ancestor is the initial focus task
-          if (parentTask.equals(this.focusTask)) {
-            return this.blurTree()
-          }
-          // valid ancestor relative found
-          nextTask = parentTask.nextSibling
-        }
-      }
-
-      nextTask.focusTask()
-      this.renderFocus(nextTask.task)
-    })
-
-    return this
+    return taskNode
   }
 
   render({ detail, target }) {
     const task = detail.task
-    const taskNode = this.renderTree(task)
+    const treeNode = this.renderTree(task)
 
     // root add event does not have node to replace
     if (task.id && !detail?.node) {
       // append root tasks to task-base
-      target.appendChild(taskNode)
+      target.appendChild(treeNode)
       // TODO: scroll adding root into view (requires more info from event?)
-      // return taskNode.scrollIntoView({ behavior: 'smooth' })
+      // return treeNode.scrollIntoView({ behavior: 'smooth' })
       return
     }
 
     // branching subtask
-    taskNode.setAttribute('slot', SLOT_TREE)
+    treeNode.setAttribute('slot', SLOT_TREE)
     // replace node with updated node
     detail.node.replaceWith(taskNode)
   }
 
-  renderFocus(task) {
-    const dialog = this.querySelector('dialog')
-    const focusTitleEl = dialog.querySelector('header h1')
-    const focusNoteEl = dialog.querySelector('header p')
-
-    if (focusTitleEl) {
-      const focusTaskName = focusTitleEl.textContent
-      focusTitleEl.textContent = task.name
-      // completed task list
-      const taskName = document.createElement('li')
-      taskName.setAttribute('slot', SLOT_NAME)
-      taskName.textContent = focusTaskName
-      dialog.querySelector('ul').prepend(taskName)
-    } else {
-      const focusTitle = document.createElement('h1')
-      focusTitle.setAttribute('slot', 'task-focus-name')
-      focusTitle.textContent = task.name
-      dialog.querySelector('header').prepend(focusTitle)
-    }
-
-    if (focusNoteEl) {
-      focusNoteEl.textContent = task.note
-    } else {
-      const focusNote = document.createElement('p')
-      focusNote.setAttribute('slot', 'task-focus-note')
-      focusNote.textContent = task.note
-      dialog.querySelector('header').appendChild(focusNote)
-    }
-  }
-
   renderTree(task) {
     const taskNode = document.createElement(TAG_NODE)
-    taskNode.init(task, this.editMode)
+    taskNode.init(task)
 
     const container = taskNode.shadowRoot.querySelector('div')
 

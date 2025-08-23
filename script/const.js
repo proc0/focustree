@@ -31,6 +31,7 @@ const TEMPLATE_FOCUS = 'template-focus'
 const TAG_NODE = 'task-node'
 const TAG_BASE = 'task-base'
 const TAG_VIEW = 'task-view'
+const TAG_FOCUS = 'task-focus'
 // html elements for slots
 const TAG_FIELD = 'span'
 const TAG_LABEL = 'span'

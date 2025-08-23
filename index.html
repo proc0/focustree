@@ -13,6 +13,7 @@
     <script src="script/taskView.js"></script>
     <script src="script/taskBase.js"></script>
     <script src="script/taskNode.js"></script>
+    <script src="script/taskFocus.js"></script>
   </head>
   <body>
     <template id="template-task">
@@ -106,25 +107,23 @@
       </div>
     </template>
     <template id="template-focus">
-      <dialog>
-        <header>
-          <slot name="focus-task-name"></slot>
-          <slot name="focus-task-note"></slot>
-        </header>
-        <ul>
-          <slot name="task-name"></slot>
-        </ul>
-        <menu>
-          <item>
-            <button name="task-done" title="Done">✓</button>
-          </item>
-          <item>
-            <form method="dialog">
-              <button name="task-pause" title="Pause">⏸</button>
-            </form>
-          </item>
-        </menu>
-      </dialog>
+      <header>
+        <slot name="focus-task-name"></slot>
+        <slot name="focus-task-note"></slot>
+      </header>
+      <ul>
+        <slot name="task-name"></slot>
+      </ul>
+      <menu>
+        <item>
+          <button name="task-done" title="Done">✓</button>
+        </item>
+        <item>
+          <form method="dialog">
+            <button name="task-pause" title="Pause">⏸</button>
+          </form>
+        </item>
+      </menu>
     </template>
     <main>
       <menu>
