@@ -190,30 +190,29 @@ class TaskView extends HTMLElement {
     const dialog = this.querySelector('dialog')
     const focusTitleEl = dialog.querySelector('header h1')
     const focusNoteEl = dialog.querySelector('header p')
-    // try to get the current focus task name
-    const focusTaskName = focusTitleEl?.textContent
 
-    if (!focusTaskName) {
-      const focusTitle = document.createElement('h1')
-      focusTitle.setAttribute('slot', 'task-focus-name')
-      focusTitle.textContent = task.name
-      dialog.querySelector('header').prepend(focusTitle)
-    } else {
+    if (focusTitleEl) {
+      const focusTaskName = focusTitleEl.textContent
       focusTitleEl.textContent = task.name
       // completed task list
       const taskName = document.createElement('li')
       taskName.setAttribute('slot', SLOT_NAME)
       taskName.textContent = focusTaskName
       dialog.querySelector('ul').prepend(taskName)
+    } else {
+      const focusTitle = document.createElement('h1')
+      focusTitle.setAttribute('slot', 'task-focus-name')
+      focusTitle.textContent = task.name
+      dialog.querySelector('header').prepend(focusTitle)
     }
 
-    if (!focusNoteEl && task.note && task.note.length) {
+    if (focusNoteEl) {
+      focusNoteEl.textContent = task.note
+    } else {
       const focusNote = document.createElement('p')
       focusNote.setAttribute('slot', 'task-focus-note')
       focusNote.textContent = task.note
       dialog.querySelector('header').appendChild(focusNote)
-    } else {
-      focusNoteEl.textContent = task.note
     }
   }
 
