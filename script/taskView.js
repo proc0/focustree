@@ -60,7 +60,7 @@ class TaskView extends HTMLElement {
     }
 
     // branching subtask
-    treeNode.setAttribute('slot', SLOT_TREE)
+    treeNode.setAttribute('slot', NAME_TREE)
     // replace node with updated node
     detail.node.replaceWith(treeNode)
   }
@@ -79,35 +79,36 @@ class TaskView extends HTMLElement {
     }
 
     // fields
-    if (taskNode.shadowRoot.querySelector('slot[name="task-name"]')) {
+    if (taskNode.shadowRoot.querySelector(`slot[name="${NAME_NAME}"]`)) {
       const taskName = document.createElement(TAG_FIELD)
-      taskName.setAttribute('slot', SLOT_NAME)
+      taskName.setAttribute('slot', NAME_NAME)
       taskName.textContent = task.name
-
       taskNode.appendChild(taskName)
     }
 
     if (!task.meta.editing) {
       if (task.note && task.note.length) {
-        taskNode.shadowRoot.querySelector('[part="task-note"]').setAttribute('data-note', task.note)
+        taskNode.shadowRoot
+          .querySelector(`[part="${NAME_NOTE}"]`)
+          .setAttribute('data-note', task.note)
       } else {
-        taskNode.shadowRoot.querySelector('[part="task-note"]').remove()
+        taskNode.shadowRoot.querySelector(`[part="${NAME_NOTE}"]`).remove()
       }
     }
 
     if (
-      taskNode.shadowRoot.querySelector('slot[name="task-note"]') &&
+      taskNode.shadowRoot.querySelector(`slot[name="${NAME_NOTE}"]`) &&
       task.note &&
       task.note.length
     ) {
       const taskNote = document.createElement(TAG_FIELD)
-      taskNote.setAttribute('slot', SLOT_NOTE)
+      taskNote.setAttribute('slot', NAME_NOTE)
       taskNote.textContent = task.note
       taskNode.appendChild(taskNote)
     }
 
     const taskState = document.createElement('select')
-    taskState.setAttribute('slot', SLOT_STATE)
+    taskState.setAttribute('slot', NAME_STATE)
     let currentState = ''
     task.data.states.forEach((state, index) => {
       const option = document.createElement('option')
@@ -141,18 +142,18 @@ class TaskView extends HTMLElement {
     // branch
     container.classList.add(CLASS_BRANCH)
 
-    const treeTitleSlot = taskNode.shadowRoot.querySelector(`slot[name="${SLOT_TITLE_TREE}"]`)
+    const treeTitleSlot = taskNode.shadowRoot.querySelector(`slot[name="${NAME_TITLE_TREE}"]`)
     if (treeTitleSlot) {
       const treeLength = task.tree.length
       const treeLabel = document.createElement(TAG_LABEL)
-      treeLabel.setAttribute('slot', SLOT_TITLE_TREE)
+      treeLabel.setAttribute('slot', NAME_TITLE_TREE)
       treeLabel.textContent = `${treeTitleSlot.getAttribute('data-text')} (${treeLength})`
       taskNode.appendChild(treeLabel)
     }
 
     for (const sub in task.tree) {
       const subTask = this.renderTree(task.tree[sub])
-      subTask.setAttribute('slot', SLOT_TREE)
+      subTask.setAttribute('slot', NAME_TREE)
 
       taskNode.appendChild(subTask)
     }

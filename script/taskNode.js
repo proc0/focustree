@@ -1,13 +1,3 @@
-const QUERY_SLOT_FIELD = 'ul li slot'
-const QUERY_TREE_HEADER = 'details summary header'
-const QUERY_BUTTON_ADD = 'button[name="task-add"]'
-const QUERY_BUTTON_EDIT = 'button[name="task-edit"]'
-const QUERY_BUTTON_DELETE = 'button[name="task-delete"]'
-const QUERY_SELECT_STATE = 'slot[name="task-state"]'
-const QUERY_SELECT_FOCUS = 'button[name="task-focus"]'
-const QUERY_SELECT_SYNC = 'button[name="task-sync"]'
-const QUERY_SELECT_SAVE = 'button[name="task-save"]'
-
 class TaskNode extends HTMLElement {
   constructor() {
     super()
@@ -26,15 +16,11 @@ class TaskNode extends HTMLElement {
 
     if (task.meta.editing) {
       // click event for editing task fields
-      this.shadowRoot.querySelectorAll(QUERY_SLOT_FIELD).forEach((slot) => {
-        const editButton = slot.parentElement.querySelector(QUERY_BUTTON_EDIT)
-
-        if (editButton) {
-          editButton.addEventListener('click', this.edit.bind(this))
-        }
+      this.selectAll(NAME_EDIT).forEach((editButton) => {
+        editButton.addEventListener('click', this.edit.bind(this))
       })
 
-      this.shadowRoot.querySelector(QUERY_SELECT_SAVE).addEventListener('click', (event) => {
+      this.select(NAME_SAVE).addEventListener('click', (event) => {
         event.stopPropagation()
         this.task.meta.editing = false
         this.dispatchEvent(
@@ -45,11 +31,11 @@ class TaskNode extends HTMLElement {
         )
       })
     } else {
-      this.shadowRoot.querySelector(QUERY_BUTTON_EDIT).addEventListener('click', (event) => {
+      this.select(NAME_EDIT).addEventListener('click', (event) => {
         event.stopPropagation()
         this.task.meta.editing = true
         // this.dispatch(EVENT_EDIT, this.task)
-
+        // TODO: modify dispatch to add node or not
         this.dispatchEvent(
           new CustomEvent(EVENT_EDIT, {
             bubbles: true,
@@ -63,17 +49,18 @@ class TaskNode extends HTMLElement {
     this.addEventListener(EVENT_UPDATE, this.update.bind(this))
 
     // add event for subtasks
-    this.shadowRoot.querySelector(QUERY_BUTTON_ADD).addEventListener('click', (event) => {
+    this.select(NAME_ADD).addEventListener('click', (event) => {
       event.stopPropagation()
       this.dispatch(EVENT_BRANCH, this.task)
     })
 
-    //TODO: add a way to undo with ctrl+z, add a history data struct in taskBase, and send opposite command (delete -> add)
-    this.shadowRoot.querySelector(QUERY_BUTTON_DELETE).addEventListener('click', (event) => {
+    //TODO: add a way to undo with ctrl+z, add a history data struct
+    // in taskBase, and send opposite command (delete -> add)
+    this.select(NAME_DELETE).addEventListener('click', (event) => {
       event.stopPropagation()
 
       // root task delete
-      if (this.parentElement.tagName === TAG_BASE.toUpperCase()) {
+      if (this.isRoot()) {
         return this.dispatch(EVENT_DELETE, this.task)
       }
 
@@ -90,30 +77,30 @@ class TaskNode extends HTMLElement {
       this.dispatch(EVENT_DELETE, parentTask)
     })
 
-    this.shadowRoot.querySelector(QUERY_SELECT_FOCUS).addEventListener('click', (event) => {
+    this.select(NAME_FOCUS).addEventListener('click', (event) => {
       event.stopPropagation()
 
       this.dispatch(EVENT_FOCUS, this.task)
     })
 
     // state change
-    this.shadowRoot.querySelector(QUERY_SELECT_STATE).addEventListener('change', (event) => {
+    this.select(NAME_STATE).addEventListener('change', (event) => {
       event.stopPropagation()
       this.task.state = Number(event.target.value)
       this.dispatch(EVENT_STATUS, this.task)
     })
 
     // sync state
-    this.shadowRoot.querySelector(QUERY_SELECT_SYNC).addEventListener('click', (event) => {
+    this.select(NAME_SYNC).addEventListener('click', (event) => {
       event.stopPropagation()
       this.dispatch(EVENT_SYNC, this.task)
     })
 
     // open and close subtasks drawer
-    this.shadowRoot.querySelector(QUERY_TREE_HEADER).addEventListener('click', (event) => {
+    this.shadowRoot.querySelector('details summary').addEventListener('click', (event) => {
       event.stopPropagation()
       // get the details tag, somehow null open attribute means it is open
-      const opened = event.currentTarget.parentElement.parentElement.getAttribute('open') === null
+      const opened = event.currentTarget.parentElement.getAttribute('open') === null
       this.task.meta.opened = opened
       this.dispatch(EVENT_EXPAND, this.task)
     })
@@ -140,7 +127,7 @@ class TaskNode extends HTMLElement {
     const input = taskField.querySelector('input')
 
     // show hidden elements again
-    const editButton = taskField.querySelector(QUERY_BUTTON_EDIT)
+    const editButton = taskField.querySelector(`[name="${NAME_EDIT}"]`)
     taskField.removeChild(input)
     taskField.querySelector('slot').setAttribute('class', '')
     editButton.setAttribute('class', '')
@@ -189,9 +176,9 @@ class TaskNode extends HTMLElement {
     input.setAttribute('value', this.task[fieldName])
     // spawn a save button
     const saveButton = document.createElement('button')
-    const taskSaveButton = this.shadowRoot.querySelector(QUERY_SELECT_SAVE)
+    const taskSaveButton = this.shadowRoot.querySelector(`[name="${NAME_SAVE}"]`)
     saveButton.textContent = taskSaveButton.textContent
-    saveButton.setAttribute('name', SLOT_SAVE)
+    saveButton.setAttribute('name', NAME_SAVE)
     // bind commit on save click
     saveButton.addEventListener('click', this.commit.bind(this))
 
@@ -238,9 +225,17 @@ class TaskNode extends HTMLElement {
     const currentButton = event.currentTarget
     const taskField = currentButton.parentElement
     const { slotName, fieldName } = this.getFieldNames(taskField)
-    const deleteButton = taskField.querySelector(QUERY_BUTTON_DELETE)
+    const deleteButton = taskField.querySelector(`[name="${NAME_DELETE}"]`)
 
     return { slotName, fieldName, currentButton, deleteButton, taskField }
+  }
+
+  select(name) {
+    return this.shadowRoot.querySelector(`[name="${name}"]`)
+  }
+
+  selectAll(name) {
+    return this.shadowRoot.querySelectorAll(`[name="${name}"]`)
   }
 
   isRoot() {

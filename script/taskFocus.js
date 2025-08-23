@@ -132,7 +132,7 @@ class TaskFocus extends HTMLDialogElement {
       focusTitleEl.textContent = task.name
       // completed task list
       const taskName = document.createElement('li')
-      taskName.setAttribute('slot', SLOT_NAME)
+      taskName.setAttribute('slot', NAME_NAME)
       taskName.textContent = focusTaskName
       this.querySelector('ul').prepend(taskName)
     } else {
