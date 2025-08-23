@@ -2,11 +2,11 @@ const BASE_NAME = 'taskbase'
 const BASE_VERSION = 4
 const BASE_STORE = 'task'
 
-const MODEL_TASK = {
-  // id: 1, (root only)
+const MODEL = {
+  // id: 0, (root only)
   data: {
     record: [],
-    states: STATES_TASK,
+    states: STATES,
   },
   meta: {
     editing: true,
@@ -66,7 +66,7 @@ class TaskBase extends HTMLElement {
 
         taskStore.createIndex('name', 'name')
 
-        const taskSeed = structuredClone(TUTORIAL || MODEL_TASK)
+        const taskSeed = structuredClone(TUTORIAL || MODEL)
         // only root tasks have id
         taskSeed.id = 1
 
@@ -189,7 +189,7 @@ class TaskBase extends HTMLElement {
       EVENT_BRANCH,
       EVENT_EDIT,
       EVENT_EXPAND,
-      EVENT_STATES,
+      EVENT_STATUS,
       EVENT_SYNC,
       EVENT_UPDATE,
     ]
@@ -201,7 +201,7 @@ class TaskBase extends HTMLElement {
 
   addRoot() {
     this.store('readwrite', (store) => {
-      const task = structuredClone(MODEL_TASK)
+      const task = structuredClone(MODEL)
       const addRequest = store.add(task)
 
       addRequest.onsuccess = ({ target }) => {
@@ -379,14 +379,14 @@ class TaskBase extends HTMLElement {
     const task = event.detail.task
     if (event.type === EVENT_BRANCH) {
       // create new task and add path
-      const newTask = structuredClone(MODEL_TASK)
+      const newTask = structuredClone(MODEL)
       newTask.path = [...task.path, task.tree.length]
       task.tree.push(newTask)
       // open drawer
       task.meta.opened = true
     }
 
-    if (event.type === EVENT_STATES) {
+    if (event.type === EVENT_STATUS) {
       // limit history to prevent large db size
       if (task.data.record.length > 99) {
         task.data.record.splice(50)

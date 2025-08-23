@@ -1,10 +1,10 @@
 window.onload = () => {
-  customElements.define(ELEMENT_NODE, TaskNode)
-  customElements.define(ELEMENT_BASE, TaskBase)
-  customElements.define(ELEMENT_VIEW, TaskView)
+  customElements.define(TAG_NODE, TaskNode)
+  customElements.define(TAG_BASE, TaskBase)
+  customElements.define(TAG_VIEW, TaskView)
 
-  const taskView = document.createElement(ELEMENT_VIEW)
-  const taskBase = document.createElement(ELEMENT_BASE)
+  const taskView = document.createElement(TAG_VIEW)
+  const taskBase = document.createElement(TAG_BASE)
 
   taskView.init().appendChild(taskBase)
   document.querySelector('main').appendChild(taskView)

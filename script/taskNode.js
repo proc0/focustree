@@ -73,7 +73,7 @@ class TaskNode extends HTMLElement {
       event.stopPropagation()
 
       // root task delete
-      if (this.parentElement.tagName === ELEMENT_BASE.toUpperCase()) {
+      if (this.parentElement.tagName === TAG_BASE.toUpperCase()) {
         return this.dispatch(EVENT_DELETE, this.task)
       }
 
@@ -100,7 +100,7 @@ class TaskNode extends HTMLElement {
     this.shadowRoot.querySelector(QUERY_SELECT_STATE).addEventListener('change', (event) => {
       event.stopPropagation()
       this.task.state = Number(event.target.value)
-      this.dispatch(EVENT_STATES, this.task)
+      this.dispatch(EVENT_STATUS, this.task)
     })
 
     // sync state
@@ -128,7 +128,7 @@ class TaskNode extends HTMLElement {
       this.task.data.record[lastIndex].timeEnd = Date.now()
     }
     this.task.meta.focused = false
-    this.dispatch(EVENT_STATES, this.task)
+    this.dispatch(EVENT_STATUS, this.task)
   }
 
   commit(event) {
@@ -189,7 +189,8 @@ class TaskNode extends HTMLElement {
     input.setAttribute('value', this.task[fieldName])
     // spawn a save button
     const saveButton = document.createElement('button')
-    saveButton.textContent = TEXT_SAVE
+    const taskSaveButton = this.shadowRoot.querySelector(QUERY_SELECT_SAVE)
+    saveButton.textContent = taskSaveButton.textContent
     saveButton.setAttribute('name', SLOT_SAVE)
     // bind commit on save click
     saveButton.addEventListener('click', this.commit.bind(this))
@@ -217,8 +218,9 @@ class TaskNode extends HTMLElement {
       stateStart: this.task.state,
       timeStart: Date.now(),
     })
-    this.dispatch(EVENT_STATES, this.task)
-
+    // set task state
+    this.dispatch(EVENT_STATUS, this.task)
+    // custom scroll into view, places the focused task slightly above center
     const taskContainer = this.shadowRoot.querySelector('div').getBoundingClientRect()
     const containerY = taskContainer.top + window.pageYOffset
     const middle = containerY - window.innerHeight / 2 + 200
@@ -242,14 +244,14 @@ class TaskNode extends HTMLElement {
   }
 
   isRoot() {
-    return this.parentElement.tagName === ELEMENT_BASE.toUpperCase()
+    return this.parentElement.tagName === TAG_BASE.toUpperCase()
   }
 
   update(event) {
     const fieldElement = event.currentTarget.shadowRoot
     const { slotName, fieldName } = this.getFieldNames(fieldElement)
 
-    const elementQuery = `${ELEMENT_FIELD}[slot="${slotName}"]`
+    const elementQuery = `${TAG_FIELD}[slot="${slotName}"]`
     const taskPath = event.detail.task.path.join('')
     const updateValue = event.detail.task[fieldName]
 

@@ -108,7 +108,7 @@ class TaskView extends HTMLElement {
 
       const currentTask = this.querySelector(QUERY_FOCUS_NODE)
       // DFS - get first subtask
-      let nextTask = currentTask.querySelector(ELEMENT_NODE)
+      let nextTask = currentTask.querySelector(TAG_NODE)
 
       // do not set task as done (3) unless it has children
       // this only removes focus
@@ -218,7 +218,7 @@ class TaskView extends HTMLElement {
   }
 
   renderTree(task) {
-    const taskNode = document.createElement(ELEMENT_NODE)
+    const taskNode = document.createElement(TAG_NODE)
     taskNode.init(task, this.editMode)
 
     const container = taskNode.shadowRoot.querySelector('div')
@@ -232,7 +232,7 @@ class TaskView extends HTMLElement {
 
     // fields
     if (taskNode.shadowRoot.querySelector('slot[name="task-name"]')) {
-      const taskName = document.createElement(ELEMENT_FIELD)
+      const taskName = document.createElement(TAG_FIELD)
       taskName.setAttribute('slot', SLOT_NAME)
       taskName.textContent = task.name
 
@@ -252,7 +252,7 @@ class TaskView extends HTMLElement {
       task.note &&
       task.note.length
     ) {
-      const taskNote = document.createElement(ELEMENT_FIELD)
+      const taskNote = document.createElement(TAG_FIELD)
       taskNote.setAttribute('slot', SLOT_NOTE)
       taskNote.textContent = task.note
       taskNode.appendChild(taskNote)
@@ -293,11 +293,14 @@ class TaskView extends HTMLElement {
     // branch
     container.classList.add(CLASS_BRANCH)
 
-    const treeLength = task.tree.length
-    const treeLabel = document.createElement(ELEMENT_LABEL)
-    treeLabel.setAttribute('slot', SLOT_TITLE_TREE)
-    treeLabel.textContent = `${TEXT_TREE} (${treeLength})`
-    taskNode.appendChild(treeLabel)
+    const treeTitleSlot = taskNode.shadowRoot.querySelector(`slot[name="${SLOT_TITLE_TREE}"]`)
+    if (treeTitleSlot) {
+      const treeLength = task.tree.length
+      const treeLabel = document.createElement(TAG_LABEL)
+      treeLabel.setAttribute('slot', SLOT_TITLE_TREE)
+      treeLabel.textContent = `${treeTitleSlot.getAttribute('data-text')} (${treeLength})`
+      taskNode.appendChild(treeLabel)
+    }
 
     for (const sub in task.tree) {
       const subTask = this.renderTree(task.tree[sub])
