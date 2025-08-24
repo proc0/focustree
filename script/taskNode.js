@@ -26,7 +26,7 @@ class TaskNode extends HTMLElement {
         this.dispatch(EVENT_EDIT)
       })
     } else {
-      // prevent menu click from trigger subtask open
+      // prevent menu click from triggering subtask open
       this.selectName(NAME_MENU).addEventListener('click', (event) => {
         event.stopPropagation()
       })
@@ -74,6 +74,10 @@ class TaskNode extends HTMLElement {
       this.dispatch(EVENT_FOCUS)
     })
 
+    // prevent select or option click from triggering subtask open
+    this.selectName(NAME_STATE).addEventListener('click', (event) => {
+      event.stopPropagation()
+    })
     // task state selection
     this.selectName(NAME_STATE).addEventListener('change', (event) => {
       event.stopPropagation()
