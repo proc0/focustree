@@ -10,6 +10,7 @@ class TaskView extends HTMLElement {
     this.addEventListener(EVENT_DELETE, this.deleteTree.bind(this))
     this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
     this.addEventListener(EVENT_EDIT, this.render.bind(this))
+    this.addEventListener(EVENT_MENU, this.showMenu.bind(this))
   }
 
   deleteTree({ detail, target }) {
@@ -165,5 +166,10 @@ class TaskView extends HTMLElement {
     }
 
     return taskNode
+  }
+
+  showMenu(event) {
+    event.stopPropagation()
+    this.querySelector('menu').show(event)
   }
 }

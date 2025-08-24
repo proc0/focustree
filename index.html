@@ -14,6 +14,7 @@
     <script src="script/taskBase.js"></script>
     <script src="script/taskNode.js"></script>
     <script src="script/taskFocus.js"></script>
+    <script src="script/taskMenu.js"></script>
   </head>
   <body>
     <template id="template-task">
@@ -35,43 +36,43 @@
               <slot name="task-name"></slot>
               <span part="task-note">🛈</span>
             </header>
-            <button name="task-menu" part="menu-button" title="Menu">☰</button>
-            <menu part="task-menu">
-              <item>
-                <button name="task-delete" part="menu-item" title="Delete">✕</button>
-              </item>
-              <item>
-                <button name="task-move-down" part="menu-item" title="Move down">⤓</button>
-              </item>
-              <item>
-                <button name="task-move-up" part="menu-item" title="Move up">⤒</button>
-              </item>
-              <item>
-                <button name="task-copy" part="menu-item" title="Copy">❐</button>
-              </item>
-              <item>
-                <button name="task-cut" part="menu-item" title="Cut">✂</button>
-              </item>
-              <item>
-                <button name="task-sync" part="menu-item" title="Sync state">↯</button>
-                <slot name="task-state"></slot>
-              </item>
-              <item>
-                <button name="task-edit" part="menu-item" title="Edit">✎</button>
-              </item>
-              <item>
-                <button name="task-add" part="menu-item" title="Add subtask">+</button>
-              </item>
-              <item>
-                <button name="task-focus" part="focus-button" title="Focus">👁</button>
-              </item>
-            </menu>
+            <button name="task-menu" part="task-menu" title="Menu">☰</button>
           </summary>
           <section>
             <slot name="task-tree"></slot>
           </section>
         </details>
       </div>
+    </template>
+    <template id="template-menu">
+      <item>
+        <button name="task-delete" title="Delete">✕</button>
+      </item>
+      <item>
+        <button name="task-move-down" title="Move down">⤓</button>
+      </item>
+      <item>
+        <button name="task-move-up" title="Move up">⤒</button>
+      </item>
+      <item>
+        <button name="task-copy" title="Copy">❐</button>
+      </item>
+      <item>
+        <button name="task-cut" title="Cut">✂</button>
+      </item>
+      <item>
+        <button name="task-sync" title="Sync state">↯</button>
+        <slot name="task-state"></slot>
+      </item>
+      <item>
+        <button name="task-edit" title="Edit">✎</button>
+      </item>
+      <item>
+        <button name="task-add" title="Add subtask">+</button>
+      </item>
+      <item>
+        <button name="task-focus" title="Focus">👁</button>
+      </item>
     </template>
     <template id="template-edit">
       <link rel="stylesheet" href="style/edit.css" />

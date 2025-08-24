@@ -29,67 +29,68 @@ class TaskNode extends HTMLElement {
       // prevent menu click from triggering subtask open
       this.selectName(NAME_MENU).addEventListener('click', (event) => {
         event.stopPropagation()
+        this.dispatch(EVENT_MENU)
       })
-      // task edit mode
-      this.selectName(NAME_EDIT).addEventListener('click', (event) => {
-        event.stopPropagation()
-        this.task.meta.editing = true
-        this.dispatch(EVENT_EDIT)
-      })
+      // // task edit mode
+      // this.selectName(NAME_EDIT).addEventListener('click', (event) => {
+      //   event.stopPropagation()
+      //   this.task.meta.editing = true
+      //   this.dispatch(EVENT_EDIT)
+      // })
     }
 
     // update fields with new input
     this.addEventListener(EVENT_UPDATE, this.update.bind(this))
 
-    // add event for subtasks
-    this.selectName(NAME_ADD).addEventListener('click', (event) => {
-      event.stopPropagation()
-      this.dispatch(EVENT_BRANCH)
-    })
+    // // add event for subtasks
+    // this.selectName(NAME_ADD).addEventListener('click', (event) => {
+    //   event.stopPropagation()
+    //   this.dispatch(EVENT_BRANCH)
+    // })
 
-    //TODO: add a way to undo with ctrl+z, add a history data struct
-    // in taskBase, and send opposite command (delete -> add)
-    this.selectName(NAME_DELETE).addEventListener('click', (event) => {
-      event.stopPropagation()
-      // root task delete
-      if (this.isRoot()) {
-        return this.dispatch(EVENT_DELETE)
-      }
+    // //TODO: add a way to undo with ctrl+z, add a history data struct
+    // // in taskBase, and send opposite command (delete -> add)
+    // this.selectName(NAME_DELETE).addEventListener('click', (event) => {
+    //   event.stopPropagation()
+    //   // root task delete
+    //   if (this.isRoot()) {
+    //     return this.dispatch(EVENT_DELETE)
+    //   }
 
-      // since we are deleting this task, get parent task
-      const parentTask = this.parentElement.task
-      for (const index in parentTask.tree) {
-        if (parentTask.tree[index].path.join('') === this.task.path.join('')) {
-          parentTask.tree.splice(index, 1)
-          break
-        }
-      }
+    //   // since we are deleting this task, get parent task
+    //   const parentTask = this.parentElement.task
+    //   for (const index in parentTask.tree) {
+    //     if (parentTask.tree[index].path.join('') === this.task.path.join('')) {
+    //       parentTask.tree.splice(index, 1)
+    //       break
+    //     }
+    //   }
 
-      // dispatch parent task to render
-      this.dispatch(EVENT_DELETE, parentTask)
-    })
+    //   // dispatch parent task to render
+    //   this.dispatch(EVENT_DELETE, parentTask)
+    // })
 
-    this.selectName(NAME_FOCUS).addEventListener('click', (event) => {
-      event.stopPropagation()
-      this.dispatch(EVENT_FOCUS)
-    })
+    // this.selectName(NAME_FOCUS).addEventListener('click', (event) => {
+    //   event.stopPropagation()
+    //   this.dispatch(EVENT_FOCUS)
+    // })
 
-    // prevent select or option click from triggering subtask open
-    this.selectName(NAME_STATE).addEventListener('click', (event) => {
-      event.stopPropagation()
-    })
-    // task state selection
-    this.selectName(NAME_STATE).addEventListener('change', (event) => {
-      event.stopPropagation()
-      this.task.state = Number(event.target.value)
-      this.dispatch(EVENT_STATUS)
-    })
+    // // prevent select or option click from triggering subtask open
+    // this.selectName(NAME_STATE).addEventListener('click', (event) => {
+    //   event.stopPropagation()
+    // })
+    // // task state selection
+    // this.selectName(NAME_STATE).addEventListener('change', (event) => {
+    //   event.stopPropagation()
+    //   this.task.state = Number(event.target.value)
+    //   this.dispatch(EVENT_STATUS)
+    // })
 
-    // sync task tree states
-    this.selectName(NAME_SYNC).addEventListener('click', (event) => {
-      event.stopPropagation()
-      this.dispatch(EVENT_SYNC)
-    })
+    // // sync task tree states
+    // this.selectName(NAME_SYNC).addEventListener('click', (event) => {
+    //   event.stopPropagation()
+    //   this.dispatch(EVENT_SYNC)
+    // })
 
     // open and close subtasks drawer
     this.select('details summary').addEventListener('click', (event) => {

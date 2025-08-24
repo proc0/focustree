@@ -76,7 +76,7 @@ select option {
 * selectors, when select is open menu should be visible
 */
 /* TODO: constrain this to compact mode once there is a class on task-view */
-task-node {
+/* task-node {
   &:has(> select:open) {
     &::part(task-menu) {
       visibility: visible;
@@ -94,4 +94,4 @@ task-node {
       background-color: var(--color-hover-background-button);
     }
   }
-}
+} */
