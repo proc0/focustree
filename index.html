@@ -29,9 +29,9 @@
       </style>
       <link rel="stylesheet" href="style/task.css" />
       <div>
-        <details part="tree-container">
-          <summary part="tree-summary">
-            <header part="tree-header">
+        <details part="task-details">
+          <summary part="task-summary">
+            <header part="task-header">
               <slot name="task-name"></slot>
               <span part="task-note">🛈</span>
             </header>
@@ -93,8 +93,8 @@
             <button name="task-save" title="Save">✔</button>
           </li>
         </ul>
-        <details part="tree-container">
-          <summary>
+        <details part="tree-details">
+          <summary part="tree-summary">
             <header part="tree-header">
               <slot name="tree-title" data-text="Subtasks">No subtasks</slot
               ><button name="task-add" title="Add subtask">+</button>

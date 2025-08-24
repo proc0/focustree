@@ -14,7 +14,10 @@ div {
   &.focused summary {
     border: 1px solid var(--color-highlight);
     background-color: var(--color-background);
-    filter: none !important;
+
+    & details {
+      filter: none;
+    }
 
     &:before {
       display: none;

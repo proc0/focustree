@@ -24,15 +24,15 @@ main {
 
 main.focused {
 
-  & task-node:not([data-focused])::part(task-container) {
+  /* & task-node:not([data-focused])::part(task-details) {
     filter: blur(3px);
-  }
+  } */
 
-  & task-node:not([data-focused])::part(tree-header) {
+  & task-node:not([data-focused])::part(task-header) {
     filter: blur(7px);
   }
 
-  & task-node:not([data-focused])::part(tree-summary):before {
+  & task-node:not([data-focused])::part(task-summary):before {
     display: none;
   }
 
