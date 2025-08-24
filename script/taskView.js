@@ -50,11 +50,13 @@ class TaskView extends HTMLElement {
     const task = detail.task
     const treeNode = this.renderTree(task)
 
-    // root add event does not have node to replace
-    if (task.id && !detail?.node) {
+    // task base events without node are to be appended directly
+    // TODO?: find an abstraction to consolidate this logic
+    if (task.id && !detail?.node && target.tagName === TAG_BASE.toUpperCase()) {
       // append root tasks to task-base
       target.appendChild(treeNode)
       // TODO: scroll adding root into view (requires more info from event?)
+      // scenario: there is a lot of tasks and you add a new one, it should scroll into view
       // return treeNode.scrollIntoView({ behavior: 'smooth' })
       return
     }

@@ -15,33 +15,26 @@ class TaskNode extends HTMLElement {
     )
 
     if (task.meta.editing) {
-      // click event for editing task fields
+      // task fields edit
       this.selectAll(NAME_EDIT).forEach((editButton) => {
         editButton.addEventListener('click', this.edit.bind(this))
       })
-
-      this.select(NAME_SAVE).addEventListener('click', (event) => {
+      // task edit save
+      this.selectName(NAME_SAVE).addEventListener('click', (event) => {
         event.stopPropagation()
         this.task.meta.editing = false
-        this.dispatchEvent(
-          new CustomEvent(EVENT_EDIT, {
-            bubbles: true,
-            detail: { task: this.task, node: this },
-          })
-        )
+        this.dispatch(EVENT_EDIT)
       })
     } else {
-      this.select(NAME_EDIT).addEventListener('click', (event) => {
+      // prevent menu click from trigger subtask open
+      this.selectName(NAME_MENU).addEventListener('click', (event) => {
+        event.stopPropagation()
+      })
+      // task edit mode
+      this.selectName(NAME_EDIT).addEventListener('click', (event) => {
         event.stopPropagation()
         this.task.meta.editing = true
-        // this.dispatch(EVENT_EDIT, this.task)
-        // TODO: modify dispatch to add node or not
-        this.dispatchEvent(
-          new CustomEvent(EVENT_EDIT, {
-            bubbles: true,
-            detail: { task: this.task, node: this },
-          })
-        )
+        this.dispatch(EVENT_EDIT)
       })
     }
 
@@ -49,19 +42,18 @@ class TaskNode extends HTMLElement {
     this.addEventListener(EVENT_UPDATE, this.update.bind(this))
 
     // add event for subtasks
-    this.select(NAME_ADD).addEventListener('click', (event) => {
+    this.selectName(NAME_ADD).addEventListener('click', (event) => {
       event.stopPropagation()
-      this.dispatch(EVENT_BRANCH, this.task)
+      this.dispatch(EVENT_BRANCH)
     })
 
     //TODO: add a way to undo with ctrl+z, add a history data struct
     // in taskBase, and send opposite command (delete -> add)
-    this.select(NAME_DELETE).addEventListener('click', (event) => {
+    this.selectName(NAME_DELETE).addEventListener('click', (event) => {
       event.stopPropagation()
-
       // root task delete
       if (this.isRoot()) {
-        return this.dispatch(EVENT_DELETE, this.task)
+        return this.dispatch(EVENT_DELETE)
       }
 
       // since we are deleting this task, get parent task
@@ -77,32 +69,31 @@ class TaskNode extends HTMLElement {
       this.dispatch(EVENT_DELETE, parentTask)
     })
 
-    this.select(NAME_FOCUS).addEventListener('click', (event) => {
+    this.selectName(NAME_FOCUS).addEventListener('click', (event) => {
       event.stopPropagation()
-
-      this.dispatch(EVENT_FOCUS, this.task)
+      this.dispatch(EVENT_FOCUS)
     })
 
-    // state change
-    this.select(NAME_STATE).addEventListener('change', (event) => {
+    // task state selection
+    this.selectName(NAME_STATE).addEventListener('change', (event) => {
       event.stopPropagation()
       this.task.state = Number(event.target.value)
-      this.dispatch(EVENT_STATUS, this.task)
+      this.dispatch(EVENT_STATUS)
     })
 
-    // sync state
-    this.select(NAME_SYNC).addEventListener('click', (event) => {
+    // sync task tree states
+    this.selectName(NAME_SYNC).addEventListener('click', (event) => {
       event.stopPropagation()
-      this.dispatch(EVENT_SYNC, this.task)
+      this.dispatch(EVENT_SYNC)
     })
 
     // open and close subtasks drawer
-    this.shadowRoot.querySelector('details summary').addEventListener('click', (event) => {
+    this.select('details summary').addEventListener('click', (event) => {
       event.stopPropagation()
       // get the details tag, somehow null open attribute means it is open
       const opened = event.currentTarget.parentElement.getAttribute('open') === null
       this.task.meta.opened = opened
-      this.dispatch(EVENT_EXPAND, this.task)
+      this.dispatch(EVENT_EXPAND)
     })
   }
 
@@ -115,24 +106,21 @@ class TaskNode extends HTMLElement {
       this.task.data.record[lastIndex].timeEnd = Date.now()
     }
     this.task.meta.focused = false
-    this.dispatch(EVENT_STATUS, this.task)
+    this.dispatch(EVENT_STATUS)
   }
 
   commit(event) {
     event.stopPropagation()
     // current button is save
-    const { slotName, fieldName, currentButton, deleteButton, taskField } =
-      this.getFieldElements(event)
-
+    const { fieldName, currentButton, deleteButton, taskField } = this.getFieldElements(event)
     const input = taskField.querySelector('input')
-
-    // show hidden elements again
     const editButton = taskField.querySelector(`[name="${NAME_EDIT}"]`)
+    // show hidden elements again
     taskField.removeChild(input)
     taskField.querySelector('slot').setAttribute('class', '')
     editButton.setAttribute('class', '')
     deleteButton?.setAttribute('class', '')
-    // save button
+    // remove save button
     currentButton.remove()
 
     // no changes
@@ -144,14 +132,14 @@ class TaskNode extends HTMLElement {
     const updateValue = input.value
     this.task[fieldName] = updateValue
 
-    this.dispatch(EVENT_UPDATE, this.task)
+    this.dispatch(EVENT_UPDATE)
   }
 
-  dispatch(eventName, task) {
+  dispatch(eventName, task = this.task) {
     this.dispatchEvent(
       new CustomEvent(eventName, {
         bubbles: true,
-        detail: { task },
+        detail: { task, node: this },
       })
     )
   }
@@ -176,7 +164,7 @@ class TaskNode extends HTMLElement {
     input.setAttribute('value', this.task[fieldName])
     // spawn a save button
     const saveButton = document.createElement('button')
-    const taskSaveButton = this.shadowRoot.querySelector(`[name="${NAME_SAVE}"]`)
+    const taskSaveButton = this.selectName(NAME_SAVE)
     saveButton.textContent = taskSaveButton.textContent
     saveButton.setAttribute('name', NAME_SAVE)
     // bind commit on save click
@@ -208,10 +196,14 @@ class TaskNode extends HTMLElement {
     // set task state
     this.dispatch(EVENT_STATUS, this.task)
     // custom scroll into view, places the focused task slightly above center
-    const taskContainer = this.shadowRoot.querySelector('div').getBoundingClientRect()
+    const taskContainer = this.select('div').getBoundingClientRect()
     const containerY = taskContainer.top + window.pageYOffset
     const middle = containerY - window.innerHeight / 2 + 200
     window.scrollTo(0, middle)
+  }
+
+  isRoot() {
+    return this.parentElement.tagName === TAG_BASE.toUpperCase()
   }
 
   getFieldNames(element) {
@@ -230,16 +222,16 @@ class TaskNode extends HTMLElement {
     return { slotName, fieldName, currentButton, deleteButton, taskField }
   }
 
-  select(name) {
+  select(query) {
+    return this.shadowRoot.querySelector(query)
+  }
+
+  selectName(name) {
     return this.shadowRoot.querySelector(`[name="${name}"]`)
   }
 
   selectAll(name) {
     return this.shadowRoot.querySelectorAll(`[name="${name}"]`)
-  }
-
-  isRoot() {
-    return this.parentElement.tagName === TAG_BASE.toUpperCase()
   }
 
   update(event) {
