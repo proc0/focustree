@@ -1,11 +1,17 @@
 const BASE_NAME = 'taskbase'
-const BASE_VERSION = 4
 const BASE_STORE = 'task'
+const BASE_VERSION = 1
 
 const MODEL = {
   // id: 0, (root only)
   data: {
     record: [],
+    // record: [{
+    // stateStart,
+    // stateEnd,
+    // timeStart,
+    // timeEnd,
+    // }]
     states: STATES,
   },
   meta: {
@@ -20,16 +26,6 @@ const MODEL = {
   state: 0,
   tree: [],
 }
-
-// V2 task history model
-// records how much time was spent focusing
-// and whether or not it was paused
-// {
-//   stateStart,
-//   stateEnd,
-//   timeStart,
-//   timeEnd,
-// }
 
 class TaskBase extends HTMLElement {
   constructor() {
@@ -47,7 +43,7 @@ class TaskBase extends HTMLElement {
       this.load()
     }
 
-    initBase.onupgradeneeded = ({ target, oldVersion }) => {
+    initBase.onupgradeneeded = ({ target }) => {
       console.log('TaskBase upgrade needed.')
 
       const taskBase = target.result
@@ -91,68 +87,17 @@ class TaskBase extends HTMLElement {
             traverseTask(sub, transform)
           })
         }
+
         // pick migration function according to version
-        let migration = (a) => a
-        if (oldVersion === 1) {
-          console.log(`Migrating TaskBase from ${oldVersion} to ${taskBase.version}...`)
-          // version 2 changes task state history model
-          migration = (task) => {
-            task.state.history = task.state.history.map((entry) => ({
-              stateStart: entry.state,
-              stateEnd: entry.state,
-              timeStart: entry.time,
-              timeEnd: entry.time,
-            }))
-            // V3
-            task.tree = task.subs
-            delete task.subs
-            // V4
-            const currentState = task.state.current
-            task.data = {
-              record: task.state.history,
-              states: task.state.options,
-            }
-            task.meta.focused = task.state.focused
-            task.meta.grafted = false
-            delete task.state
-            task.state = currentState
-          }
-        }
-
-        if (oldVersion === 2) {
-          console.log(`Migrating TaskBase from ${oldVersion} to ${taskBase.version}...`)
-          // version 3 changes task subs to task tree
-          migration = (task) => {
-            task.tree = task.subs
-            delete task.subs
-            //V4 changes
-            const currentState = task.state.current
-            task.data = {
-              record: task.state.history,
-              states: task.state.options,
-            }
-            task.meta.focused = task.state.focused
-            task.meta.grafted = false
-            delete task.state
-            task.state = currentState
-          }
-        }
-
-        if (oldVersion === 3) {
-          console.log(`Migrating TaskBase from ${oldVersion} to ${taskBase.version}...`)
-          // version 3 changes task subs to task tree
-          migration = (task) => {
-            const currentState = task.state.current
-            task.data = {
-              record: task.state.history,
-              states: task.state.options,
-            }
-            task.meta.focused = task.state.focused
-            task.meta.grafted = false
-            delete task.state
-            task.state = currentState
-          }
-        }
+        // let migration = (a) => a
+        // get oldVersion from event.oldVersion
+        // if (oldVersion === 1) {
+        //   console.log(`Migrating TaskBase from ${oldVersion} to ${taskBase.version}...`)
+        //   // version 2 changes task state history model
+        //   migration = (task) => {
+        //     // modify task to new version here
+        //   }
+        // }
 
         const request = (store.openCursor().onsuccess = ({ target }) => {
           const cursor = target.result
