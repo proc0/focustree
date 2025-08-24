@@ -1,6 +1,3 @@
-const QUERY_FOCUS_DONE = 'button[name="task-done"]'
-const QUERY_FOCUS_PAUSE = 'button[name="task-pause"]'
-
 class TaskFocus extends HTMLDialogElement {
   seed = null
 
@@ -23,7 +20,7 @@ class TaskFocus extends HTMLDialogElement {
     })
 
     // focus exit
-    this.querySelector(QUERY_FOCUS_PAUSE).addEventListener('click', (e) => {
+    this.querySelector(`[name="${NAME_PAUSE}"]`).addEventListener('click', (e) => {
       e.stopPropagation()
       const focusNode = this.parentElement.getTaskNode()
       // pause current task
@@ -48,7 +45,7 @@ class TaskFocus extends HTMLDialogElement {
     })
 
     // focus complete task
-    this.querySelector(QUERY_FOCUS_DONE).addEventListener('click', (e) => {
+    this.querySelector(`[name="${NAME_DONE}"]`).addEventListener('click', (e) => {
       e.stopPropagation()
 
       const focusNode = this.parentElement.getTaskNode()
