@@ -2,13 +2,6 @@
 
 /* Reset */
 
-ul,
-ul li {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
 button {
   border: none;
   background: none;
@@ -16,4 +9,9 @@ button {
   margin: 0;
   padding: 0;
   user-select: none;
+}
+
+.icon-button {
+  color: var(--color-text-button);
+  background-color: var(--color-background-select);
 }

@@ -68,6 +68,27 @@ class TaskView extends HTMLElement {
     detail.node.replaceWith(treeNode)
   }
 
+  renderSelect(task) {
+    const taskState = document.createElement('select')
+    taskState.setAttribute('slot', NAME_STATE)
+    let currentState = ''
+    task.data.states.forEach((state, index) => {
+      const option = document.createElement('option')
+      option.value = index
+      option.textContent = state.toUpperCase()
+      // set current state
+      if (index === task.state) {
+        currentState = state
+        option.setAttribute('selected', '')
+        taskState.value = index
+      }
+      taskState.appendChild(option)
+    })
+    // set class to current state name
+    // taskState.classList.add(currentState)
+    return taskState
+  }
+
   renderTree(task) {
     const taskNode = document.createElement(TAG_NODE)
     taskNode.init(task)
@@ -110,27 +131,43 @@ class TaskView extends HTMLElement {
       taskNode.appendChild(taskNote)
     }
 
-    const taskState = document.createElement('select')
-    taskState.setAttribute('slot', NAME_STATE)
-    let currentState = ''
-    task.data.states.forEach((state, index) => {
-      const option = document.createElement('option')
-      option.value = index
-      option.textContent = state.toUpperCase()
-      // set current state
-      if (index === task.state) {
-        currentState = state
-        option.setAttribute('selected', '')
-        taskState.value = index
-      }
-      taskState.appendChild(option)
-    })
-    // set class to current state name
-    taskState.classList.add(currentState)
-    taskNode.appendChild(taskState)
+    // const taskState = document.createElement('select')
+    // taskState.setAttribute('slot', NAME_STATE)
+    // let currentState = ''
+    // task.data.states.forEach((state, index) => {
+    //   const option = document.createElement('option')
+    //   option.value = index
+    //   option.textContent = state.toUpperCase()
+    //   // set current state
+    //   if (index === task.state) {
+    //     currentState = state
+    //     option.setAttribute('selected', '')
+    //     taskState.value = index
+    //   }
+    //   taskState.appendChild(option)
+    // })
+    // // set class to current state name
+    // taskState.classList.add(currentState)
+    // taskNode.appendChild(taskState)
 
+    if (task.meta.editing) {
+      const taskState = this.renderSelect(task, taskNode)
+      taskNode.appendChild(taskState)
+    }
+    const currentState = task.data.states[task.state].toLowerCase()
+
+    // refresh menu task node
+    const menu = this.querySelector('menu')
+    if (menu.node?.equals(taskNode)) {
+      // this.querySelector('menu').show({ detail: { task, node: taskNode } })
+      // this.querySelector('menu').clearEvents()
+      menu.node = taskNode
+      menu.task = task
+      // this.querySelector('menu').bindEvents()
+    }
     // state class and attributes on container
     container.classList.add(currentState)
+
     if (task.meta.focused) {
       taskNode.setAttribute('data-focused', '')
       container.classList.add('focused')
@@ -169,7 +206,11 @@ class TaskView extends HTMLElement {
   }
 
   showMenu(event) {
+    // const task = event.detail.task
+    // const node = event.detail.node
+    const menu = this.querySelector('menu')
     event.stopPropagation()
-    this.querySelector('menu').show(event)
+
+    menu.show(event)
   }
 }

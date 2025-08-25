@@ -36,7 +36,7 @@
               <slot name="task-name"></slot>
               <span part="task-note">🛈</span>
             </header>
-            <button name="task-menu" part="task-menu" title="Menu">☰</button>
+            <button class="icon-button" name="task-menu" part="task-menu" title="Menu">☰</button>
           </summary>
           <section>
             <slot name="task-tree"></slot>
@@ -46,32 +46,34 @@
     </template>
     <template id="template-menu">
       <item>
-        <button name="task-delete" title="Delete">✕</button>
+        <button class="icon-button" name="task-delete" title="Delete">✕</button>
       </item>
       <item>
-        <button name="task-move-down" title="Move down">⤓</button>
+        <button class="icon-button" name="task-move-down" title="Move down">⤓</button>
       </item>
       <item>
-        <button name="task-move-up" title="Move up">⤒</button>
+        <button class="icon-button" name="task-move-up" title="Move up">⤒</button>
       </item>
       <item>
-        <button name="task-copy" title="Copy">❐</button>
+        <button class="icon-button" name="task-copy" title="Copy">❐</button>
       </item>
       <item>
-        <button name="task-cut" title="Cut">✂</button>
+        <button class="icon-button" name="task-cut" title="Cut">✂</button>
       </item>
       <item>
-        <button name="task-sync" title="Sync state">↯</button>
+        <button class="icon-button" name="task-sync" title="Sync state">↯</button>
+      </item>
+      <item>
         <slot name="task-state"></slot>
       </item>
       <item>
-        <button name="task-edit" title="Edit">✎</button>
+        <button class="icon-button" name="task-edit" title="Edit">✎</button>
       </item>
       <item>
-        <button name="task-add" title="Add subtask">+</button>
+        <button class="icon-button" name="task-add" title="Add subtask">+</button>
       </item>
       <item>
-        <button name="task-focus" title="Focus">👁</button>
+        <button class="icon-button" name="task-focus" title="Focus">👁</button>
       </item>
     </template>
     <template id="template-edit">

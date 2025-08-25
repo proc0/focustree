@@ -62,7 +62,6 @@ task-view > menu {
   padding: 0;
   position: absolute;
   z-index: 999;
-  background-color: var(--color-background-select);
 
   & item {
     display: flex;
