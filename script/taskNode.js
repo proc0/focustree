@@ -5,91 +5,10 @@ class TaskNode extends HTMLElement {
 
   init(task) {
     this.task = task
-    this.equals.bind(this)
-    this.dispatch.bind(this)
-
+    const template = task.meta.editing ? TEMPLATE_EDIT : TEMPLATE_NODE
     this.attachShadow({ mode: 'open' }).appendChild(
-      document
-        .getElementById(task.meta.editing ? TEMPLATE_EDIT : TEMPLATE_NODE)
-        .content.cloneNode(true)
+      document.getElementById(template).content.cloneNode(true)
     )
-
-    if (task.meta.editing) {
-      // task fields edit
-      this.selectAll(NAME_EDIT).forEach((editButton) => {
-        editButton.addEventListener('click', this.edit.bind(this))
-      })
-      // task edit save
-      this.selectName(NAME_SAVE).addEventListener('click', (event) => {
-        event.stopPropagation()
-        this.task.meta.editing = false
-        this.dispatch(EVENT_EDIT)
-      })
-    } else {
-      // prevent menu click from triggering subtask open
-      this.selectName(NAME_MENU).addEventListener('click', (event) => {
-        event.stopPropagation()
-      })
-      // task edit mode
-      this.selectName(NAME_EDIT).addEventListener('click', (event) => {
-        event.stopPropagation()
-        this.task.meta.editing = true
-        this.dispatch(EVENT_EDIT)
-      })
-    }
-
-    // update fields with new input
-    this.addEventListener(EVENT_UPDATE, this.update.bind(this))
-
-    // add event for subtasks
-    this.selectName(NAME_ADD).addEventListener('click', (event) => {
-      event.stopPropagation()
-      this.dispatch(EVENT_BRANCH)
-    })
-
-    //TODO: add a way to undo with ctrl+z, add a history data struct
-    // in taskBase, and send opposite command (delete -> add)
-    this.selectName(NAME_DELETE).addEventListener('click', (event) => {
-      event.stopPropagation()
-      // root task delete
-      if (this.isRoot()) {
-        return this.dispatch(EVENT_DELETE)
-      }
-
-      // since we are deleting this task, get parent task
-      const parentTask = this.parentElement.task
-      for (const index in parentTask.tree) {
-        if (parentTask.tree[index].path.join('') === this.task.path.join('')) {
-          parentTask.tree.splice(index, 1)
-          break
-        }
-      }
-
-      // dispatch parent task to render
-      this.dispatch(EVENT_DELETE, parentTask)
-    })
-
-    this.selectName(NAME_FOCUS).addEventListener('click', (event) => {
-      event.stopPropagation()
-      this.dispatch(EVENT_FOCUS)
-    })
-
-    // prevent select or option click from triggering subtask open
-    this.selectName(NAME_STATE).addEventListener('click', (event) => {
-      event.stopPropagation()
-    })
-    // task state selection
-    this.selectName(NAME_STATE).addEventListener('change', (event) => {
-      event.stopPropagation()
-      this.task.state = Number(event.target.value)
-      this.dispatch(EVENT_STATUS)
-    })
-
-    // sync task tree states
-    this.selectName(NAME_SYNC).addEventListener('click', (event) => {
-      event.stopPropagation()
-      this.dispatch(EVENT_SYNC)
-    })
 
     // open and close subtasks drawer
     this.select('details summary').addEventListener('click', (event) => {
@@ -99,17 +18,70 @@ class TaskNode extends HTMLElement {
       this.task.meta.opened = opened
       this.dispatch(EVENT_EXPAND)
     })
+
+    if (!task.meta.editing) {
+      // prevent menu click from triggering subtask open
+      return this.selectName(NAME_MENU).addEventListener('click', (event) => {
+        event.stopPropagation()
+        this.dispatch(EVENT_MENU)
+      })
+    }
+
+    this.selectName(NAME_FOCUS).addEventListener('click', (event) => {
+      event.stopPropagation()
+      this.dispatch(EVENT_FOCUS)
+    })
+
+    this.addEventListener(EVENT_UPDATE, this.update.bind(this))
+    // task fields edit
+    this.selectAll(NAME_EDIT).forEach((editButton) => {
+      editButton.addEventListener('click', this.edit.bind(this))
+    })
+
+    // task edit save
+    this.selectName(NAME_SAVE).addEventListener('click', (event) => {
+      event.stopPropagation()
+      this.task.meta.editing = false
+      this.dispatch(EVENT_EDIT)
+    })
+
+    //TODO: add a way to undo with ctrl+z, add a history data struct
+    // in taskBase, and send opposite command (delete -> add)
+    this.selectName(NAME_DELETE).addEventListener('click', (event) => {
+      event.stopPropagation()
+      this.delete()
+    })
+
+    // task state selection
+    this.selectName(NAME_STATE).addEventListener('change', (event) => {
+      event.stopPropagation()
+      this.changeState(Number(event.target.value))
+    })
   }
 
-  blurTask(state) {
-    if (state) {
-      this.task.state = state
-      // complete the history entry
-      const lastIndex = this.task.data.record.length - 1
-      this.task.data.record[lastIndex].stateEnd = state
-      this.task.data.record[lastIndex].timeEnd = Date.now()
-    }
+  blur() {
     this.task.meta.focused = false
+    this.dispatch(EVENT_STATUS)
+  }
+
+  changeState(state) {
+    const lastRecord = this.task.data.record.length - 1
+    // add history entry
+    if (lastRecord) {
+      if (this.task.data.record[lastRecord]?.stateEnd) {
+        // complete entry
+        this.task.data.record[lastRecord].stateEnd = state
+        this.task.data.record[lastRecord].timeEnd = Date.now()
+      } else {
+        // new entry
+        this.task.data.record.push({
+          stateStart: this.task.state,
+          timeStart: Date.now(),
+        })
+      }
+    }
+
+    this.task.state = state
     this.dispatch(EVENT_STATUS)
   }
 
@@ -137,6 +109,29 @@ class TaskNode extends HTMLElement {
     this.task[fieldName] = updateValue
 
     this.dispatch(EVENT_UPDATE)
+  }
+
+  complete() {
+    this.task.meta.focused = false
+    this.changeState(3)
+  }
+
+  delete() {
+    if (this.isRoot()) {
+      return this.dispatch(EVENT_DELETE)
+    }
+
+    // since we are deleting this task, get parent task
+    const parentTask = this.parentElement.task
+    for (const index in parentTask.tree) {
+      if (parentTask.tree[index].path.join('') === this.task.path.join('')) {
+        parentTask.tree.splice(index, 1)
+        break
+      }
+    }
+
+    // dispatch parent task to render
+    this.dispatch(EVENT_DELETE, parentTask)
   }
 
   dispatch(eventName, task = this.task) {
@@ -184,26 +179,23 @@ class TaskNode extends HTMLElement {
     input.focus()
   }
 
+  editMode() {
+    this.task.meta.editing = true
+    this.dispatch(EVENT_EDIT)
+  }
+
   equals(node) {
     return node.task && this.task.path.toString() === node.task.path.toString()
   }
 
-  focusTask() {
-    this.task.state = 1
+  focus() {
     this.task.meta.focused = true
     this.task.meta.opened = true
-    // add history entry
-    this.task.data.record.push({
-      stateStart: this.task.state,
-      timeStart: Date.now(),
-    })
-    // set task state
-    this.dispatch(EVENT_STATUS, this.task)
-    // custom scroll into view, places the focused task slightly above center
-    const taskContainer = this.select('div').getBoundingClientRect()
-    const containerY = taskContainer.top + window.pageYOffset
-    const middle = containerY - window.innerHeight / 2 + 200
-    window.scrollTo(0, middle)
+    this.changeState(1)
+  }
+
+  isActive() {
+    return this.task.state === 1
   }
 
   isRoot() {
@@ -224,6 +216,11 @@ class TaskNode extends HTMLElement {
     const deleteButton = taskField.querySelector(`[name="${NAME_DELETE}"]`)
 
     return { slotName, fieldName, currentButton, deleteButton, taskField }
+  }
+
+  pause() {
+    this.task.meta.focused = false
+    this.changeState(2)
   }
 
   select(query) {

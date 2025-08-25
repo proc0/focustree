@@ -10,6 +10,8 @@ class TaskView extends HTMLElement {
     this.addEventListener(EVENT_DELETE, this.deleteTree.bind(this))
     this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
     this.addEventListener(EVENT_EDIT, this.render.bind(this))
+    this.addEventListener(EVENT_MENU, this.showMenu.bind(this))
+    this.addEventListener(EVENT_EXPAND, this.hideMenu.bind(this))
   }
 
   deleteTree({ detail, target }) {
@@ -22,28 +24,38 @@ class TaskView extends HTMLElement {
   focusTree(event) {
     const initialTask = event.target
     // focus initial task
-    initialTask.focusTask()
+    initialTask.focus()
     // show focus modal
     this.querySelector('dialog').showFocus(initialTask)
+    // custom scroll into view, places the focused task slightly above center
+    const taskContainer = initialTask.select('div').getBoundingClientRect()
+    const containerY = taskContainer.top + window.pageYOffset
+    const middle = containerY - window.innerHeight / 2 + 200
+    window.scrollTo(0, middle)
   }
 
-  getTaskNode(task) {
-    // if no task, return the focused task
+  hideMenu(event) {
+    event.stopPropagation()
+    this.querySelector('menu').hide()
+  }
+
+  getNode(task) {
     if (!task) {
+      // if no task, return the focused task
       return this.querySelector(QUERY_FOCUS_NODE)
     }
 
     const taskId = task.id
     const taskPath = task.path.toString()
 
-    let taskNode = null
+    let node = null
     if (taskId) {
-      taskNode = this.querySelector(`task-node[data-id="${taskId}"]`)
+      node = this.querySelector(`task-node[data-id="${taskId}"]`)
     } else {
-      taskNode = this.querySelector(`task-node[data-path="${taskPath}"]`)
+      node = this.querySelector(`task-node[data-path="${taskPath}"]`)
     }
 
-    return taskNode
+    return node
   }
 
   render({ detail, target }) {
@@ -65,6 +77,27 @@ class TaskView extends HTMLElement {
     treeNode.setAttribute('slot', NAME_TREE)
     // replace node with updated node
     detail.node.replaceWith(treeNode)
+  }
+
+  renderSelect(task) {
+    const taskState = document.createElement('select')
+    taskState.setAttribute('slot', NAME_STATE)
+    // let currentState = ''
+    task.data.states.forEach((state, index) => {
+      const option = document.createElement('option')
+      option.value = index
+      option.textContent = state.toUpperCase()
+      // set current state
+      if (index === task.state) {
+        // currentState = state
+        option.setAttribute('selected', '')
+        taskState.value = index
+      }
+      taskState.appendChild(option)
+    })
+    // set class to current state name
+    // taskState.classList.add(currentState)
+    return taskState
   }
 
   renderTree(task) {
@@ -109,39 +142,33 @@ class TaskView extends HTMLElement {
       taskNode.appendChild(taskNote)
     }
 
-    const taskState = document.createElement('select')
-    taskState.setAttribute('slot', NAME_STATE)
-    let currentState = ''
-    task.data.states.forEach((state, index) => {
-      const option = document.createElement('option')
-      option.value = index
-      option.textContent = state.toUpperCase()
-      // set current state
-      if (index === task.state) {
-        currentState = state
-        option.setAttribute('selected', '')
-        taskState.value = index
-      }
-      taskState.appendChild(option)
-    })
-    // set class to current state name
-    taskState.classList.add(currentState)
-    taskNode.appendChild(taskState)
+    if (task.meta.editing) {
+      const taskState = this.renderSelect(task, taskNode)
+      taskNode.appendChild(taskState)
+    }
+    const currentState = task.data.states[task.state].toLowerCase()
+
+    // refresh menu task node
+    const menu = this.querySelector('menu')
+    if (menu.node?.equals(taskNode)) {
+      menu.node = taskNode
+    }
 
     // state class and attributes on container
     container.classList.add(currentState)
+
     if (task.meta.focused) {
       taskNode.setAttribute('data-focused', '')
       container.classList.add('focused')
     }
 
-    // leaf
+    // leaf node
     if (!task.tree.length) {
       container.classList.add(CLASS_LEAF)
       return taskNode
     }
 
-    // branch
+    // branch node
     container.classList.add(CLASS_BRANCH)
 
     const treeTitleSlot = taskNode.shadowRoot.querySelector(`slot[name="${NAME_TITLE_TREE}"]`)
@@ -153,6 +180,10 @@ class TaskView extends HTMLElement {
       taskNode.appendChild(treeLabel)
     }
 
+    if (task.meta.opened) {
+      taskNode.shadowRoot.querySelector('details').setAttribute('open', '')
+    }
+
     for (const sub in task.tree) {
       const subTask = this.renderTree(task.tree[sub])
       subTask.setAttribute('slot', NAME_TREE)
@@ -160,10 +191,15 @@ class TaskView extends HTMLElement {
       taskNode.appendChild(subTask)
     }
 
-    if (task.meta.opened) {
-      taskNode.shadowRoot.querySelector('details').setAttribute('open', '')
-    }
-
     return taskNode
+  }
+
+  showMenu(event) {
+    // const task = event.detail.task
+    // const node = event.detail.node
+    const menu = this.querySelector('menu')
+    event.stopPropagation()
+
+    menu.show(event)
   }
 }

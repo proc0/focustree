@@ -6,6 +6,7 @@
 div {
   display: flex;
   flex-direction: column;
+  position: relative;
   transition: opacity, visibility 0.25s ease;
   -moz-transition: opacity, visibility 0.25s ease;
   -o-transition: opacity, visibility 0.25s ease;
@@ -82,7 +83,7 @@ div {
     }
   }
 }
-
+/* 
 menu {
   background-color: var(--color-background-select);
   display: flex;
@@ -127,7 +128,7 @@ menu item {
   & button[name='task-focus'] {
     line-height: 0;
   }
-}
+} */
 
 /* Subtasks */
 
@@ -271,7 +272,7 @@ input {
   }
 }
 
-button {
+/* button {
   border-radius: 0.2rem;
   color: var(--color-text-button);
   display: flex;
@@ -292,7 +293,7 @@ button {
     color: var(--color-hover-text-button);
     background-color: var(--color-hover-background-button);
   }
-}
+} */
 
 ::slotted(select) {
   background: transparent !important;

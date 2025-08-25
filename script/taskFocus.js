@@ -13,103 +13,99 @@ class TaskFocus extends HTMLDialogElement {
 
   bindEvents() {
     // focus exit
-    this.addEventListener('close', (e) => {
-      e.stopPropagation()
-      const focusNode = this.parentElement.getTaskNode()
-      focusNode.blurTask()
+    this.addEventListener('close', (event) => {
+      event.stopPropagation()
+      const node = this.parentElement.getNode()
+      node.blur()
     })
 
     // focus exit
-    this.querySelector(`[name="${NAME_PAUSE}"]`).addEventListener('click', (e) => {
-      e.stopPropagation()
-      const focusNode = this.parentElement.getTaskNode()
+    this.querySelector(`[name="${NAME_PAUSE}"]`).addEventListener('click', (event) => {
+      event.stopPropagation()
       // pause current task
-      focusNode.blurTask(2)
+      const node = this.parentElement.getNode()
+      node.pause()
 
-      let parentNode = focusNode.parentElement
-
-      if (!parentNode.task) {
+      let parent = node.parentElement
+      if (!parent.task) {
         return this.hideFocus()
       }
-      // pause parent task if active
-      if (parentNode.task.state === 1) {
-        parentNode.blurTask(2)
+      // pause parent
+      if (parent.isActive()) {
+        parent.pause()
       }
-      // pause all the ancestors as well, only if ancestor is active
-      while (!parentNode.equals(this.seed) && parentNode.task.state === 1) {
-        parentNode = parentNode.parentElement
-        parentNode.blurTask(2)
+      // pause ancestors, if active
+      while (!parent.equals(this.seed) && parent.isActive()) {
+        parent = parent.parentElement
+        parent.pause()
       }
       // exit focus
       this.hideFocus()
     })
 
     // focus complete task
-    this.querySelector(`[name="${NAME_DONE}"]`).addEventListener('click', (e) => {
-      e.stopPropagation()
-
-      const focusNode = this.parentElement.getTaskNode()
+    this.querySelector(`[name="${NAME_DONE}"]`).addEventListener('click', (event) => {
+      event.stopPropagation()
+      // get current task
+      const node = this.parentElement.getNode()
       // DFS - get first subtask
-      let nextNode = focusNode.querySelector(TAG_NODE)
+      let nextNode = node.querySelector(TAG_NODE)
 
-      // do not set task as done (3) unless it has children
-      // this only removes focus
-      focusNode.blurTask()
+      node.blur()
 
       // no subtasks
       if (!nextNode) {
-        // set task as done because no children
-        focusNode.blurTask(3)
+        // task is done
+        node.complete()
         // focus level ~ leaf task
-        let parentNode = focusNode.parentElement
+        let parent = node.parentElement
         // current task is initial focus (no more subtasks left)
         // or current task is a root task with no subtasks
-        if (focusNode.equals(this.seed) || focusNode.isRoot()) {
-          focusNode.blurTask(3)
+        if (node.equals(this.seed) || node.isRoot()) {
+          node.complete()
           return this.hideFocus()
         }
 
-        // focusNode.blurTask(3)
         // try adjacent task
-        nextNode = focusNode.nextSibling
+        nextNode = node.nextSibling
         // no adjacent tasks
         if (!nextNode) {
-          // set parent task as done since all children tasks are done
-          parentNode.blurTask(3)
+          // parent is done
+          parent.complete()
           // focus level ~ singleton leaf task
           // parent task is the initial focus (last subtask of the branch)
           // or parent task is a root task
-          if (parentNode.equals(this.seed) || parentNode.isRoot()) {
+          if (parent.equals(this.seed) || parent.isRoot()) {
             return this.hideFocus()
           }
           // try uncle task
-          nextNode = parentNode.nextSibling
+          nextNode = parent.nextSibling
         }
 
         // no direct uncle task
         // focus level ~ deep leaf task
         while (!nextNode) {
-          // find the next valid ancestor task
-          parentNode = parentNode.parentElement
-          // set parent task as done since all children tasks are done
-          parentNode.blurTask(3)
+          // get next valid ancestor
+          parent = parent.parentElement
+          // ancestor is done
+          parent.complete()
           // quit if visited ancestor is the initial focus task
-          if (parentNode.equals(this.seed)) {
+          if (parent.equals(this.seed)) {
             return this.hideFocus()
           }
           // valid ancestor relative found
-          nextNode = parentNode.nextSibling
+          nextNode = parent.nextSibling
         }
       }
 
-      nextNode.focusTask()
+      nextNode.focus()
       this.renderFocus(nextNode.task)
     })
   }
 
   hideFocus() {
-    const taskNode = this.parentElement.getTaskNode(this.seed.task)
-    taskNode.scrollIntoView({ behavior: 'smooth' })
+    const node = this.parentElement.getNode(this.seed.task)
+    node.scrollIntoView({ behavior: 'smooth' })
 
     this.close()
     // cleanup

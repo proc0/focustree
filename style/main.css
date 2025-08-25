@@ -44,9 +44,9 @@ main.focused {
     visibility: hidden;
   }
 
-  & ::part(focus-button), & ::part(menu-button) {
+  /* & ::part(focus-button), & ::part(menu-button) {
     display: none;
-  }
+  } */
 }
 
 task-view {
