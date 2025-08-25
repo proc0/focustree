@@ -187,11 +187,7 @@ class TaskView extends HTMLElement {
   }
 
   showMenu(event) {
-    // const task = event.detail.task
-    // const node = event.detail.node
-    const menu = this.querySelector('menu')
     event.stopPropagation()
-
-    menu.show(event)
+    this.querySelector('menu').show(event)
   }
 }

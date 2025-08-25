@@ -3,13 +3,11 @@ class TaskNode extends HTMLElement {
     super()
   }
 
-  init(task) {
-    this.task = task
-    const template = task.meta.editing ? TEMPLATE_EDIT : TEMPLATE_NODE
-    this.attachShadow({ mode: 'open' }).appendChild(
-      document.getElementById(template).content.cloneNode(true)
-    )
+  connectedCallback() {
+    this.bindEvents()
+  }
 
+  bindEvents() {
     // open and close subtasks drawer
     this.select('details summary').addEventListener('click', (event) => {
       event.stopPropagation()
@@ -19,13 +17,12 @@ class TaskNode extends HTMLElement {
       this.dispatch(EVENT_EXPAND)
     })
 
-    if (!task.meta.editing) {
+    if (!this.task.meta.editing) {
       // prevent menu click from triggering subtask open
-      this.selectName(NAME_MENU).addEventListener('click', (event) => {
+      return this.selectName(NAME_MENU).addEventListener('click', (event) => {
         event.stopPropagation()
         this.dispatch(EVENT_MENU)
       })
-      return this
     }
 
     this.selectName(NAME_FOCUS).addEventListener('click', (event) => {
@@ -58,6 +55,15 @@ class TaskNode extends HTMLElement {
       event.stopPropagation()
       this.changeState(Number(event.target.value))
     })
+  }
+
+  init(task) {
+    this.task = task
+
+    const template = task.meta.editing ? TEMPLATE_EDIT : TEMPLATE_NODE
+    this.attachShadow({ mode: 'open' }).appendChild(
+      document.getElementById(template).content.cloneNode(true)
+    )
 
     return this
   }
