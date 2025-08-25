@@ -11,6 +11,7 @@ class TaskView extends HTMLElement {
     this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
     this.addEventListener(EVENT_EDIT, this.render.bind(this))
     this.addEventListener(EVENT_MENU, this.showMenu.bind(this))
+    this.addEventListener(EVENT_EXPAND, this.hideMenu.bind(this))
   }
 
   deleteTree({ detail, target }) {
@@ -26,6 +27,11 @@ class TaskView extends HTMLElement {
     initialTask.focusTask()
     // show focus modal
     this.querySelector('dialog').showFocus(initialTask)
+  }
+
+  hideMenu(event) {
+    event.stopPropagation()
+    this.querySelector('menu').hide()
   }
 
   getTaskNode(task) {
@@ -71,14 +77,14 @@ class TaskView extends HTMLElement {
   renderSelect(task) {
     const taskState = document.createElement('select')
     taskState.setAttribute('slot', NAME_STATE)
-    let currentState = ''
+    // let currentState = ''
     task.data.states.forEach((state, index) => {
       const option = document.createElement('option')
       option.value = index
       option.textContent = state.toUpperCase()
       // set current state
       if (index === task.state) {
-        currentState = state
+        // currentState = state
         option.setAttribute('selected', '')
         taskState.value = index
       }
@@ -131,25 +137,6 @@ class TaskView extends HTMLElement {
       taskNode.appendChild(taskNote)
     }
 
-    // const taskState = document.createElement('select')
-    // taskState.setAttribute('slot', NAME_STATE)
-    // let currentState = ''
-    // task.data.states.forEach((state, index) => {
-    //   const option = document.createElement('option')
-    //   option.value = index
-    //   option.textContent = state.toUpperCase()
-    //   // set current state
-    //   if (index === task.state) {
-    //     currentState = state
-    //     option.setAttribute('selected', '')
-    //     taskState.value = index
-    //   }
-    //   taskState.appendChild(option)
-    // })
-    // // set class to current state name
-    // taskState.classList.add(currentState)
-    // taskNode.appendChild(taskState)
-
     if (task.meta.editing) {
       const taskState = this.renderSelect(task, taskNode)
       taskNode.appendChild(taskState)
@@ -159,12 +146,9 @@ class TaskView extends HTMLElement {
     // refresh menu task node
     const menu = this.querySelector('menu')
     if (menu.node?.equals(taskNode)) {
-      // this.querySelector('menu').show({ detail: { task, node: taskNode } })
-      // this.querySelector('menu').clearEvents()
       menu.node = taskNode
-      menu.task = task
-      // this.querySelector('menu').bindEvents()
     }
+
     // state class and attributes on container
     container.classList.add(currentState)
 
@@ -173,13 +157,13 @@ class TaskView extends HTMLElement {
       container.classList.add('focused')
     }
 
-    // leaf
+    // leaf node
     if (!task.tree.length) {
       container.classList.add(CLASS_LEAF)
       return taskNode
     }
 
-    // branch
+    // branch node
     container.classList.add(CLASS_BRANCH)
 
     const treeTitleSlot = taskNode.shadowRoot.querySelector(`slot[name="${NAME_TITLE_TREE}"]`)
@@ -191,15 +175,15 @@ class TaskView extends HTMLElement {
       taskNode.appendChild(treeLabel)
     }
 
+    if (task.meta.opened) {
+      taskNode.shadowRoot.querySelector('details').setAttribute('open', '')
+    }
+
     for (const sub in task.tree) {
       const subTask = this.renderTree(task.tree[sub])
       subTask.setAttribute('slot', NAME_TREE)
 
       taskNode.appendChild(subTask)
-    }
-
-    if (task.meta.opened) {
-      taskNode.shadowRoot.querySelector('details').setAttribute('open', '')
     }
 
     return taskNode

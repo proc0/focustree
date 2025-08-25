@@ -301,8 +301,11 @@ class TaskBase extends HTMLElement {
   }
 
   save(event) {
-    // stop save event
-    event.stopPropagation()
+    // stop save events except expand,
+    // to allow view to handle it
+    if (event.type !== EVENT_EXPAND) {
+      event.stopPropagation()
+    }
 
     let node = event.target
     // when deleting a subtask,

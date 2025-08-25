@@ -1,15 +1,13 @@
 class TaskMenu extends HTMLMenuElement {
-  task = null
   node = null
 
   constructor() {
     super()
-    this.bindEvents.bind(this)
   }
 
   connectedCallback() {
-    const menuTemplate = document.getElementById(TEMPLATE_MENU)
-    this.append(menuTemplate.content.cloneNode(true))
+    const template = document.getElementById(TEMPLATE_MENU)
+    this.append(template.content.cloneNode(true))
     this.bindEvents()
   }
 
@@ -22,58 +20,39 @@ class TaskMenu extends HTMLMenuElement {
   }
 
   bindEvents() {
-    this.bindEvent(NAME_FOCUS, () => this.node.dispatch(EVENT_FOCUS))
+    this.bindEvent(NAME_FOCUS, () => {
+      this.node.dispatch(EVENT_FOCUS)
+      this.hide()
+    })
+
     this.bindEvent(NAME_ADD, () => this.node.dispatch(EVENT_BRANCH))
-    this.bindEvent(NAME_EDIT, () => this.node.editMode())
-    this.bindEvent(NAME_DELETE, () => this.node.delete())
-    this.bindEvent(NAME_SYNC, () => this.node.dispatch(EVENT_SYNC))
+
+    this.bindEvent(NAME_EDIT, () => {
+      this.node.editMode()
+      this.hide()
+    })
+
     this.bindEvent(
       NAME_STATE,
       ({ target }) => this.node.changeState(Number(target.value)),
       'change'
     )
+
+    this.selectName(NAME_STATE).addEventListener('click', (event) => {
+      event.stopImmediatePropagation()
+    })
+
+    this.bindEvent(NAME_SYNC, () => this.node.dispatch(EVENT_SYNC))
+
+    this.bindEvent(NAME_DELETE, () => {
+      this.node.delete()
+      this.hide()
+    })
   }
-  //   bindEvents() {
-  //     this.selectName(NAME_FOCUS).addEventListener('click', (event) => {
-  //       event.stopImmediatePropagation()
-  //       this.node.dispatch(EVENT_FOCUS)
-  //     })
 
-  //     this.selectName(NAME_ADD).addEventListener('click', (event) => {
-  //       event.stopImmediatePropagation()
-  //       this.node.dispatch(EVENT_BRANCH)
-  //     })
-
-  //     // task edit mode
-  //     this.selectName(NAME_EDIT).addEventListener('click', (event) => {
-  //       event.stopImmediatePropagation()
-  //       this.node.editMode()
-  //     })
-
-  //     this.selectName(NAME_DELETE).addEventListener('click', (event) => {
-  //       event.stopImmediatePropagation()
-  //       this.node.delete()
-  //     })
-
-  //     this.selectName(NAME_STATE).addEventListener('click', (event) => {
-  //       event.stopImmediatePropagation()
-  //     })
-
-  //     // task state selection
-  //     this.selectName(NAME_STATE).addEventListener('change', (event) => {
-  //       event.stopImmediatePropagation()
-  //       this.node.changeState(Number(event.target.value))
-  //     })
-
-  //     // sync task tree states
-  //     this.selectName(NAME_SYNC).addEventListener('click', (event) => {
-  //       event.stopImmediatePropagation()
-  //       this.node.dispatch(EVENT_SYNC)
-  //     })
-  //   }
-
-  clear() {
-    this.querySelector(`[name="${NAME_STATE}"] select`)?.remove()
+  hide() {
+    this.node = null
+    this.removeAttribute('style')
   }
 
   select(query) {
@@ -84,14 +63,13 @@ class TaskMenu extends HTMLMenuElement {
   }
 
   show(event) {
-    const task = event.detail.task
-    const node = event.detail.node
-    this.task = task
-    this.node = node
-    this.clear()
-    const stateSelect = this.parentElement.renderSelect(task)
+    this.node = event.detail.node
+
+    this.querySelector(`[name="${NAME_STATE}"] select`)?.remove()
+    const stateSelect = this.parentElement.renderSelect(this.node.task)
     this.selectName(NAME_STATE).appendChild(stateSelect)
-    const menuButton = node.shadowRoot.querySelector('[name="task-menu"]')
+
+    const menuButton = this.node.selectName(NAME_MENU)
     const menuButtonRect = menuButton.getBoundingClientRect()
     const menuRect = this.getBoundingClientRect()
 

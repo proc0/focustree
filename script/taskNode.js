@@ -3,12 +3,6 @@ class TaskNode extends HTMLElement {
     super()
   }
 
-  // connectedCallback() {
-  //   if (this.task.meta.menued) {
-  //     this.dispatch(EVENT_MENU)
-  //   }
-  // }
-
   init(task) {
     this.task = task
     this.equals.bind(this)
@@ -50,43 +44,7 @@ class TaskNode extends HTMLElement {
         event.stopPropagation()
         this.dispatch(EVENT_MENU)
       })
-      // // task edit mode
-      // this.selectName(NAME_EDIT).addEventListener('click', (event) => {
-      //   event.stopPropagation()
-      //   this.task.meta.editing = true
-      //   this.dispatch(EVENT_EDIT)
-      // })
     }
-
-    // update fields with new input
-
-    // // add event for subtasks
-    // this.selectName(NAME_ADD).addEventListener('click', (event) => {
-    //   event.stopPropagation()
-    //   this.dispatch(EVENT_BRANCH)
-    // })
-
-    // this.selectName(NAME_FOCUS).addEventListener('click', (event) => {
-    //   event.stopPropagation()
-    //   this.dispatch(EVENT_FOCUS)
-    // })
-
-    // // prevent select or option click from triggering subtask open
-    // this.selectName(NAME_STATE).addEventListener('click', (event) => {
-    //   event.stopPropagation()
-    // })
-    // // task state selection
-    // this.selectName(NAME_STATE).addEventListener('change', (event) => {
-    //   event.stopPropagation()
-    //   this.task.state = Number(event.target.value)
-    //   this.dispatch(EVENT_STATUS)
-    // })
-
-    // // sync task tree states
-    // this.selectName(NAME_SYNC).addEventListener('click', (event) => {
-    //   event.stopPropagation()
-    //   this.dispatch(EVENT_SYNC)
-    // })
 
     // open and close subtasks drawer
     this.select('details summary').addEventListener('click', (event) => {
