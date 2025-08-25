@@ -21,13 +21,13 @@
     <template id="template-task">
       <style>
         /* Flash of Unstyled Content fix */
-        div {
+        flex {
           visibility: hidden;
           opacity: 0;
         }
       </style>
       <link rel="stylesheet" href="style/task.css" />
-      <div>
+      <flex>
         <details>
           <summary>
             <span>
@@ -40,7 +40,7 @@
             <slot name="task-tree"></slot>
           </section>
         </details>
-      </div>
+      </flex>
     </template>
     <template id="template-menu">
       <item>
@@ -77,14 +77,14 @@
     <template id="template-edit">
       <style>
         /* Flash of Unstyled Content fix */
-        div {
+        flex {
           visibility: hidden;
           opacity: 0;
         }
       </style>
       <link rel="stylesheet" href="style/task.css" />
       <link rel="stylesheet" href="style/edit.css" />
-      <div>
+      <flex>
         <ul>
           <li>
             <button name="task-edit" title="Edit">✎</button>
@@ -113,7 +113,7 @@
             <slot name="task-tree"></slot>
           </section>
         </details>
-      </div>
+      </flex>
     </template>
     <template id="template-focus">
       <header>

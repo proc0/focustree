@@ -10,7 +10,7 @@ ul {
 
 /* structure */
 
-div {
+flex {
   flex-direction: column;
   padding-left: 2rem;
 }

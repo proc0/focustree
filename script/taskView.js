@@ -28,7 +28,7 @@ class TaskView extends HTMLElement {
     // show focus modal
     this.querySelector('dialog').showFocus(initialTask)
     // custom scroll into view, places the focused task slightly above center
-    const taskContainer = initialTask.select('div').getBoundingClientRect()
+    const taskContainer = initialTask.select('flex').getBoundingClientRect()
     const containerY = taskContainer.top + window.pageYOffset
     const middle = containerY - window.innerHeight / 2 + 200
     window.scrollTo(0, middle)
@@ -102,7 +102,7 @@ class TaskView extends HTMLElement {
 
   renderTree(task) {
     const taskNode = document.createElement(TAG_NODE).init(task)
-    const container = taskNode.shadowRoot.querySelector('div')
+    const container = taskNode.shadowRoot.querySelector('flex')
 
     // metadata
     taskNode.setAttribute('data-path', task.path)
