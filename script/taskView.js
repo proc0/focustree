@@ -24,9 +24,14 @@ class TaskView extends HTMLElement {
   focusTree(event) {
     const initialTask = event.target
     // focus initial task
-    initialTask.focusTask()
+    initialTask.focus()
     // show focus modal
     this.querySelector('dialog').showFocus(initialTask)
+    // custom scroll into view, places the focused task slightly above center
+    const taskContainer = initialTask.select('div').getBoundingClientRect()
+    const containerY = taskContainer.top + window.pageYOffset
+    const middle = containerY - window.innerHeight / 2 + 200
+    window.scrollTo(0, middle)
   }
 
   hideMenu(event) {
@@ -34,23 +39,23 @@ class TaskView extends HTMLElement {
     this.querySelector('menu').hide()
   }
 
-  getTaskNode(task) {
-    // if no task, return the focused task
+  getNode(task) {
     if (!task) {
+      // if no task, return the focused task
       return this.querySelector(QUERY_FOCUS_NODE)
     }
 
     const taskId = task.id
     const taskPath = task.path.toString()
 
-    let taskNode = null
+    let node = null
     if (taskId) {
-      taskNode = this.querySelector(`task-node[data-id="${taskId}"]`)
+      node = this.querySelector(`task-node[data-id="${taskId}"]`)
     } else {
-      taskNode = this.querySelector(`task-node[data-path="${taskPath}"]`)
+      node = this.querySelector(`task-node[data-path="${taskPath}"]`)
     }
 
-    return taskNode
+    return node
   }
 
   render({ detail, target }) {

@@ -52,6 +52,7 @@ class TaskMenu extends HTMLMenuElement {
 
   hide() {
     this.node = null
+
     this.removeAttribute('style')
   }
 
@@ -76,6 +77,9 @@ class TaskMenu extends HTMLMenuElement {
     const menuTop = menuButtonRect.y
     const menuRight = menuButtonRect.x - menuRect.width
 
-    this.setAttribute('style', `top:${menuTop}px; left:${menuRight}px;`)
+    this.setAttribute(
+      'style',
+      `top:${menuTop}px; left:${menuRight}px; visibility: visible; opacity: 1`
+    )
   }
 }

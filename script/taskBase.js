@@ -88,12 +88,13 @@ class TaskBase extends HTMLElement {
           })
         }
 
-        // pick migration function according to version
-        // let migration = (a) => a
-        // get oldVersion from event.oldVersion
+        // migration placeholder
+        let migration = null
+        // // write incremental migrations according to versions
+        // // get oldVersion from event.oldVersion
         // if (oldVersion === 1) {
         //   console.log(`Migrating TaskBase from ${oldVersion} to ${taskBase.version}...`)
-        //   // version 2 changes task state history model
+        //   // version 1 -> 2 migration
         //   migration = (task) => {
         //     // modify task to new version here
         //   }
@@ -107,8 +108,10 @@ class TaskBase extends HTMLElement {
           }
 
           const task = cursor.value
-          // migrate task and subtasks
-          traverseTask(task, migration)
+          if (migration) {
+            // migrate task and subtasks
+            traverseTask(task, migration)
+          }
 
           // save task migration
           const putRequest = store.put(task, task.id)
