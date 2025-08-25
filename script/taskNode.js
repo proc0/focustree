@@ -30,6 +30,11 @@ class TaskNode extends HTMLElement {
       this.dispatch(EVENT_FOCUS)
     })
 
+    this.selectName(NAME_ADD).addEventListener('click', (event) => {
+      event.stopPropagation()
+      this.dispatch(EVENT_BRANCH)
+    })
+
     this.addEventListener(EVENT_UPDATE, this.update.bind(this))
     // task fields edit
     this.selectAll(NAME_EDIT).forEach((editButton) => {
@@ -102,9 +107,9 @@ class TaskNode extends HTMLElement {
     const editButton = taskField.querySelector(`[name="${NAME_EDIT}"]`)
     // show hidden elements again
     taskField.removeChild(input)
-    taskField.querySelector('slot').setAttribute('class', '')
-    editButton.setAttribute('class', '')
-    deleteButton?.setAttribute('class', '')
+    taskField.querySelector('slot').removeAttribute('disabled')
+    editButton.removeAttribute('disabled')
+    deleteButton?.removeAttribute('disabled')
     // remove save button
     currentButton.remove()
 
@@ -162,9 +167,9 @@ class TaskNode extends HTMLElement {
     if (taskField.getElementsByTagName('input')?.length) return
 
     // hide field elements
-    currentButton.setAttribute('class', 'hidden')
-    deleteButton?.setAttribute('class', 'hidden')
-    taskField.querySelector('slot').setAttribute('class', 'hidden')
+    currentButton.setAttribute('disabled', '')
+    deleteButton?.setAttribute('disabled', '')
+    taskField.querySelector('slot').setAttribute('disabled', '')
     // show input in place of field
     const input = document.createElement('input')
     input.setAttribute('type', 'text')

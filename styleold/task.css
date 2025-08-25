@@ -1,0 +1,365 @@
+@import url('shared.css');
+@import url('select.css');
+
+/* Main task */
+
+div {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: opacity, visibility 0.25s ease;
+  -moz-transition: opacity, visibility 0.25s ease;
+  -o-transition: opacity, visibility 0.25s ease;
+  -webkit-transition: opacity, visibility 0.25s ease;
+
+  &.focused summary {
+    border: 1px solid var(--color-highlight);
+    background-color: var(--color-background);
+
+    & details {
+      filter: none;
+    }
+
+    &:before {
+      display: none;
+    }
+
+    & [part='task-note'] {
+      visibility: hidden;
+    }
+  }
+
+  &.focused details section {
+    font-size: 100% !important;
+  }
+
+  /* &.done menu item {
+    & button,
+    & input {
+      color: var(--color-text-done);
+    }
+  } */
+
+  &.done details[open] summary {
+    border-bottom: 1px solid var(--color-text-done);
+  }
+
+  &.done details summary {
+    &::before {
+      color: var(--color-text-done);
+    }
+
+    & header {
+      color: var(--color-text-done);
+    }
+
+    & button[name='task-menu'] {
+      color: var(--color-text-done);
+    }
+  }
+
+  /* &.pause menu item {
+    & button,
+    & input {
+      color: var(--color-accent);
+    }
+  } */
+
+  &.pause details[open] summary {
+    border-bottom: 1px solid var(--color-accent);
+  }
+
+  &.pause details summary {
+    &::before {
+      color: var(--color-accent);
+    }
+
+    & header {
+      color: var(--color-accent);
+    }
+
+    & button[name='task-menu'] {
+      color: var(--color-accent);
+    }
+  }
+}
+/* 
+menu {
+  background-color: var(--color-background-select);
+  display: flex;
+  flex-direction: row;
+  border-radius: 0.2rem;
+  box-shadow: inset 0 0 0.2rem var(--color-shadow);
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  right: 2.2rem;
+  visibility: hidden;
+  opacity: 0;
+  z-index: -10;
+  transition: opacity 350ms ease;
+  -moz-transition: opacity 350ms ease;
+  -o-transition: opacity 350ms ease;
+  -webkit-transition: opacity 350ms ease;
+
+  transition-delay: 250ms;
+  transition-property: visibility, opacity;
+}
+
+menu item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  & button {
+    visibility: hidden;
+    width: 2rem;
+    height: 2rem;
+    transition-delay: 250ms;
+    transition-property: visibility, opacity;
+  }
+
+  & button[name='task-delete'],
+  & button[name='task-edit'] {
+    font-size: 1rem;
+  }
+
+  & button[name='task-focus'] {
+    line-height: 0;
+  }
+} */
+
+/* Subtasks */
+
+details {
+  padding-left: 2rem;
+
+  &[open] summary {
+    border-bottom: 1px solid var(--color-border-details);
+  }
+}
+
+details summary {
+  list-style-position: outside;
+  flex-direction: row;
+  height: 2rem;
+  font-size: 1.3rem;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  display: flex;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &::before {
+    /* Custom marker dimensions */
+    content: '▶';
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    color: var(--color-marker);
+    margin-left: -1.4rem;
+
+    /* Anchor the shape to the summary */
+    position-anchor: --summary;
+    position-area: self-start;
+    transition: transform 350ms ease;
+    -moz-transition: transform 350ms ease;
+    -o-transition: transform 350ms ease;
+    -webkit-transition: transform 350ms ease;
+  }
+
+  & button[name='task-menu'] {
+    font-size: 1.2rem;
+    margin-left: auto;
+    /* opens the menu */
+    &:hover + menu,
+    &:hover + menu button {
+      visibility: visible;
+      opacity: 1;
+      z-index: 10;
+    }
+    /* keeps the menu button visible while menu open */
+    &:has(+ menu:hover) {
+      color: var(--color-hover-text-button);
+      background-color: var(--color-hover-background-button);
+    }
+  }
+  /* keeps the menu and menu items visible while menu open */
+  & menu:hover,
+  & menu:hover button {
+    visibility: visible;
+    opacity: 1;
+    z-index: 10;
+  }
+
+  /* & [part='focus-button'] {
+    display: none;
+  }
+
+  &:hover [part='focus-button'] {
+    display: block;
+  } */
+}
+
+details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+details summary header {
+  align-items: center;
+  color: var(--color-subtitle);
+  display: flex;
+  position: relative;
+  padding-left: 0.25rem;
+}
+
+details section {
+  font-size: 92%;
+}
+
+/* Leaf subtasks */
+
+.leaf {
+  & details summary {
+    list-style: none;
+    box-shadow: none;
+    border: none;
+
+    &::before {
+      display: none;
+    }
+
+    &:hover {
+      cursor: default;
+    }
+
+    & header {
+      color: var(--color-disabled-subtitle);
+    }
+  }
+
+  &.focused summary {
+    border: 1px solid var(--color-highlight);
+    background-color: var(--color-background);
+    filter: none !important;
+  }
+
+  &.focused details section {
+    font-size: 100% !important;
+  }
+}
+
+/* Interactive elements */
+
+.hidden {
+  display: inline;
+  visibility: hidden;
+}
+
+input {
+  appearance: base-select;
+  background-color: inherit;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: inherit;
+
+  &:focus {
+    outline: none !important;
+    border: 2px inset var(--color-focus-input);
+  }
+}
+
+/* button {
+  border-radius: 0.2rem;
+  color: var(--color-text-button);
+  display: flex;
+  font-size: 1.5rem;
+  height: 100%;
+  place-items: center;
+  place-content: center;
+  margin-right: 0.2rem;
+
+  transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+
+  transition-delay: 250ms;
+  transition-property: visibility, opacity, width;
+  &:hover {
+    color: var(--color-hover-text-button);
+    background-color: var(--color-hover-background-button);
+  }
+} */
+
+::slotted(select) {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin: 0 0 0 0.2rem !important;
+}
+
+::slotted(select[open]) {
+  padding: 0 !important;
+}
+menu button {
+  padding: 0.3em;
+}
+
+summary > button {
+  width: 2rem;
+  height: 2rem;
+  line-height: 1.4rem;
+}
+
+[part='task-note'] {
+  margin-left: 0.2rem;
+  font-size: 1rem;
+
+  &:after {
+    background-color: var(--color-background-select);
+    content: attr(data-note);
+    position: absolute;
+    bottom: 1.5rem;
+    left: auto;
+    font-size: 0.8rem;
+    max-height: 3em;
+    padding: 0.5em;
+    max-width: 100%;
+    color: var(--color-text);
+    white-space: break-spaces;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-wrap: nowrap;
+    transition: visibility, opacity 100ms ease-in-out;
+    transition-delay: 100ms;
+    transition-property: visibility, opacity;
+
+    border-radius: 0.2em;
+    -moz-border-radius: 0.2em;
+    -webkit-border-radius: 0.2em;
+
+    box-shadow: 2px 2px 16px var(--color-shadow);
+    -moz-box-shadow: 2px 2px 16px var(--color-shadow);
+    -webkit-box-shadow: 2px 2px 16px var(--color-shadow);
+
+    opacity: 0;
+    z-index: 99999;
+    visibility: hidden;
+  }
+
+  &:hover:after {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+/* Flash of Unstyled Content fix */
+div,
+summary button {
+  visibility: visible !important;
+  opacity: 1 !important;
+}

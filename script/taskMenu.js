@@ -15,6 +15,7 @@ class TaskMenu extends HTMLMenuElement {
     this.selectName(targetName).addEventListener(eventName, (event) => {
       // avoids accidental recursive bindings
       event.stopImmediatePropagation()
+      if (!this.node) return
       eventHandler(event)
     })
   }

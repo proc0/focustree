@@ -1,15 +1,35 @@
-@import url('reset.css');
-@import url('shared.css');
 @import url('theme.css');
-@import url('menu.css');
 @import url('select.css');
-@import url('dialog.css');
+
+/* reset */
+
+body {
+  margin: 0;
+}
+
+main {
+  box-sizing: border-box;
+
+  & menu {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+button {
+  cursor: pointer;
+}
+
+task-base > task-node {
+  & details {
+    padding: 0;
+  }
+}
+
+/* structure */
 
 html {
-  background-color: var(--color-background);
-  color: var(--color-text);
-  font-family: Tahoma, sans-serif;
-  font-size: 1em;
+  font-size: 0.25in;
   width: 100%;
 }
 
@@ -20,86 +40,52 @@ body {
 main {
   padding: 3%;
   width: 100%;
-}
 
-main.focused {
+  & menu {
+    display: flex;
+    flex-direction: row;
 
-  /* & task-node:not([data-focused])::part(task-details) {
-    filter: blur(3px);
-  } */
-
-  & task-node:not([data-focused])::part(task-header) {
-    filter: blur(7px);
-  }
-
-  & task-node:not([data-focused])::part(task-summary):before {
-    display: none;
-  }
-
-  & task-base {
-    margin: 0 0 0 50%;
+    & item {
+      display: flex;
+      place-items: center;
+    }
   }
 
   & > menu {
-    visibility: hidden;
+    & button {
+      width: 2rem;
+      height: 2rem;
+    }
   }
-
-  /* & ::part(focus-button), & ::part(menu-button) {
-    display: none;
-  } */
 }
 
 task-view {
   display: flex;
-  margin: 30px 0;
-  width: 100%;
+  flex-direction: column;
+
+  & > menu {
+    & button {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
 }
 
 task-base {
   display: flex;
   flex-direction: column;
-  margin: 0 25%;
-  transition: all 0.25s ease-out;
-  min-width: 44%;
-  width: 100%;
 }
 
 task-base > task-node {
-  display: flex;
-  margin-bottom: 1em;
+  margin-bottom: 1rem;
 }
 
-/* fade in tasks, prevents FOUC */
 task-node {
-  opacity: 1;
-  animation-name: OpacityFadeIn;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-in;
-  animation-duration: 100ms;
-  animation-fill-mode: forwards;
+  width: 100%;
 }
 
-@keyframes OpacityFadeIn {
-  0% {
-    opacity: 0;
-  }
+/* styles */
 
-  25% {
-    opacity: 0.04;
-
-  50% {
-    opacity: 0.25;
-  }
-
-  75% {
-    opacity: 0.64;
-  }
-
-  90% {
-    opacity: 0.81;
-  }
-
-  100% {
-    opacity: 1;
-  }
+html.theme-forest {
+  background-color: var(--forest-background);
 }

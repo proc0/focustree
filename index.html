@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- <html class="theme-forest" lang="en"> -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -20,9 +21,6 @@
     <template id="template-task">
       <style>
         /* Flash of Unstyled Content fix */
-        summary button,
-        menu,
-        menu button,
         div {
           visibility: hidden;
           opacity: 0;
@@ -30,12 +28,12 @@
       </style>
       <link rel="stylesheet" href="style/task.css" />
       <div>
-        <details part="task-details">
-          <summary part="task-summary">
-            <header part="task-header">
+        <details>
+          <summary>
+            <span>
               <slot name="task-name"></slot>
               <span part="task-note">🛈</span>
-            </header>
+            </span>
             <button class="icon-button" name="task-menu" part="task-menu" title="Menu">☰</button>
           </summary>
           <section>
@@ -77,9 +75,17 @@
       </item>
     </template>
     <template id="template-edit">
+      <style>
+        /* Flash of Unstyled Content fix */
+        div {
+          visibility: hidden;
+          opacity: 0;
+        }
+      </style>
+      <link rel="stylesheet" href="style/task.css" />
       <link rel="stylesheet" href="style/edit.css" />
       <div>
-        <ul part="task-container">
+        <ul>
           <li>
             <button name="task-edit" title="Edit">✎</button>
             <slot name="task-name"></slot>
@@ -96,12 +102,12 @@
             <button name="task-save" title="Save">✔</button>
           </li>
         </ul>
-        <details part="tree-details">
-          <summary part="tree-summary">
-            <header part="tree-header">
+        <details>
+          <summary>
+            <span>
               <slot name="tree-title" data-text="Subtasks">No subtasks</slot
               ><button name="task-add" title="Add subtask">+</button>
-            </header>
+            </span>
           </summary>
           <section>
             <slot name="task-tree"></slot>

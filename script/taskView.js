@@ -122,7 +122,7 @@ class TaskView extends HTMLElement {
     if (!task.meta.editing) {
       const taskNote = taskNode.select(`[part="${NAME_NOTE}"]`)
       if (task.note.length) {
-        taskNote.setAttribute('data-note', task.note)
+        taskNote.setAttribute('title', task.note)
       } else {
         taskNote.remove()
       }
