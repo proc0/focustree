@@ -21,10 +21,11 @@ class TaskNode extends HTMLElement {
 
     if (!task.meta.editing) {
       // prevent menu click from triggering subtask open
-      return this.selectName(NAME_MENU).addEventListener('click', (event) => {
+      this.selectName(NAME_MENU).addEventListener('click', (event) => {
         event.stopPropagation()
         this.dispatch(EVENT_MENU)
       })
+      return this
     }
 
     this.selectName(NAME_FOCUS).addEventListener('click', (event) => {
@@ -57,6 +58,8 @@ class TaskNode extends HTMLElement {
       event.stopPropagation()
       this.changeState(Number(event.target.value))
     })
+
+    return this
   }
 
   blur() {

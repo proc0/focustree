@@ -34,11 +34,6 @@ class TaskView extends HTMLElement {
     window.scrollTo(0, middle)
   }
 
-  hideMenu(event) {
-    event.stopPropagation()
-    this.querySelector('menu').hide()
-  }
-
   getNode(task) {
     if (!task) {
       // if no task, return the focused task
@@ -56,6 +51,11 @@ class TaskView extends HTMLElement {
     }
 
     return node
+  }
+
+  hideMenu(event) {
+    event.stopPropagation()
+    this.querySelector('menu').hide()
   }
 
   render({ detail, target }) {
@@ -101,12 +101,10 @@ class TaskView extends HTMLElement {
   }
 
   renderTree(task) {
-    const taskNode = document.createElement(TAG_NODE)
-    taskNode.init(task)
-
+    const taskNode = document.createElement(TAG_NODE).init(task)
     const container = taskNode.shadowRoot.querySelector('div')
 
-    // set the task path
+    // metadata
     taskNode.setAttribute('data-path', task.path)
     if (task.id) {
       // only root tasks have id
@@ -114,7 +112,7 @@ class TaskView extends HTMLElement {
     }
 
     // fields
-    if (taskNode.shadowRoot.querySelector(`slot[name="${NAME_NAME}"]`)) {
+    if (taskNode.selectName(NAME_NAME)) {
       const taskName = document.createElement(TAG_FIELD)
       taskName.setAttribute('slot', NAME_NAME)
       taskName.textContent = task.name
@@ -122,44 +120,38 @@ class TaskView extends HTMLElement {
     }
 
     if (!task.meta.editing) {
-      if (task.note && task.note.length) {
-        taskNode.shadowRoot
-          .querySelector(`[part="${NAME_NOTE}"]`)
-          .setAttribute('data-note', task.note)
+      const taskNote = taskNode.select(`[part="${NAME_NOTE}"]`)
+      if (task.note.length) {
+        taskNote.setAttribute('data-note', task.note)
       } else {
-        taskNode.shadowRoot.querySelector(`[part="${NAME_NOTE}"]`).remove()
+        taskNote.remove()
       }
     }
 
-    if (
-      taskNode.shadowRoot.querySelector(`slot[name="${NAME_NOTE}"]`) &&
-      task.note &&
-      task.note.length
-    ) {
-      const taskNote = document.createElement(TAG_FIELD)
-      taskNote.setAttribute('slot', NAME_NOTE)
-      taskNote.textContent = task.note
-      taskNode.appendChild(taskNote)
-    }
-
     if (task.meta.editing) {
+      if (task.note.length) {
+        const taskNote = document.createElement(TAG_FIELD)
+        taskNote.setAttribute('slot', NAME_NOTE)
+        taskNote.textContent = task.note
+        taskNode.appendChild(taskNote)
+      }
       const taskState = this.renderSelect(task, taskNode)
       taskNode.appendChild(taskState)
     }
-    const currentState = task.data.states[task.state].toLowerCase()
-
-    // refresh menu task node
-    const menu = this.querySelector('menu')
-    if (menu.node?.equals(taskNode)) {
-      menu.node = taskNode
-    }
 
     // state class and attributes on container
+    const currentState = task.data.states[task.state].toLowerCase()
     container.classList.add(currentState)
 
     if (task.meta.focused) {
       taskNode.setAttribute('data-focused', '')
       container.classList.add('focused')
+    }
+
+    // refresh menu task node
+    const menu = this.querySelector('menu')
+    if (menu.node?.equals(taskNode)) {
+      menu.node = taskNode
     }
 
     // leaf node
@@ -171,8 +163,8 @@ class TaskView extends HTMLElement {
     // branch node
     container.classList.add(CLASS_BRANCH)
 
-    const treeTitleSlot = taskNode.shadowRoot.querySelector(`slot[name="${NAME_TITLE_TREE}"]`)
-    if (treeTitleSlot) {
+    const treeTitleSlot = taskNode.selectName(NAME_TITLE_TREE)
+    if (treeTitleSlot && task.meta.editing) {
       const treeLength = task.tree.length
       const treeLabel = document.createElement(TAG_LABEL)
       treeLabel.setAttribute('slot', NAME_TITLE_TREE)
