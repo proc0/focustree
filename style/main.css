@@ -30,7 +30,7 @@ task-base > task-node {
 /* structure */
 
 html {
-  font-size: 0.25in;
+  font-size: 0.2in;
   width: 100%;
 }
 
@@ -42,39 +42,37 @@ main {
   padding: 3%;
   width: 100%;
 
-  & menu {
+  & > menu {
     display: flex;
     flex-direction: row;
 
-    & item {
+    & menuitem {
       display: flex;
       place-items: center;
-    }
-  }
 
-  & > menu {
-    & button {
-      width: 2rem;
-      height: 2rem;
+      & button {
+        width: 2rem;
+        height: 2rem;
+      }
     }
   }
 }
 
 task-view {
-  display: flex;
-  flex-direction: column;
-
   & > menu {
-    & button {
-      width: 1.5rem;
-      height: 1.5rem;
+    display: flex;
+    flex-direction: row;
+
+    & menuitem {
+      display: flex;
+      place-items: center;
+
+      & button {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
     }
   }
-}
-
-task-base {
-  display: flex;
-  flex-direction: column;
 }
 
 task-base > task-node {

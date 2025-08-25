@@ -10,9 +10,12 @@ ul {
 
 /* structure */
 
-flex {
+div {
   flex-direction: column;
-  padding-left: 2rem;
+}
+
+ul {
+  margin-left: -0.7rem;
 }
 
 /* interaction */

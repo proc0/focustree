@@ -5,24 +5,29 @@ button {
 
 /* structure */
 
-flex {
+div {
   visibility: visible;
   opacity: 1;
 }
 
 button {
-  text-align: center;
   width: 1.5rem;
   height: 1.5rem;
 }
 
 details {
   padding-left: 2rem;
+
+  & summary {
+    &::marker {
+      font-size: 1rem;
+    }
+  }
 }
 
 /* states */
 
-flex.leaf {
+div.leaf {
   & summary {
     margin-left: -1rem;
     &::marker {

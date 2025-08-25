@@ -27,7 +27,7 @@
         }
       </style>
       <link rel="stylesheet" href="style/task.css" />
-      <flex>
+      <div>
         <details>
           <summary>
             <span>
@@ -40,39 +40,39 @@
             <slot name="task-tree"></slot>
           </section>
         </details>
-      </flex>
+      </div>
     </template>
     <template id="template-menu">
-      <item>
-        <button class="icon-button" name="task-delete" title="Delete">✕</button>
-      </item>
-      <item>
-        <button class="icon-button" name="task-move-down" title="Move down">⤓</button>
-      </item>
-      <item>
-        <button class="icon-button" name="task-move-up" title="Move up">⤒</button>
-      </item>
-      <item>
+      <menuitem>
+        <button class="icon-button" name="task-delete" title="Delete">✖</button>
+      </menuitem>
+      <menuitem>
+        <button class="icon-button" name="task-move-down" title="Move down">↧</button>
+      </menuitem>
+      <menuitem>
+        <button class="icon-button" name="task-move-up" title="Move up">↥</button>
+      </menuitem>
+      <menuitem>
         <button class="icon-button" name="task-copy" title="Copy">❐</button>
-      </item>
-      <item>
+      </menuitem>
+      <menuitem>
         <button class="icon-button" name="task-cut" title="Cut">✂</button>
-      </item>
-      <item>
-        <button class="icon-button" name="task-sync" title="Sync state">↯</button>
-      </item>
-      <item>
+      </menuitem>
+      <menuitem>
+        <button class="icon-button" name="task-sync" title="Sync state">⮏</button>
+      </menuitem>
+      <menuitem>
         <slot name="task-state"></slot>
-      </item>
-      <item>
+      </menuitem>
+      <menuitem>
         <button class="icon-button" name="task-edit" title="Edit">✎</button>
-      </item>
-      <item>
-        <button class="icon-button" name="task-add" title="Add subtask">+</button>
-      </item>
-      <item>
+      </menuitem>
+      <menuitem>
+        <button class="icon-button" name="task-add" title="Add subtask">✚</button>
+      </menuitem>
+      <menuitem>
         <button class="icon-button" name="task-focus" title="Focus">👁</button>
-      </item>
+      </menuitem>
     </template>
     <template id="template-edit">
       <style>
@@ -84,12 +84,12 @@
       </style>
       <link rel="stylesheet" href="style/task.css" />
       <link rel="stylesheet" href="style/edit.css" />
-      <flex>
+      <div>
         <ul>
           <li>
             <button name="task-edit" title="Edit">✎</button>
             <slot name="task-name"></slot>
-            <button name="task-delete" title="Delete">✕</button>
+            <button name="task-delete" title="Delete">✖</button>
           </li>
           <li>
             <button name="task-edit" title="Edit">✎</button>
@@ -98,22 +98,22 @@
           <li>
             <button name="task-focus" title="Focus">👁</button>
             <slot name="task-state"></slot>
-            <button name="task-sync" title="Sync state">↯</button>
-            <button name="task-save" title="Save">✔</button>
+            <button name="task-sync" title="Sync state">⮏</button>
+            <button name="task-save" title="Save">✓</button>
           </li>
         </ul>
         <details>
           <summary>
             <span>
               <slot name="tree-title" data-text="Subtasks">No subtasks</slot
-              ><button name="task-add" title="Add subtask">+</button>
+              ><button name="task-add" title="Add subtask">✚</button>
             </span>
           </summary>
           <section>
             <slot name="task-tree"></slot>
           </section>
         </details>
-      </flex>
+      </div>
     </template>
     <template id="template-focus">
       <header>
@@ -124,21 +124,21 @@
         <slot name="task-name"></slot>
       </ul>
       <menu>
-        <item>
+        <menuitem>
           <button name="task-done" title="Done">✓</button>
-        </item>
-        <item>
+        </menuitem>
+        <menuitem>
           <form method="dialog">
             <button name="task-pause" title="Pause">⏸</button>
           </form>
-        </item>
+        </menuitem>
       </menu>
     </template>
     <main>
       <menu>
-        <item><button id="root-add" title="New">✚</button></item>
-        <item><button id="root-import" title="Import">🡇</button></item>
-        <item><button id="root-export" title="Export">🡅</button></item>
+        <menuitem><button id="root-add" title="New">✚</button></menuitem>
+        <menuitem><button id="root-import" title="Import">🡇</button></menuitem>
+        <menuitem><button id="root-export" title="Export">🡅</button></menuitem>
       </menu>
     </main>
     <script src="script/main.js"></script>
