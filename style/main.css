@@ -27,7 +27,7 @@ task-base > task-node {
   }
 }
 
-/* structure */
+/* structure and layout */
 
 html {
   font-size: 0.2in;
@@ -59,9 +59,15 @@ main {
 }
 
 task-view {
+  display: flex;
+  width: 100%;
+
   & > menu {
     display: flex;
     flex-direction: row;
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
 
     & menuitem {
       display: flex;
@@ -75,11 +81,19 @@ task-view {
   }
 }
 
+task-base {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
+  width: 100%;
+}
+
 task-base > task-node {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 task-node {
+  display: flex;
   width: 100%;
 }
 

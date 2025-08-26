@@ -76,7 +76,7 @@ class TaskMenu extends HTMLMenuElement {
     const menuRect = this.getBoundingClientRect()
 
     const menuTop = menuButtonRect.y
-    const menuRight = menuButtonRect.x - menuRect.width
+    const menuRight = menuButtonRect.x + menuButtonRect.width
 
     this.setAttribute(
       'style',

@@ -6,6 +6,9 @@ button {
 /* structure */
 
 div {
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 1.5rem;
   visibility: visible;
   opacity: 1;
 }
@@ -16,21 +19,32 @@ button {
 }
 
 details {
-  padding-left: 2rem;
+  display: inline-flex;
+  flex-direction: column;
 
   & summary {
-    &::marker {
-      font-size: 1rem;
+    display: inline-flex;
+    flex-direction: row;
+
+    &::before {
+      content: '➤';
+      width: 1.5rem;
+      height: 1.5rem;
+      text-align: center;
+    }
+  }
+
+  &[open] summary {
+    &::before {
+      transform: rotate(90deg);
     }
   }
 }
-
 /* states */
 
 div.leaf {
   & summary {
-    margin-left: -1rem;
-    &::marker {
+    &::before {
       content: '';
     }
   }

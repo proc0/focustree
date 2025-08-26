@@ -2,16 +2,27 @@
 
 select {
   appearance: base-select;
+  display: flex;
+  place-items: center;
+  background: white;
   border: 0;
   border-radius: 0;
-  padding: 0;
+  padding: 0 0.3rem;
 
   &::picker(select) {
     appearance: base-select;
   }
 
+  &::picker-icon {
+    display: none;
+  }
+
   & option {
-    padding: 0;
+    padding: 0 0.3rem;
+
+    &::checkmark {
+      display: none;
+    }
   }
 }
 
@@ -19,4 +30,5 @@ select {
 
 select {
   font-size: 0.9rem;
+  height: 1.5rem;
 }

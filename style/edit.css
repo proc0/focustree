@@ -11,11 +11,17 @@ ul {
 /* structure */
 
 div {
-  flex-direction: column;
+  margin-left: 3rem;
 }
 
 ul {
-  margin-left: -0.7rem;
+  display: inline-flex;
+  flex-direction: column;
+
+  & li {
+    display: inline-flex;
+    flex-direction: row;
+  }
 }
 
 /* interaction */
