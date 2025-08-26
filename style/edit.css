@@ -2,25 +2,33 @@
 
 /* reset */
 
-ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
+div {
+  & menu {
+    display: inline-flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
 
+    & menuitem {
+      display: inline-flex;
+    }
+  }
+}
 /* structure */
 
 div {
   margin-left: 3rem;
-}
-
-ul {
-  display: inline-flex;
-  flex-direction: column;
-
-  & li {
+  & > span {
     display: inline-flex;
     flex-direction: row;
+    align-items: center;
+  }
+  & details {
+    & summary {
+      & span {
+        padding-left: 0.25rem;
+      }
+    }
   }
 }
 

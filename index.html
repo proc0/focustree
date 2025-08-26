@@ -30,11 +30,9 @@
       <div>
         <details>
           <summary>
-            <span>
-              <button class="icon-button" name="task-menu" part="task-menu" title="Menu">☰</button>
-              <slot name="task-name"></slot>
-              <span part="task-note">🛈</span>
-            </span>
+            <button class="icon-button" name="task-menu" part="task-menu" title="Menu">☰</button>
+            <slot name="task-name"></slot>
+            <span name="task-note" part="task-note">🛈</span>
           </summary>
           <section>
             <slot name="task-tree"></slot>
@@ -85,29 +83,36 @@
       <link rel="stylesheet" href="style/task.css" />
       <link rel="stylesheet" href="style/edit.css" />
       <div>
-        <ul>
-          <li>
-            <button name="task-edit" title="Edit">✎</button>
-            <slot name="task-name"></slot>
-            <button name="task-delete" title="Delete">✖</button>
-          </li>
-          <li>
-            <button name="task-edit" title="Edit">✎</button>
-            <slot name="task-note">Add a note.</slot>
-          </li>
-          <li>
+        <span>
+          <button name="task-edit" title="Edit">✎</button>
+          <slot name="task-name"></slot>
+          <button name="task-delete" title="Delete">✖</button>
+        </span>
+        <span>
+          <button name="task-edit" title="Edit">✎</button>
+          <slot name="task-note">Add a note.</slot>
+        </span>
+        <menu>
+          <menuitem>
             <button name="task-focus" title="Focus">👁</button>
+          </menuitem>
+          <menuitem>
             <slot name="task-state"></slot>
+          </menuitem>
+          <menuitem>
             <button name="task-sync" title="Sync state">⮏</button>
+          </menuitem>
+          <menuitem>
+            <button name="task-cut" title="Cut">✂</button>
+          </menuitem>
+          <menuitem>
             <button name="task-save" title="Save">✓</button>
-          </li>
-        </ul>
+          </menuitem>
+        </menu>
         <details>
           <summary>
-            <span>
-              <slot name="tree-title" data-text="Subtasks">No subtasks</slot
-              ><button name="task-add" title="Add subtask">✚</button>
-            </span>
+            <slot name="tree-title" data-text="Subtasks">No subtasks</slot>
+            <button name="task-add" title="Add subtask">✚</button>
           </summary>
           <section>
             <slot name="task-tree"></slot>

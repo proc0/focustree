@@ -25,6 +25,7 @@ details {
   & summary {
     display: inline-flex;
     flex-direction: row;
+    align-items: center;
 
     &::before {
       content: '➤';
@@ -42,10 +43,54 @@ details {
 }
 /* states */
 
-div.leaf {
-  & summary {
-    &::before {
+div {
+  & [name='task-note'] {
+    &::after {
       content: '';
+      display: inline-flex;
+      justify-content: center;
+      width: 1.5rem;
     }
   }
+
+  &.editing {
+    & [name='task-note'] {
+      &::after {
+        content: '' !important;
+        display: none !important;
+      }
+    }
+  }
+
+  &.done {
+    & [name='task-note']::after {
+      content: '✓';
+    }
+  }
+
+  &.pause {
+    & [name='task-note']::after {
+      content: '⏸';
+    }
+  }
+
+  &.active {
+    & [name='task-note']::after {
+      content: '👁';
+    }
+  }
+
+  &.leaf {
+    & summary {
+      &::before {
+        content: '';
+      }
+    }
+  }
+}
+
+/* utility */
+
+.hidden {
+  visibility: hidden;
 }
