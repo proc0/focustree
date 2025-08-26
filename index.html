@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!-- <html class="theme-forest" lang="en"> -->
-<html lang="en">
+<html class="theme-forest" lang="en">
+  <!-- <html lang="en"> -->
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -30,9 +30,8 @@
       <div>
         <details>
           <summary>
-            <button class="icon-button" name="task-menu" part="task-menu" title="Menu">☰</button>
+            <button name="task-menu" part="task-button" title="Menu">☰</button>
             <slot name="task-name"></slot>
-            <span name="task-note" part="task-note">🛈</span>
           </summary>
           <section>
             <slot name="task-tree"></slot>
@@ -84,29 +83,29 @@
       <link rel="stylesheet" href="style/edit.css" />
       <div>
         <span>
-          <button name="task-edit" title="Edit">✎</button>
+          <button part="task-button" name="task-edit" title="Edit">✎</button>
           <slot name="task-name"></slot>
-          <button name="task-delete" title="Delete">✖</button>
+          <button part="task-button" name="task-delete" title="Delete">✖</button>
         </span>
         <span>
-          <button name="task-edit" title="Edit">✎</button>
+          <button part="task-button" name="task-edit" title="Edit">✎</button>
           <slot name="task-note">Add a note.</slot>
         </span>
         <menu>
           <menuitem>
-            <button name="task-focus" title="Focus">👁</button>
+            <button part="task-button" name="task-focus" title="Focus">👁</button>
           </menuitem>
           <menuitem>
             <slot name="task-state"></slot>
           </menuitem>
           <menuitem>
-            <button name="task-sync" title="Sync state">⮏</button>
+            <button part="task-button" name="task-sync" title="Sync state">⮏</button>
           </menuitem>
           <menuitem>
-            <button name="task-cut" title="Cut">✂</button>
+            <button part="task-button" name="task-cut" title="Cut">✂</button>
           </menuitem>
           <menuitem>
-            <button name="task-save" title="Save">✓</button>
+            <button part="task-button" name="task-save" title="Save">✓</button>
           </menuitem>
         </menu>
         <details>

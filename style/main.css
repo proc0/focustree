@@ -19,6 +19,8 @@ main {
 
 button {
   cursor: pointer;
+  background: none;
+  border: none;
 }
 
 task-base > task-node {
@@ -101,4 +103,21 @@ task-node {
 
 html.theme-forest {
   background-color: var(--forest-background);
+  color: var(--forest-foreground);
+
+  & button,
+  & ::part(task-button) {
+    background-color: var(--forest-background);
+    color: var(--forest-foreground);
+  }
+
+  & select {
+    background-color: var(--forest-background);
+    color: var(--forest-foreground);
+
+    & option {
+      background-color: var(--forest-background);
+      color: var(--forest-foreground);
+    }
+  }
 }

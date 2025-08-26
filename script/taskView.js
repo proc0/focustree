@@ -120,18 +120,21 @@ class TaskView extends HTMLElement {
         taskName.textContent = task.name
       } else {
         taskName.textContent = `${task.name} (${treeLength})`
+        if (task.note.length) {
+          taskName.setAttribute('title', task.note)
+        }
       }
       taskNode.appendChild(taskName)
     }
 
-    if (!task.meta.editing) {
-      const taskNote = taskNode.select(`[part="${NAME_NOTE}"]`)
-      if (task.note.length) {
-        taskNote.setAttribute('title', task.note)
-      } else {
-        taskNote.classList.add('hidden')
-      }
-    }
+    // if (!task.meta.editing) {
+    //   const taskNote = taskNode.selectName(NAME_NAME)
+    //   if (task.note.length) {
+    //     taskNote.setAttribute('title', task.note)
+    //   } else {
+    //     taskNote.classList.add('hidden')
+    //   }
+    // }
 
     if (task.meta.editing) {
       if (task.note.length) {
