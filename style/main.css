@@ -104,6 +104,7 @@ task-node {
 html.theme-forest {
   background-color: var(--forest-background);
   color: var(--forest-foreground);
+  font-family: Tahoma;
 
   & button,
   & ::part(task-button) {
