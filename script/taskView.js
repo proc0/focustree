@@ -24,42 +24,30 @@ class TaskView extends HTMLElement {
     })
 
     this.addEventListener('dragend', (e) => {
-      e.target.classList.remove('dragging')
-      this.draggingOverItem.classList.remove('over')
+      if (!this.draggingOverItem && !this.draggingItem.isRoot()) {
+        this.querySelector('task-base').addRoot({ detail: { task: this.draggingItem.graft([0]) } })
+        this.draggingItem.delete()
+        this.draggingItem = null
+        return
+      }
 
-      // this.draggingOverItem.selectName(NAME_TREE).appendChild(this.draggingItem)
-      // const parent = this.draggingOverItem.parentElement
-      const taskCopy = structuredClone(this.draggingItem.task)
       // update draggin item path
-      taskCopy.path = [
+      const taskCopy = this.draggingItem.graft([
         ...this.draggingOverItem.task.path,
-        this.draggingOverItem.task.tree.length - 1,
-      ]
+        this.draggingOverItem.task.tree.length,
+      ])
+
       if (taskCopy.id) {
         delete taskCopy.id
       }
+
+      // this.draggingItem.classList.remove('dragging')
+      // this.draggingOverItem.classList.remove('over')
+      this.draggingOverItem.task.meta.opened = true
       this.draggingOverItem.task.tree.push(taskCopy)
       this.draggingOverItem.save()
-
-      // find task in parent task and replace it
-      // for (const index in parent.task.tree) {
-      //   if (parent.task.tree[index].path.join('') === this.draggingOverItem.task.path.join('')) {
-      //     // remove id
-      //     parent.task.tree[index] = this.draggingOverItem.task
-      //     break
-      //   }
-      // }
-
-      // const taskEl = this.renderTree(parent.task)
-      // parent.replaceWith(taskEl)
-
-      // this.querySelector('task-base').save({
-      //   detail: { task: parent.task },
-      //   stopPropagation: () => {},
-      //   target: parent,
-      //   type: EVENT_DRAG,
-      // })
       this.draggingItem.delete()
+
       this.draggingItem = null
       this.draggingOverItem = null
     })
@@ -68,6 +56,7 @@ class TaskView extends HTMLElement {
       e.preventDefault()
 
       if (e.target.tagName === TAG_BASE.toUpperCase()) {
+        this.draggingOverItem = null
         return
       }
 

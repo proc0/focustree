@@ -236,6 +236,24 @@ class TaskNode extends HTMLElement {
     return { slotName, fieldName, currentButton, deleteButton, taskField }
   }
 
+  graft(path) {
+    const grafted = structuredClone(this.task)
+    grafted.path = path
+
+    const updatePath = (task) => {
+      if (!task.tree.length) return task
+
+      task.tree.forEach((sub, index) => {
+        sub.path = [...task.path, index]
+        updatePath(sub)
+      })
+
+      return task
+    }
+
+    return updatePath(grafted)
+  }
+
   pause() {
     this.task.meta.focused = false
     this.changeState(2)

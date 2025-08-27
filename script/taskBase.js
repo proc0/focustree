@@ -148,9 +148,9 @@ class TaskBase extends HTMLElement {
     this.addEventListener(EVENT_DELETE, this.delete.bind(this))
   }
 
-  addRoot() {
+  addRoot({ detail }) {
     this.store('readwrite', (store) => {
-      const task = structuredClone(MODEL)
+      const task = detail?.task ? detail.task : structuredClone(MODEL)
       const addRequest = store.add(task)
 
       addRequest.onsuccess = ({ target }) => {
