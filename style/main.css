@@ -1,15 +1,38 @@
-@import url('reset.css');
-@import url('shared.css');
 @import url('theme.css');
-@import url('menu.css');
 @import url('select.css');
-@import url('dialog.css');
+
+/* reset */
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+main {
+  box-sizing: border-box;
+
+  & menu {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+task-base > task-node {
+  & details {
+    padding: 0;
+  }
+}
+
+/* structure and layout */
 
 html {
-  background-color: var(--color-background);
-  color: var(--color-text);
-  font-family: Tahoma, sans-serif;
-  font-size: 1em;
+  font-size: 0.2in;
   width: 100%;
 }
 
@@ -20,86 +43,82 @@ body {
 main {
   padding: 3%;
   width: 100%;
-}
-
-main.focused {
-
-  /* & task-node:not([data-focused])::part(task-details) {
-    filter: blur(3px);
-  } */
-
-  & task-node:not([data-focused])::part(task-header) {
-    filter: blur(7px);
-  }
-
-  & task-node:not([data-focused])::part(task-summary):before {
-    display: none;
-  }
-
-  & task-base {
-    margin: 0 0 0 50%;
-  }
 
   & > menu {
-    visibility: hidden;
-  }
+    display: flex;
+    flex-direction: row;
 
-  /* & ::part(focus-button), & ::part(menu-button) {
-    display: none;
-  } */
+    & menuitem {
+      display: flex;
+      place-items: center;
+
+      & button {
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+  }
 }
 
 task-view {
   display: flex;
-  margin: 30px 0;
   width: 100%;
+
+  & > menu {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+
+    & menuitem {
+      display: flex;
+      place-items: center;
+
+      & button {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+  }
 }
 
 task-base {
   display: flex;
   flex-direction: column;
-  margin: 0 25%;
-  transition: all 0.25s ease-out;
-  min-width: 44%;
+  padding: 2rem 0;
   width: 100%;
 }
 
 task-base > task-node {
-  display: flex;
-  margin-bottom: 1em;
+  margin-bottom: 2rem;
 }
 
-/* fade in tasks, prevents FOUC */
 task-node {
-  opacity: 1;
-  animation-name: OpacityFadeIn;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-in;
-  animation-duration: 100ms;
-  animation-fill-mode: forwards;
+  display: flex;
+  width: 100%;
 }
 
-@keyframes OpacityFadeIn {
-  0% {
-    opacity: 0;
+/* styles */
+
+html.theme-forest {
+  background-color: var(--forest-background);
+  color: var(--forest-foreground);
+  font-family: Tahoma;
+
+  & button,
+  & ::part(task-button) {
+    background-color: var(--forest-background);
+    color: var(--forest-foreground);
   }
 
-  25% {
-    opacity: 0.04;
+  & select {
+    background-color: var(--forest-background);
+    color: var(--forest-foreground);
 
-  50% {
-    opacity: 0.25;
-  }
-
-  75% {
-    opacity: 0.64;
-  }
-
-  90% {
-    opacity: 0.81;
-  }
-
-  100% {
-    opacity: 1;
+    & option {
+      background-color: var(--forest-background);
+      color: var(--forest-foreground);
+    }
   }
 }

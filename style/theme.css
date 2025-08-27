@@ -1,96 +1,14 @@
 /* color picker: https://css.land/lch/ */
 @media (color-gamut: srgb) {
   :root {
-    --color-background: lch(3.328% 52.498 59.084); /* rgb(8.1% 3.7% 0%) */
-    --color-title: lch(64.476% 50.595 137.834); /* rgb(37.75% 68.01% 36.04%) */
-    --color-text: lch(81.88% 6.85 238.527); /* rgb(75.4% 80.76% 84.04%) */
-    --color-hover-text: #bababa;
-    --color-accent: lch(49.777% 104.661 127.681); /* rgb(22.7% 52.84% 0%) */
-
-    --color-subtitle: lch(64.476% 50.595 137.834); /* rgb(37.75% 68.01% 36.04%) */
-    --color-marker: lch(64.476% 50.595 137.834); /* rgb(37.75% 68.01% 36.04%) */
-    --color-disabled-subtitle: lch(57.195% 19.312 140.162); /* rgb(45.68% 56.69% 45.08%) */
-    --color-border-details: #474747ff;
-
-    --color-focus-input: lch(76.003% 87.58 91.974 / 57%); /* rgb(82.27% 73.3% 0% / 57%) */
-
-    --color-highlight: lch(74.003% 94.58 91.974); /* rgb(79.89% 71.16% 0%) */
-    --color-highlight-text: black;
-
-    --color-text-button: #6d6d6dff;
-    --color-hover-text-button: var(--color-text);
-    --color-hover-background-button: #4b4040ff;
-
-    --color-background-select: #312a2aff;
-    --color-border-select: #312a2aff;
-    --color-hover-background-select: #4b4040ff;
-    --color-focus-select: lch(27.574% 10.353 137.362); /* rgb(22.02% 26.82% 21.19%) */
-
-    --color-shadow: black;
-
-    --color-background-done: #222222;
-    --color-text-done: #424242ff;
+    --forest-background: lch(3.328% 52.498 59.084); /* rgb(8.1% 3.7% 0%) */
+    --forest-foreground: lch(81.88% 6.85 238.527); /* rgb(75.4% 80.76% 84.04%) */
   }
 }
 
 @media (color-gamut: p3) {
   :root {
-    --color-background: color(display-p3 0.077 0.0381 0);
-    --color-title: color(display-p3 0.4509 0.6728 0.3954);
-    --color-text: color(display-p3 0.7639 0.8059 0.8367);
-    --color-hover-text: #bababa;
-    --color-accent: color(display-p3 0.2382 0.5344 0);
-
-    --color-subtitle: color(display-p3 0.4509 0.6728 0.3954);
-    --color-marker: color(display-p3 0.4509 0.6728 0.3954);
-    --color-disabled-subtitle: color(display-p3 0.4787 0.5637 0.4606);
-    --color-border-details: var(--color-accent);
-
-    --color-focus-input: color(display-p3 0.8104 0.7367 0.1571 / 57%);
-
-    --color-highlight: color(display-p3 0.7883 0.7158 0.0609);
-    --color-highlight-text: color(display-p3 0 0 0);
-
-    --color-text-button: #6d6d6dff;
-    --color-hover-text-button: var(--color-text);
-    --color-hover-background-button: #4b4040ff;
-
-    --color-background-select: #312a2aff;
-    --color-border-select: #312a2aff;
-    --color-hover-background-select: #4b4040ff;
-    --color-focus-select: color(display-p3 0.2296 0.2668 0.2166);
-
-    --color-shadow: color(display-p3 0 0 0 / 70%);
-
-    --color-background-done: #222222;
-    --color-text-done: #424242ff;
+    --forest-background: color(display-p3 0.077 0.0381 0);
+    --forest-foreground: color(display-p3 0.7639 0.8059 0.8367);
   }
 }
-
-/* Reference colors */
-/*
---old-gold: hsla(52, 68%, 46%, 1);
---dark-moss-green: hsla(88, 64%, 25%, 1);
---avocado: hsla(95, 69%, 31%, 1);
---asparagus: hsla(115, 26%, 50%, 1);
---black-olive: hsla(110, 5%, 23%, 1);
---drab-dark-brown: hsla(64, 80%, 12%, 1);
---platinum: hsla(198, 18%, 89%, 1);
-
---bistre: hsla(10, 32%, 15%, 1);
---avocado: hsla(80, 88%, 27%, 1);
---apple-green: hsla(80, 80%, 42%, 1);
---alice-blue: hsla(201, 41%, 92%, 1);
---citrine: hsla(52, 75%, 55%, 1);
-
---mossy-forest-1-hsla: hsla(84, 96%, 12%, 1);
---mossy-forest-2-hsla: hsla(84, 96%, 7%, 1);
---mossy-forest-3-hsla: hsla(78, 96%, 17%, 1);
---mossy-forest-4-hsla: hsla(67, 96%, 33%, 1);
---mossy-forest-5-hsla: hsla(61, 85%, 45%, 1);
-
---fireborn-fungus-1-hsla: hsla(39, 88%, 56%, 1);
---fireborn-fungus-2-hsla: hsla(28, 89%, 50%, 1);
---fireborn-fungus-3-hsla: hsla(22, 96%, 48%, 1);
---fireborn-fungus-4-hsla: hsla(11, 96%, 33%, 1);
---fireborn-fungus-5-hsla: hsla(0, 0%, 5%, 1); */

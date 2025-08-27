@@ -115,18 +115,26 @@ class TaskView extends HTMLElement {
     if (taskNode.selectName(NAME_NAME)) {
       const taskName = document.createElement(TAG_FIELD)
       taskName.setAttribute('slot', NAME_NAME)
-      taskName.textContent = task.name
+      const treeLength = task.tree.length
+      if (task.meta.editing || !treeLength) {
+        taskName.textContent = task.name
+      } else {
+        taskName.textContent = `${task.name} (${treeLength})`
+        if (task.note.length) {
+          taskName.setAttribute('title', task.note)
+        }
+      }
       taskNode.appendChild(taskName)
     }
 
-    if (!task.meta.editing) {
-      const taskNote = taskNode.select(`[part="${NAME_NOTE}"]`)
-      if (task.note.length) {
-        taskNote.setAttribute('data-note', task.note)
-      } else {
-        taskNote.remove()
-      }
-    }
+    // if (!task.meta.editing) {
+    //   const taskNote = taskNode.selectName(NAME_NAME)
+    //   if (task.note.length) {
+    //     taskNote.setAttribute('title', task.note)
+    //   } else {
+    //     taskNote.classList.add('hidden')
+    //   }
+    // }
 
     if (task.meta.editing) {
       if (task.note.length) {
@@ -137,6 +145,8 @@ class TaskView extends HTMLElement {
       }
       const taskState = this.renderSelect(task, taskNode)
       taskNode.appendChild(taskState)
+      // add edit class
+      container.classList.add('editing')
     }
 
     // state class and attributes on container
@@ -165,8 +175,8 @@ class TaskView extends HTMLElement {
 
     const treeTitleSlot = taskNode.selectName(NAME_TITLE_TREE)
     if (treeTitleSlot && task.meta.editing) {
-      const treeLength = task.tree.length
       const treeLabel = document.createElement(TAG_LABEL)
+      const treeLength = task.tree.length
       treeLabel.setAttribute('slot', NAME_TITLE_TREE)
       treeLabel.textContent = `${treeTitleSlot.getAttribute('data-text')} (${treeLength})`
       taskNode.appendChild(treeLabel)
