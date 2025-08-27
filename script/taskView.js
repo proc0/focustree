@@ -28,6 +28,7 @@ class TaskView extends HTMLElement {
       if (this.draggingItem === this.draggingOverItem) {
         return
       }
+
       if (!this.draggingOverItem && !this.draggingItem.isRoot()) {
         this.querySelector('task-base').addRoot({ detail: { task: this.draggingItem.graft([0]) } })
         this.draggingItem.delete()
@@ -37,13 +38,19 @@ class TaskView extends HTMLElement {
 
       if (this.placement === 'above') {
         console.log('above', this.draggingOverItem)
+        this.draggingOverItem.classList.remove('over')
+        this.draggingOverItem.classList.remove('drag-above')
       }
 
       if (this.placement === 'below') {
         console.log('below', this.draggingOverItem)
+        this.draggingOverItem.classList.remove('over')
+        this.draggingOverItem.classList.remove('drag-below')
       }
 
       if (this.placement === 'within') {
+        console.log('within', this.draggingOverItem)
+
         // update draggin item path
         const taskCopy = this.draggingItem.graft([
           ...this.draggingOverItem.task.path,
@@ -63,6 +70,7 @@ class TaskView extends HTMLElement {
       }
 
       this.draggingOverItem.classList.remove('over')
+      this.draggingOverItem.classList.remove('drag-within')
       this.draggingItem = null
       this.draggingOverItem = null
     })
@@ -85,37 +93,29 @@ class TaskView extends HTMLElement {
         node = e.target.parentElement
       }
 
-      if (!this.draggingItem.equals(node) && this.draggingOverItem !== node) {
+      if (node && !this.draggingItem.equals(node) && this.draggingOverItem !== node) {
         if (this.draggingOverItem) {
           this.draggingOverItem.classList.remove('over')
         }
         this.draggingOverItem = node
 
         this.draggingOverItem.classList.add('over')
-
-        // console.log(this.draggingItem.getBoundingClientRect().y)
       }
 
       const draggingOverBox = this.draggingOverItem?.querySelector('span').getBoundingClientRect()
       const draggingBox = this.draggingItem?.querySelector('span').getBoundingClientRect()
       // const isSameLevel = this.draggingItem.parentElement === this.draggingOverItem.parentElement
-      const dragBuffer = 5
-      console.log(
-        e.clientY,
-        draggingOverBox?.top + draggingBox?.height - dragBuffer,
-        draggingOverBox?.bottom - draggingBox?.height + dragBuffer
-      )
-      //if dragging item is above the dragging over item
 
       if (
         this.draggingOverItem &&
         e.clientY < draggingOverBox.top + draggingBox.height &&
         e.clientY > draggingOverBox.top
       ) {
-        // this.draggingOverItem?.classList.remove('over')
         this.placement = 'above'
+        this.draggingOverItem.classList.remove('drag-within')
+        this.draggingOverItem.classList.remove('drag-below')
+        this.draggingOverItem.classList.add('drag-above')
         return
-        // this.draggingOverItem.task.tree.unshift(this.draggingItem.task)
       }
 
       //if dragging item is below the dragging over item
@@ -124,18 +124,22 @@ class TaskView extends HTMLElement {
         e.clientY > draggingOverBox.bottom - draggingBox.height &&
         e.clientY < draggingOverBox.bottom
       ) {
-        // this.draggingOverItem?.classList.remove('over')
         this.placement = 'below'
+        this.draggingOverItem.classList.remove('drag-above')
+        this.draggingOverItem.classList.remove('drag-within')
+        this.draggingOverItem.classList.add('drag-below')
         return
-        // this.draggingOverItem.task.tree.push(this.draggingItem.task)
       }
 
       if (
-        draggingOverBox &&
-        e.clientY > draggingOverBox.top + draggingBox.height - dragBuffer &&
-        e.clientY < draggingOverBox.bottom - draggingBox.height + dragBuffer
+        this.draggingOverItem &&
+        e.clientY > draggingOverBox.top + draggingBox.height &&
+        e.clientY < draggingOverBox.bottom - draggingBox.height
       ) {
         this.placement = 'within'
+        this.draggingOverItem.classList.remove('drag-above')
+        this.draggingOverItem.classList.remove('drag-below')
+        this.draggingOverItem.classList.add('drag-within')
         return
       }
     })

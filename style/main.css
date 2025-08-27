@@ -107,6 +107,18 @@ task-node.over {
     background-color: red;
     padding: 2rem 0;
   }
+
+  &.drag-above {
+    border: 2px solid yellow;
+  }
+
+  &.drag-below {
+    border: 2px solid blue;
+  }
+
+  &.drag-within {
+    border: 2px solid green;
+  }
 }
 
 /* styles */
