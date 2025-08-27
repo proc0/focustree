@@ -17,6 +17,7 @@ class TaskView extends HTMLElement {
 
     this.draggingItem = null
     this.draggingOverItem = null
+    this.placement = null
 
     this.addEventListener('dragstart', (e) => {
       this.draggingItem = e.target
@@ -24,6 +25,9 @@ class TaskView extends HTMLElement {
     })
 
     this.addEventListener('dragend', (e) => {
+      if (this.draggingItem === this.draggingOverItem) {
+        return
+      }
       if (!this.draggingOverItem && !this.draggingItem.isRoot()) {
         this.querySelector('task-base').addRoot({ detail: { task: this.draggingItem.graft([0]) } })
         this.draggingItem.delete()
@@ -31,23 +35,34 @@ class TaskView extends HTMLElement {
         return
       }
 
-      // update draggin item path
-      const taskCopy = this.draggingItem.graft([
-        ...this.draggingOverItem.task.path,
-        this.draggingOverItem.task.tree.length,
-      ])
-
-      if (taskCopy.id) {
-        delete taskCopy.id
+      if (this.placement === 'above') {
+        console.log('above', this.draggingOverItem)
       }
 
-      // this.draggingItem.classList.remove('dragging')
-      // this.draggingOverItem.classList.remove('over')
-      this.draggingOverItem.task.meta.opened = true
-      this.draggingOverItem.task.tree.push(taskCopy)
-      this.draggingOverItem.save()
-      this.draggingItem.delete()
+      if (this.placement === 'below') {
+        console.log('below', this.draggingOverItem)
+      }
 
+      if (this.placement === 'within') {
+        // update draggin item path
+        const taskCopy = this.draggingItem.graft([
+          ...this.draggingOverItem.task.path,
+          this.draggingOverItem.task.tree.length,
+        ])
+
+        if (taskCopy.id) {
+          delete taskCopy.id
+        }
+
+        // this.draggingItem.classList.remove('dragging')
+        // this.draggingOverItem.classList.remove('over')
+        this.draggingOverItem.task.meta.opened = true
+        this.draggingOverItem.task.tree.push(taskCopy)
+        this.draggingOverItem.save()
+        this.draggingItem.delete()
+      }
+
+      this.draggingOverItem.classList.remove('over')
       this.draggingItem = null
       this.draggingOverItem = null
     })
@@ -56,6 +71,7 @@ class TaskView extends HTMLElement {
       e.preventDefault()
 
       if (e.target.tagName === TAG_BASE.toUpperCase()) {
+        this.draggingOverItem?.classList.remove('over')
         this.draggingOverItem = null
         return
       }
@@ -70,9 +86,57 @@ class TaskView extends HTMLElement {
       }
 
       if (!this.draggingItem.equals(node) && this.draggingOverItem !== node) {
+        if (this.draggingOverItem) {
+          this.draggingOverItem.classList.remove('over')
+        }
         this.draggingOverItem = node
+
         this.draggingOverItem.classList.add('over')
-        console.log(node)
+
+        // console.log(this.draggingItem.getBoundingClientRect().y)
+      }
+
+      const draggingOverBox = this.draggingOverItem?.querySelector('span').getBoundingClientRect()
+      const draggingBox = this.draggingItem?.querySelector('span').getBoundingClientRect()
+      // const isSameLevel = this.draggingItem.parentElement === this.draggingOverItem.parentElement
+      const dragBuffer = 5
+      console.log(
+        e.clientY,
+        draggingOverBox?.top + draggingBox?.height - dragBuffer,
+        draggingOverBox?.bottom - draggingBox?.height + dragBuffer
+      )
+      //if dragging item is above the dragging over item
+
+      if (
+        this.draggingOverItem &&
+        e.clientY < draggingOverBox.top + draggingBox.height &&
+        e.clientY > draggingOverBox.top
+      ) {
+        // this.draggingOverItem?.classList.remove('over')
+        this.placement = 'above'
+        return
+        // this.draggingOverItem.task.tree.unshift(this.draggingItem.task)
+      }
+
+      //if dragging item is below the dragging over item
+      if (
+        this.draggingOverItem &&
+        e.clientY > draggingOverBox.bottom - draggingBox.height &&
+        e.clientY < draggingOverBox.bottom
+      ) {
+        // this.draggingOverItem?.classList.remove('over')
+        this.placement = 'below'
+        return
+        // this.draggingOverItem.task.tree.push(this.draggingItem.task)
+      }
+
+      if (
+        draggingOverBox &&
+        e.clientY > draggingOverBox.top + draggingBox.height - dragBuffer &&
+        e.clientY < draggingOverBox.bottom - draggingBox.height + dragBuffer
+      ) {
+        this.placement = 'within'
+        return
       }
     })
   }

@@ -97,6 +97,16 @@ task-base > task-node {
 task-node {
   display: flex;
   width: 100%;
+  flex-direction: column;
+}
+
+/* interaction */
+
+task-node.over {
+  & > span {
+    background-color: red;
+    padding: 2rem 0;
+  }
 }
 
 /* styles */

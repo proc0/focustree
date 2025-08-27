@@ -20,6 +20,10 @@ div {
   margin-left: 1.5rem;
   visibility: visible;
   opacity: 1;
+  & [name='task-name'] {
+    height: 2rem;
+    box-sizing: border-box;
+  }
 }
 
 button {
