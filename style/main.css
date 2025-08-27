@@ -104,20 +104,40 @@ task-node {
 
 task-node.over {
   & > span {
-    background-color: red;
     padding: 2rem 0;
-  }
 
-  &.drag-above {
-    border: 2px solid yellow;
-  }
+    &.drag-above {
+      /* border: 2px solid yellow; */
+      background: linear-gradient(
+        180deg,
+        rgba(199, 188, 90, 0.83) 0%,
+        rgba(199, 242, 27, 0.27) 50%,
+        rgba(237, 221, 83, 0) 50%
+      );
+    }
 
-  &.drag-below {
-    border: 2px solid blue;
-  }
+    &.drag-below {
+      /* border: 2px solid blue; */
+      background: linear-gradient(
+        0deg,
+        rgba(145, 90, 199, 0.83) 0%,
+        rgba(66, 27, 242, 0.27) 50%,
+        rgba(237, 221, 83, 0) 50%
+      );
+    }
 
-  &.drag-within {
-    border: 2px solid green;
+    &.drag-center {
+      /* border: 2px solid green; */
+      background: linear-gradient(
+        0deg,
+        rgba(63, 204, 55, 0) 1%,
+        rgba(76, 202, 51, 0) 37%,
+        rgba(81, 201, 50, 0.83) 50%,
+        rgba(116, 196, 79, 0.29) 53%,
+        rgba(94, 199, 67, 0) 67%,
+        rgba(42, 207, 39, 0) 100%
+      );
+    }
   }
 }
 

@@ -15,72 +15,75 @@ class TaskView extends HTMLElement {
 
     // dragging
 
-    this.draggingItem = null
-    this.draggingOverItem = null
+    this.movingNode = null
+    this.underNode = null
     this.placement = null
 
     this.addEventListener('dragstart', (e) => {
-      this.draggingItem = e.target
+      this.movingNode = e.target
       e.target.classList.add('dragging')
     })
 
     this.addEventListener('dragend', (e) => {
-      if (this.draggingItem === this.draggingOverItem) {
+      if (this.movingNode === this.underNode) {
         return
       }
 
-      if (!this.draggingOverItem && !this.draggingItem.isRoot()) {
-        this.querySelector('task-base').addRoot({ detail: { task: this.draggingItem.graft([0]) } })
-        this.draggingItem.delete()
-        this.draggingItem = null
+      if (!this.underNode && !this.movingNode.isRoot()) {
+        this.querySelector('task-base').addRoot({ detail: { task: this.movingNode.graft([0]) } })
+        this.movingNode.delete()
+        this.movingNode = null
         return
       }
 
+      const underTag = this.underNode.querySelector('span')
       if (this.placement === 'above') {
-        console.log('above', this.draggingOverItem)
-        this.draggingOverItem.classList.remove('over')
-        this.draggingOverItem.classList.remove('drag-above')
+        console.log('above', this.underNode)
+        this.underNode.classList.remove('over')
+        this.underNode.querySelector('span').classList.remove('drag-above')
       }
 
       if (this.placement === 'below') {
-        console.log('below', this.draggingOverItem)
-        this.draggingOverItem.classList.remove('over')
-        this.draggingOverItem.classList.remove('drag-below')
+        console.log('below', this.underNode)
+        this.underNode.classList.remove('over')
+        this.underNode.querySelector('span').classList.remove('drag-below')
       }
 
-      if (this.placement === 'within') {
-        console.log('within', this.draggingOverItem)
+      if (this.placement === 'center') {
+        console.log('center', this.underNode)
 
         // update draggin item path
-        const taskCopy = this.draggingItem.graft([
-          ...this.draggingOverItem.task.path,
-          this.draggingOverItem.task.tree.length,
+        const taskCopy = this.movingNode.graft([
+          ...this.underNode.task.path,
+          this.underNode.task.tree.length,
         ])
 
         if (taskCopy.id) {
           delete taskCopy.id
         }
 
-        // this.draggingItem.classList.remove('dragging')
-        // this.draggingOverItem.classList.remove('over')
-        this.draggingOverItem.task.meta.opened = true
-        this.draggingOverItem.task.tree.push(taskCopy)
-        this.draggingOverItem.save()
-        this.draggingItem.delete()
+        // this.movingNode.classList.remove('dragging')
+        // this.underNode.classList.remove('over')
+        this.underNode.task.meta.opened = true
+        this.underNode.task.tree.push(taskCopy)
+        this.underNode.save()
+        this.movingNode.delete()
       }
 
-      this.draggingOverItem.classList.remove('over')
-      this.draggingOverItem.classList.remove('drag-within')
-      this.draggingItem = null
-      this.draggingOverItem = null
+      this.underNode.classList.remove('over')
+      this.underNode.querySelector('span').classList.remove('drag-center')
+      this.movingNode = null
+      this.underNode = null
     })
+
+    // drag over
 
     this.addEventListener('dragover', (e) => {
       e.preventDefault()
 
       if (e.target.tagName === TAG_BASE.toUpperCase()) {
-        this.draggingOverItem?.classList.remove('over')
-        this.draggingOverItem = null
+        this.underNode?.classList.remove('over')
+        this.underNode = null
         return
       }
 
@@ -93,53 +96,50 @@ class TaskView extends HTMLElement {
         node = e.target.parentElement
       }
 
-      if (node && !this.draggingItem.equals(node) && this.draggingOverItem !== node) {
-        if (this.draggingOverItem) {
-          this.draggingOverItem.classList.remove('over')
+      if (node && !this.movingNode.equals(node) && this.underNode !== node) {
+        if (this.underNode) {
+          this.underNode.classList.remove('over')
         }
-        this.draggingOverItem = node
 
-        this.draggingOverItem.classList.add('over')
+        this.underNode = node
+        this.underNode.classList.add('over')
       }
 
-      const draggingOverBox = this.draggingOverItem?.querySelector('span').getBoundingClientRect()
-      const draggingBox = this.draggingItem?.querySelector('span').getBoundingClientRect()
-      // const isSameLevel = this.draggingItem.parentElement === this.draggingOverItem.parentElement
+      if (!this.underNode) {
+        return
+      }
 
-      if (
-        this.draggingOverItem &&
-        e.clientY < draggingOverBox.top + draggingBox.height &&
-        e.clientY > draggingOverBox.top
-      ) {
+      const underTag = this.underNode.querySelector('span')
+      const movingTag = this.movingNode.querySelector('span')
+      const underBox = underTag.getBoundingClientRect()
+      const movingBox = movingTag.getBoundingClientRect()
+      // const isSameLevel = this.movingNode.parentElement === this.draggingOverItem.parentElement
+
+      if (e.clientY < underBox.top + movingBox.height && e.clientY > underBox.top) {
         this.placement = 'above'
-        this.draggingOverItem.classList.remove('drag-within')
-        this.draggingOverItem.classList.remove('drag-below')
-        this.draggingOverItem.classList.add('drag-above')
+        underTag.classList.remove('drag-center')
+        underTag.classList.remove('drag-below')
+        underTag.classList.add('drag-above')
         return
       }
 
       //if dragging item is below the dragging over item
-      if (
-        this.draggingOverItem &&
-        e.clientY > draggingOverBox.bottom - draggingBox.height &&
-        e.clientY < draggingOverBox.bottom
-      ) {
+      if (e.clientY > underBox.bottom - movingBox.height && e.clientY < underBox.bottom) {
         this.placement = 'below'
-        this.draggingOverItem.classList.remove('drag-above')
-        this.draggingOverItem.classList.remove('drag-within')
-        this.draggingOverItem.classList.add('drag-below')
+        underTag.classList.remove('drag-above')
+        underTag.classList.remove('drag-center')
+        underTag.classList.add('drag-below')
         return
       }
 
       if (
-        this.draggingOverItem &&
-        e.clientY > draggingOverBox.top + draggingBox.height &&
-        e.clientY < draggingOverBox.bottom - draggingBox.height
+        e.clientY > underBox.top + movingBox.height &&
+        e.clientY < underBox.bottom - movingBox.height
       ) {
-        this.placement = 'within'
-        this.draggingOverItem.classList.remove('drag-above')
-        this.draggingOverItem.classList.remove('drag-below')
-        this.draggingOverItem.classList.add('drag-within')
+        this.placement = 'center'
+        underTag.classList.remove('drag-above')
+        underTag.classList.remove('drag-below')
+        underTag.classList.add('drag-center')
         return
       }
     })
