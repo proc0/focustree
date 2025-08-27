@@ -199,7 +199,11 @@ class TaskNode extends HTMLElement {
   }
 
   equals(node) {
-    return node.task && this.task.path.toString() === node.task.path.toString()
+    return (
+      node?.task &&
+      this.task.path.toString() === node.task.path.toString() &&
+      this.task.id === node.task.id
+    )
   }
 
   focus() {
@@ -235,6 +239,10 @@ class TaskNode extends HTMLElement {
   pause() {
     this.task.meta.focused = false
     this.changeState(2)
+  }
+
+  save() {
+    this.dispatch(EVENT_SAVE)
   }
 
   select(query) {

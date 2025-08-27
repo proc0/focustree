@@ -12,6 +12,80 @@ class TaskView extends HTMLElement {
     this.addEventListener(EVENT_EDIT, this.render.bind(this))
     this.addEventListener(EVENT_MENU, this.showMenu.bind(this))
     this.addEventListener(EVENT_EXPAND, this.hideMenu.bind(this))
+
+    // dragging
+
+    this.draggingItem = null
+    this.draggingOverItem = null
+
+    this.addEventListener('dragstart', (e) => {
+      this.draggingItem = e.target
+      e.target.classList.add('dragging')
+    })
+
+    this.addEventListener('dragend', (e) => {
+      e.target.classList.remove('dragging')
+      this.draggingOverItem.classList.remove('over')
+
+      // this.draggingOverItem.selectName(NAME_TREE).appendChild(this.draggingItem)
+      // const parent = this.draggingOverItem.parentElement
+      const taskCopy = structuredClone(this.draggingItem.task)
+      // update draggin item path
+      taskCopy.path = [
+        ...this.draggingOverItem.task.path,
+        this.draggingOverItem.task.tree.length - 1,
+      ]
+      if (taskCopy.id) {
+        delete taskCopy.id
+      }
+      this.draggingOverItem.task.tree.push(taskCopy)
+      this.draggingOverItem.save()
+
+      // find task in parent task and replace it
+      // for (const index in parent.task.tree) {
+      //   if (parent.task.tree[index].path.join('') === this.draggingOverItem.task.path.join('')) {
+      //     // remove id
+      //     parent.task.tree[index] = this.draggingOverItem.task
+      //     break
+      //   }
+      // }
+
+      // const taskEl = this.renderTree(parent.task)
+      // parent.replaceWith(taskEl)
+
+      // this.querySelector('task-base').save({
+      //   detail: { task: parent.task },
+      //   stopPropagation: () => {},
+      //   target: parent,
+      //   type: EVENT_DRAG,
+      // })
+      this.draggingItem.delete()
+      this.draggingItem = null
+      this.draggingOverItem = null
+    })
+
+    this.addEventListener('dragover', (e) => {
+      e.preventDefault()
+
+      if (e.target.tagName === TAG_BASE.toUpperCase()) {
+        return
+      }
+
+      let node = null
+
+      if (e.target.tagName === TAG_NODE.toUpperCase()) {
+        node = e.target
+      }
+      if (e.target.getAttribute('slot') === NAME_NAME) {
+        node = e.target.parentElement
+      }
+
+      if (!this.draggingItem.equals(node) && this.draggingOverItem !== node) {
+        this.draggingOverItem = node
+        this.draggingOverItem.classList.add('over')
+        console.log(node)
+      }
+    })
   }
 
   deleteTree({ detail, target }) {
@@ -110,6 +184,7 @@ class TaskView extends HTMLElement {
       // only root tasks have id
       taskNode.setAttribute('data-id', task.id)
     }
+    taskNode.setAttribute('draggable', 'true')
 
     // fields
     if (taskNode.selectName(NAME_NAME)) {
@@ -126,15 +201,6 @@ class TaskView extends HTMLElement {
       }
       taskNode.appendChild(taskName)
     }
-
-    // if (!task.meta.editing) {
-    //   const taskNote = taskNode.selectName(NAME_NAME)
-    //   if (task.note.length) {
-    //     taskNote.setAttribute('title', task.note)
-    //   } else {
-    //     taskNote.classList.add('hidden')
-    //   }
-    // }
 
     if (task.meta.editing) {
       if (task.note.length) {

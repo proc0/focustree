@@ -137,6 +137,7 @@ class TaskBase extends HTMLElement {
       EVENT_BRANCH,
       EVENT_EDIT,
       EVENT_EXPAND,
+      EVENT_SAVE,
       EVENT_STATUS,
       EVENT_SYNC,
       EVENT_UPDATE,

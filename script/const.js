@@ -17,9 +17,12 @@ const EVENT_DELETE = 'delete'
 const EVENT_EXPAND = 'expand'
 const EVENT_STATUS = 'status'
 const EVENT_FOCUS = 'focus'
+const EVENT_SAVE = 'save'
 const EVENT_MENU = 'menu'
 const EVENT_SYNC = 'sync'
 const EVENT_EDIT = 'edit'
+const EVENT_DRAG = 'drag'
+
 // main menu
 const ID_ROOT_ADD = 'root-add'
 const ID_ROOT_IMPORT = 'root-import'
