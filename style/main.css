@@ -104,7 +104,8 @@ task-node {
 
 task-node.over {
   & > span {
-    padding: 2rem 0;
+    padding: 1.5rem 0;
+    transform: scale(1.2);
 
     &.drag-above {
       /* border: 2px solid yellow; */

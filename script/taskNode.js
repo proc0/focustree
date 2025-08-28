@@ -144,6 +144,11 @@ class TaskNode extends HTMLElement {
       }
     }
 
+    // update paths
+    parentTask.tree.forEach((sub, index) => {
+      sub.path[sub.path.length - 1] = index
+    })
+
     // dispatch parent task to render
     this.dispatch(EVENT_DELETE, parentTask)
   }
