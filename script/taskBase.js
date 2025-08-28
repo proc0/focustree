@@ -16,7 +16,6 @@ const MODEL = {
   },
   meta: {
     editing: true,
-    grafted: false,
     focused: false,
     opened: false,
   },

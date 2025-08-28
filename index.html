@@ -53,19 +53,10 @@
         <slot name="task-state"></slot>
       </menuitem>
       <menuitem>
-        <button class="icon-button" name="task-sync" title="Sync state">⮏</button>
+        <button class="icon-button" name="task-sync" title="Sync state">🗘</button>
       </menuitem>
       <menuitem>
-        <button class="icon-button" name="task-cut" title="Cut">✂</button>
-      </menuitem>
-      <menuitem>
-        <button class="icon-button" name="task-copy" title="Copy">❐</button>
-      </menuitem>
-      <menuitem>
-        <button class="icon-button" name="task-move-up" title="Move up">↥</button>
-      </menuitem>
-      <menuitem>
-        <button class="icon-button" name="task-move-down" title="Move down">↧</button>
+        <button class="icon-button" name="task-clone" title="Clone">🗗</button>
       </menuitem>
       <menuitem>
         <button class="icon-button" name="task-delete" title="Delete">✖</button>
@@ -99,10 +90,10 @@
             <slot name="task-state"></slot>
           </menuitem>
           <menuitem>
-            <button part="task-button" name="task-sync" title="Sync state">⮏</button>
+            <button part="task-button" name="task-sync" title="Sync state">🗘</button>
           </menuitem>
           <menuitem>
-            <button part="task-button" name="task-cut" title="Cut">✂</button>
+            <button part="task-button" name="task-clone" title="clone">🗗</button>
           </menuitem>
           <menuitem>
             <button part="task-button" name="task-save" title="Save">✓</button>
@@ -141,8 +132,8 @@
     <main>
       <menu>
         <menuitem><button id="root-add" title="New">✚</button></menuitem>
-        <menuitem><button id="root-import" title="Import">↧</button></menuitem>
-        <menuitem><button id="root-export" title="Export">↥</button></menuitem>
+        <menuitem><button id="root-import" title="Import">↓</button></menuitem>
+        <menuitem><button id="root-export" title="Export">↑</button></menuitem>
       </menu>
     </main>
     <script src="script/main.js"></script>

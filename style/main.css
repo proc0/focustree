@@ -149,6 +149,7 @@ html.theme-forest {
   color: var(--forest-foreground);
   font-family: Tahoma;
 
+  /* TODO: use classes instead, move task styles to task css */
   & button,
   & ::part(task-button) {
     background-color: var(--forest-background);

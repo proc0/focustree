@@ -28,9 +28,9 @@ class TaskView extends HTMLElement {
 
     this.addEventListener('dragend', (e) => {
       // dropping it on itself
-      if (this.movingNode === this.underNode) {
+      if (!this.underNode || this.movingNode === this.underNode) {
         // cleanup
-        this.underNode.classList.remove('over')
+        this.underNode?.classList.remove('over')
         this.movingNode = null
         this.underNode = null
         this.placement = null
