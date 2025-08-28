@@ -6,10 +6,11 @@ const QUERY_FOCUS_NODE = 'task-node[data-focused]'
 class TaskView extends HTMLElement {
   constructor() {
     super()
-    this.addEventListener(EVENT_RENDER, this.render.bind(this))
+    this.addEventListener(EVENT_RENDER, this.renderBranch.bind(this))
+    this.addEventListener(EVENT_REROOT, this.renderRoot.bind(this))
     this.addEventListener(EVENT_DELETE, this.deleteTree.bind(this))
     this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
-    this.addEventListener(EVENT_EDIT, this.render.bind(this))
+    this.addEventListener(EVENT_EDIT, this.renderBranch.bind(this))
     this.addEventListener(EVENT_MENU, this.showMenu.bind(this))
     this.addEventListener(EVENT_EXPAND, this.hideMenu.bind(this))
 
@@ -52,8 +53,23 @@ class TaskView extends HTMLElement {
       // dropping it above another node makes it its previous sibling
       if (this.placement === 'above' || this.placement === 'below') {
         if (this.underNode.isRoot()) {
-          //TODO: add to root above or below the underNode
-          // calculate new path based on underNode path
+          // get new task path (order index of root)
+          const rootIndex =
+            this.placement === 'above'
+              ? this.underNode.task.path[0]
+              : this.underNode.task.path[0] + 1
+          // TODO: ALL root nodes need to update their paths because of this
+          // view needs a refresh all, and then call updateTreePaths
+          const newPath = [rootIndex >= 0 ? rootIndex : 0]
+          // create root task
+          this.querySelector('task-base').addRoot({
+            detail: { task: this.movingNode.graftTask(newPath) },
+          })
+          this.movingNode.delete()
+          // cleanup
+          this.underNode.classList.remove('over')
+          this.underNode.querySelector('span').classList.remove('drag-above')
+          this.underNode.querySelector('span').classList.remove('drag-below')
           return
         }
         const underParent = this.underNode.parentElement
@@ -215,25 +231,21 @@ class TaskView extends HTMLElement {
     this.querySelector('menu').hide()
   }
 
-  render({ detail, target }) {
+  renderBranch({ detail, target }) {
     const task = detail.task
     const treeNode = this.renderTree(task)
-
-    // task base events without node are to be appended directly
-    // TODO?: find an abstraction to consolidate this logic
-    if (task.id && !detail?.node && target.tagName === TAG_BASE.toUpperCase()) {
-      // append root tasks to task-base
-      target.appendChild(treeNode)
-      // TODO: scroll adding root into view (requires more info from event?)
-      // scenario: there is a lot of tasks and you add a new one, it should scroll into view
-      // return treeNode.scrollIntoView({ behavior: 'smooth' })
-      return
-    }
-
-    // branching subtask
+    // branch rendering
     treeNode.setAttribute('slot', NAME_TREE)
     // replace node with updated node
     detail.node.replaceWith(treeNode)
+  }
+
+  // TODO: add render method for lists of tasks
+  // could be a different method or this one
+  renderRoot({ detail, target }) {
+    const task = detail.task
+    const treeNode = this.renderTree(task)
+    target.appendChild(treeNode)
   }
 
   renderSelect(task) {
@@ -269,29 +281,34 @@ class TaskView extends HTMLElement {
     }
     taskNode.setAttribute('draggable', 'true')
 
-    // fields
+    // task name
     if (taskNode.selectName(NAME_NAME)) {
       const taskName = document.createElement(TAG_FIELD)
       taskName.setAttribute('slot', NAME_NAME)
       const treeLength = task.tree.length
+      // subtask number
       if (task.meta.editing || !treeLength) {
         taskName.textContent = task.name
       } else {
         taskName.textContent = `${task.name} (${treeLength})`
-        if (task.note.length) {
-          taskName.setAttribute('title', task.note)
-        }
+      }
+      // note tooltip
+      if (task.note.length) {
+        taskName.setAttribute('title', task.note)
       }
       taskNode.appendChild(taskName)
     }
 
+    // edit mode
     if (task.meta.editing) {
+      // task note
       if (task.note.length) {
         const taskNote = document.createElement(TAG_FIELD)
         taskNote.setAttribute('slot', NAME_NOTE)
         taskNote.textContent = task.note
         taskNode.appendChild(taskNote)
       }
+      // task state
       const taskState = this.renderSelect(task, taskNode)
       taskNode.appendChild(taskState)
       // add edit class
@@ -302,6 +319,7 @@ class TaskView extends HTMLElement {
     const currentState = task.data.states[task.state].toLowerCase()
     container.classList.add(currentState)
 
+    // focus mode
     if (task.meta.focused) {
       taskNode.setAttribute('data-focused', '')
       container.classList.add('focused')
@@ -322,6 +340,7 @@ class TaskView extends HTMLElement {
     // branch node
     container.classList.add(CLASS_BRANCH)
 
+    // subtasks title header
     const treeTitleSlot = taskNode.selectName(NAME_TITLE_TREE)
     if (treeTitleSlot && task.meta.editing) {
       const treeLabel = document.createElement(TAG_LABEL)
@@ -335,11 +354,12 @@ class TaskView extends HTMLElement {
       taskNode.shadowRoot.querySelector('details').setAttribute('open', '')
     }
 
-    for (const sub in task.tree) {
-      const subTask = this.renderTree(task.tree[sub])
-      subTask.setAttribute('slot', NAME_TREE)
-
-      taskNode.appendChild(subTask)
+    for (let i = 0; i < task.tree.length; i++) {
+      // recurse tree
+      const subTree = this.renderTree(task.tree[i])
+      subTree.setAttribute('slot', NAME_TREE)
+      // append tree
+      taskNode.appendChild(subTree)
     }
 
     return taskNode

@@ -214,6 +214,7 @@ class TaskNode extends HTMLElement {
   focus() {
     this.task.meta.focused = true
     this.task.meta.opened = true
+    // set state active
     this.changeState(1)
   }
 
@@ -232,8 +233,8 @@ class TaskNode extends HTMLElement {
     return { slotName, fieldName }
   }
 
-  getFieldElements(event) {
-    const currentButton = event.currentTarget
+  getFieldElements({ currentTarget }) {
+    const currentButton = currentTarget
     const taskField = currentButton.parentElement
     const { slotName, fieldName } = this.getFieldNames(taskField)
     const deleteButton = taskField.querySelector(`[name="${NAME_DELETE}"]`)
@@ -251,7 +252,7 @@ class TaskNode extends HTMLElement {
   graftTask(path) {
     const graft = structuredClone(this.task)
     graft.path = path
-    // grafting is for branches only
+    // root to branch
     if (graft.id) {
       delete graft.id
     }
@@ -279,17 +280,17 @@ class TaskNode extends HTMLElement {
     return this.shadowRoot.querySelectorAll(`[name="${name}"]`)
   }
 
-  updateField(event) {
-    const fieldElement = event.currentTarget.shadowRoot
+  updateField({ currentTarget, detail }) {
+    const fieldElement = currentTarget.shadowRoot
     const { slotName, fieldName } = this.getFieldNames(fieldElement)
 
     const elementQuery = `${TAG_FIELD}[slot="${slotName}"]`
-    const taskPath = event.detail.task.path.join('')
-    const updateValue = event.detail.task[fieldName]
+    const taskPath = detail.task.path.join('')
+    const updateValue = detail.task[fieldName]
 
     // only update relevant task as this bubbles up to task-view
     if (taskPath === this.task.path.join('')) {
-      event.currentTarget.querySelector(elementQuery).textContent = updateValue
+      currentTarget.querySelector(elementQuery).textContent = updateValue
     }
   }
 

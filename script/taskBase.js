@@ -169,7 +169,7 @@ class TaskBase extends HTMLElement {
         putRequest.onsuccess = () => {
           console.log(`Added task ${task.id}`)
           this.dispatchEvent(
-            new CustomEvent(EVENT_RENDER, {
+            new CustomEvent(EVENT_REROOT, {
               bubbles: true,
               detail: {
                 task,
@@ -237,7 +237,7 @@ class TaskBase extends HTMLElement {
             addRequest.onsuccess = ({ target }) => {
               console.log(`Imported task ${target.result}`)
               this.dispatchEvent(
-                new CustomEvent(EVENT_RENDER, {
+                new CustomEvent(EVENT_REROOT, {
                   bubbles: true,
                   detail: {
                     task,
@@ -275,7 +275,7 @@ class TaskBase extends HTMLElement {
         }
 
         this.dispatchEvent(
-          new CustomEvent(EVENT_RENDER, {
+          new CustomEvent(EVENT_REROOT, {
             bubbles: true,
             detail: {
               task: cursor.value,
