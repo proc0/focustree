@@ -33,9 +33,14 @@ class TaskView extends HTMLElement {
 
       // dropping a branch on task-base to become root
       if (!this.underNode && !this.movingNode.isRoot()) {
+        // TODO: detect the Y coord and which node is closest to get its order from its path
+        // then use that to create a new path so that it gets rendered in the right order
+        const newPath = [0]
+        // create root task
         this.querySelector('task-base').addRoot({
-          detail: { task: this.movingNode.graftTask([0]) },
+          detail: { task: this.movingNode.graftTask(newPath) },
         })
+        // cleanup
         this.movingNode.delete()
         this.movingNode = null
         return
@@ -52,12 +57,13 @@ class TaskView extends HTMLElement {
 
         // update dragging item path
         const newPosition = this.placement === 'above' ? underPosition : underPosition + 1
-        const taskCopy = this.movingNode.graftTask([...underParent.task.path, newPosition])
-        if (taskCopy.id) {
-          delete taskCopy.id
-        }
-        underParent.task.tree.splice(newPosition, 0, taskCopy)
+        // const taskCopy = this.movingNode.graftTask([...underParent.task.path, newPosition])
+        // if (taskCopy.id) {
+        //   delete taskCopy.id
+        // }
+        // underParent.task.tree.splice(newPosition, 0, taskCopy)
 
+        underParent.graftNode(this.movingNode, newPosition)
         // save and delete
         underParent.save()
         this.movingNode.delete()
@@ -69,17 +75,19 @@ class TaskView extends HTMLElement {
       // dropping on top of another task makes it its child
       if (this.placement === 'center') {
         // update dragging item path
-        const taskCopy = this.movingNode.graftTask([
-          ...this.underNode.task.path,
-          this.underNode.task.tree.length,
-        ])
+        // const taskCopy = this.movingNode.graftTask([
+        //   ...this.underNode.task.path,
+        //   this.underNode.task.tree.length,
+        // ])
 
-        if (taskCopy.id) {
-          delete taskCopy.id
-        }
+        // if (taskCopy.id) {
+        //   delete taskCopy.id
+        // }
+        // this.underNode.task.tree.push(taskCopy)
+
         // open the destination node, save and delete
         this.underNode.task.meta.opened = true
-        this.underNode.task.tree.push(taskCopy)
+        this.underNode.graftNode(this.movingNode)
         this.underNode.save()
         this.movingNode.delete()
       }

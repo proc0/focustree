@@ -139,7 +139,7 @@ class TaskNode extends HTMLElement {
     // delet self using parent
     this.parentElement.deleteSub(this.task)
     // update path indices
-    this.parentElement.updatePaths()
+    this.parentElement.updateSubPaths()
     // dispatch parent task to save and render
     this.dispatch(EVENT_DELETE, this.parentElement.task)
   }
@@ -241,22 +241,21 @@ class TaskNode extends HTMLElement {
     return { slotName, fieldName, currentButton, deleteButton, taskField }
   }
 
+  graftNode(node, position = this.task.tree.length) {
+    // get grafted branch from input node
+    const graft = node.graftTask([...this.task.path, position])
+    // insert graft at position
+    this.task.tree.splice(position, 0, graft)
+  }
+
   graftTask(path) {
-    const grafted = structuredClone(this.task)
-    grafted.path = path
-
-    const updatePath = (task) => {
-      if (!task.tree.length) return task
-
-      task.tree.forEach((sub, index) => {
-        sub.path = [...task.path, index]
-        updatePath(sub)
-      })
-
-      return task
+    const graft = structuredClone(this.task)
+    graft.path = path
+    // grafting is for branches only
+    if (graft.id) {
+      delete graft.id
     }
-
-    return updatePath(grafted)
+    return this.updateTreePaths(graft)
   }
 
   pause() {
@@ -294,9 +293,24 @@ class TaskNode extends HTMLElement {
     }
   }
 
-  updatePaths() {
+  updateSubPaths() {
     this.task.tree.forEach((sub, index) => {
       sub.path[sub.path.length - 1] = index
     })
+  }
+
+  updateTreePaths(_task = this.task) {
+    const updatePath = (task) => {
+      if (!task.tree.length) return task
+
+      task.tree.forEach((sub, index) => {
+        sub.path = [...task.path, index]
+        updatePath(sub)
+      })
+
+      return task
+    }
+
+    return updatePath(_task)
   }
 }

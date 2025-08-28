@@ -149,10 +149,17 @@ class TaskBase extends HTMLElement {
   }
 
   addRoot({ detail }) {
-    this.store('readwrite', (store) => {
-      const task = detail?.task ? detail.task : structuredClone(MODEL)
-      const addRequest = store.add(task)
+    let task = detail?.task
 
+    if (!task) {
+      task = structuredClone(MODEL)
+      // get new task path (order index of root)
+      const rootIndex = this.querySelectorAll('task-base > task-node').length
+      task.path = [rootIndex >= 0 ? rootIndex : 0]
+    }
+
+    this.store('readwrite', (store) => {
+      const addRequest = store.add(task)
       addRequest.onsuccess = ({ target }) => {
         task.id = target.result
 
