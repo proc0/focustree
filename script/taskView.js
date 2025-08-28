@@ -28,73 +28,61 @@ class TaskView extends HTMLElement {
     this.addEventListener('dragend', (e) => {
       // dropping it on itself
       if (this.movingNode === this.underNode) {
+        // cleanup
+        this.underNode.classList.remove('over')
+        this.movingNode = null
+        this.underNode = null
+        this.placement = null
         return
       }
 
       // dropping a branch on task-base to become root
-      if (!this.underNode && !this.movingNode.isRoot()) {
-        // TODO: detect the Y coord and which node is closest to get its order from its path
-        // then use that to create a new path so that it gets rendered in the right order
-        const newPath = [0]
+      if (this.placement === 'root') {
+        // get new task path (order index of root)
+        const rootIndex = this.querySelectorAll('task-base > task-node').length
+        const newPath = [rootIndex >= 0 ? rootIndex : 0]
         // create root task
         this.querySelector('task-base').addRoot({
           detail: { task: this.movingNode.graftTask(newPath) },
         })
-        // cleanup
         this.movingNode.delete()
-        this.movingNode = null
-        return
       }
 
-      // assign style classes to the task-name (instead of task-node)
-      // restricts the visual effects to the task name
-      const underTag = this.underNode.querySelector('span')
       // dropping below another node makes it its next sibling
       // dropping it above another node makes it its previous sibling
       if (this.placement === 'above' || this.placement === 'below') {
+        if (this.underNode.isRoot()) {
+          //TODO: add to root above or below the underNode
+          // calculate new path based on underNode path
+          return
+        }
         const underParent = this.underNode.parentElement
         const underPosition = this.underNode.task.path[this.underNode.task.path.length - 1]
-
         // update dragging item path
         const newPosition = this.placement === 'above' ? underPosition : underPosition + 1
-        // const taskCopy = this.movingNode.graftTask([...underParent.task.path, newPosition])
-        // if (taskCopy.id) {
-        //   delete taskCopy.id
-        // }
-        // underParent.task.tree.splice(newPosition, 0, taskCopy)
-
         underParent.graftNode(this.movingNode, newPosition)
         // save and delete
         underParent.save()
         this.movingNode.delete()
         // cleanup
-        this.underNode.classList.remove('over')
+        this.underNode.querySelector('span').classList.remove('drag-above')
         this.underNode.querySelector('span').classList.remove('drag-below')
       }
 
       // dropping on top of another task makes it its child
       if (this.placement === 'center') {
-        // update dragging item path
-        // const taskCopy = this.movingNode.graftTask([
-        //   ...this.underNode.task.path,
-        //   this.underNode.task.tree.length,
-        // ])
-
-        // if (taskCopy.id) {
-        //   delete taskCopy.id
-        // }
-        // this.underNode.task.tree.push(taskCopy)
-
-        // open the destination node, save and delete
+        // open the destination node
         this.underNode.task.meta.opened = true
+        // graft, save, and delete
         this.underNode.graftNode(this.movingNode)
         this.underNode.save()
         this.movingNode.delete()
+        // cleanup
+        this.underNode.querySelector('span').classList.remove('drag-center')
       }
 
-      // cleanup classes and empty cache
+      // cleanup
       this.underNode.classList.remove('over')
-      this.underNode.querySelector('span').classList.remove('drag-center')
       this.movingNode = null
       this.underNode = null
       this.placement = null
@@ -104,11 +92,15 @@ class TaskView extends HTMLElement {
 
     this.addEventListener('dragover', (e) => {
       e.preventDefault()
-
       // dragging over task-base (empty space)
       if (e.target.tagName === TAG_BASE.toUpperCase()) {
-        this.underNode?.classList.remove('over')
-        this.underNode = null
+        this.placement = 'root'
+        const underTag = this.underNode?.querySelector('span')
+        if (underTag) {
+          underTag.classList.remove('drag-above')
+          underTag.classList.remove('drag-below')
+          underTag.classList.remove('drag-center')
+        }
         return
       }
 
@@ -140,12 +132,12 @@ class TaskView extends HTMLElement {
       if (!this.underNode) {
         return
       }
+
       // get bounding boxes of dragging node and unerneath node
       const underTag = this.underNode.querySelector('span')
       const movingTag = this.movingNode.querySelector('span')
       const underBox = underTag.getBoundingClientRect()
       const movingBox = movingTag.getBoundingClientRect()
-      // const isSameLevel = this.movingNode.parentElement === this.draggingOverItem.parentElement
 
       // when the dragging node is above the under node
       if (this.mouseY < underBox.top + movingBox.height && this.mouseY > underBox.top) {

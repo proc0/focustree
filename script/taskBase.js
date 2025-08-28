@@ -154,7 +154,7 @@ class TaskBase extends HTMLElement {
     if (!task) {
       task = structuredClone(MODEL)
       // get new task path (order index of root)
-      const rootIndex = this.querySelectorAll('task-base > task-node').length
+      const rootIndex = this.querySelectorAll('& > task-node').length
       task.path = [rootIndex >= 0 ? rootIndex : 0]
     }
 
