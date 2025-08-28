@@ -18,7 +18,7 @@ class TaskNode extends HTMLElement {
     })
 
     if (!this.task.meta.editing) {
-      // prevent menu click from triggering subtask open
+      // task menu
       return this.selectName(NAME_MENU).addEventListener('click', (event) => {
         event.stopPropagation()
         this.dispatch(EVENT_MENU)
@@ -35,11 +35,13 @@ class TaskNode extends HTMLElement {
       this.dispatch(EVENT_BRANCH)
     })
 
-    this.addEventListener(EVENT_UPDATE, this.update.bind(this))
     // task fields edit
-    this.selectAll(NAME_EDIT).forEach((editButton) => {
+    this.selectNames(NAME_EDIT).forEach((editButton) => {
       editButton.addEventListener('click', this.edit.bind(this))
     })
+
+    // update after editing fields
+    this.addEventListener(EVENT_UPDATE, this.updateField.bind(this))
 
     // task edit save
     this.selectName(NAME_SAVE).addEventListener('click', (event) => {
@@ -48,8 +50,7 @@ class TaskNode extends HTMLElement {
       this.dispatch(EVENT_EDIT)
     })
 
-    //TODO: add a way to undo with ctrl+z, add a history data struct
-    // in taskBase, and send opposite command (delete -> add)
+    // task delete
     this.selectName(NAME_DELETE).addEventListener('click', (event) => {
       event.stopPropagation()
       this.delete()
@@ -132,25 +133,24 @@ class TaskNode extends HTMLElement {
 
   delete() {
     if (this.isRoot()) {
+      // root is removed by task base
       return this.dispatch(EVENT_DELETE)
     }
+    // delet self using parent
+    this.parentElement.deleteSub(this.task)
+    // update path indices
+    this.parentElement.updatePaths()
+    // dispatch parent task to save and render
+    this.dispatch(EVENT_DELETE, this.parentElement.task)
+  }
 
-    // since we are deleting this task, get parent task
-    const parentTask = this.parentElement.task
-    for (const index in parentTask.tree) {
-      if (parentTask.tree[index].path.join('') === this.task.path.join('')) {
-        parentTask.tree.splice(index, 1)
+  deleteSub(task) {
+    for (let i = 0; i < this.task.tree.length; i++) {
+      if (this.task.tree[i].path.join('') === task.path.join('')) {
+        this.task.tree.splice(i, 1)
         break
       }
     }
-
-    // update paths
-    parentTask.tree.forEach((sub, index) => {
-      sub.path[sub.path.length - 1] = index
-    })
-
-    // dispatch parent task to render
-    this.dispatch(EVENT_DELETE, parentTask)
   }
 
   dispatch(eventName, task = this.task) {
@@ -241,7 +241,7 @@ class TaskNode extends HTMLElement {
     return { slotName, fieldName, currentButton, deleteButton, taskField }
   }
 
-  graft(path) {
+  graftTask(path) {
     const grafted = structuredClone(this.task)
     grafted.path = path
 
@@ -276,11 +276,11 @@ class TaskNode extends HTMLElement {
     return this.shadowRoot.querySelector(`[name="${name}"]`)
   }
 
-  selectAll(name) {
+  selectNames(name) {
     return this.shadowRoot.querySelectorAll(`[name="${name}"]`)
   }
 
-  update(event) {
+  updateField(event) {
     const fieldElement = event.currentTarget.shadowRoot
     const { slotName, fieldName } = this.getFieldNames(fieldElement)
 
@@ -292,5 +292,11 @@ class TaskNode extends HTMLElement {
     if (taskPath === this.task.path.join('')) {
       event.currentTarget.querySelector(elementQuery).textContent = updateValue
     }
+  }
+
+  updatePaths() {
+    this.task.tree.forEach((sub, index) => {
+      sub.path[sub.path.length - 1] = index
+    })
   }
 }

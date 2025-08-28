@@ -19,6 +19,7 @@ class TaskView extends HTMLElement {
     this.underNode = null
     this.placement = null
     this.mouseY = null
+
     this.addEventListener('dragstart', (e) => {
       this.movingNode = e.target
       e.target.classList.add('dragging')
@@ -32,7 +33,9 @@ class TaskView extends HTMLElement {
 
       // dropping a branch on task-base to become root
       if (!this.underNode && !this.movingNode.isRoot()) {
-        this.querySelector('task-base').addRoot({ detail: { task: this.movingNode.graft([0]) } })
+        this.querySelector('task-base').addRoot({
+          detail: { task: this.movingNode.graftTask([0]) },
+        })
         this.movingNode.delete()
         this.movingNode = null
         return
@@ -49,10 +52,7 @@ class TaskView extends HTMLElement {
 
         // update dragging item path
         const newPosition = this.placement === 'above' ? underPosition : underPosition + 1
-        if (newPosition < 0 || newPosition > underParent.task.tree.length) {
-          return
-        }
-        const taskCopy = this.movingNode.graft([...underParent.task.path, newPosition])
+        const taskCopy = this.movingNode.graftTask([...underParent.task.path, newPosition])
         if (taskCopy.id) {
           delete taskCopy.id
         }
@@ -69,7 +69,7 @@ class TaskView extends HTMLElement {
       // dropping on top of another task makes it its child
       if (this.placement === 'center') {
         // update dragging item path
-        const taskCopy = this.movingNode.graft([
+        const taskCopy = this.movingNode.graftTask([
           ...this.underNode.task.path,
           this.underNode.task.tree.length,
         ])
