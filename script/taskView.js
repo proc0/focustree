@@ -169,7 +169,7 @@ class TaskView extends HTMLElement {
         node = e.target.parentElement
       }
       // when the under node is not the node being dragged
-      if (node && !this.movingNode.equals(node) && this.underNode !== node) {
+      if (node && !this.movingNode.equals(node) && !node.equals(this.underNode)) {
         // remove previous under node class
         if (this.underNode) {
           this.underNode.classList.remove('over')
@@ -283,12 +283,14 @@ class TaskView extends HTMLElement {
       return a.path[0] > b.path[0] ? 1 : -1
     })
 
+    const base = this.querySelector('task-base')
     tasks.forEach((task) => {
-      this.renderRoot({ detail: { task }, target: this.querySelector('task-base') })
+      const treeNode = this.renderTree(task)
+      base.appendChild(treeNode)
     })
   }
 
-  renderBranch({ detail, target }) {
+  renderBranch({ detail }) {
     const task = detail.task
     const treeNode = this.renderTree(task)
     // branch rendering
@@ -297,12 +299,22 @@ class TaskView extends HTMLElement {
     detail.node.replaceWith(treeNode)
   }
 
-  // TODO: add render method for lists of tasks
-  // could be a different method or this one
   renderRoot({ detail, target }) {
     const task = detail.task
     const treeNode = this.renderTree(task)
     target.appendChild(treeNode)
+
+    // const currentTasks = target.querySelectorAll(TAG_NODE)
+    // if (!currentTasks.length) {
+    //   return
+    // }
+    // let beforeNode = null
+    // currentTasks.forEach((node, index) => {
+    //   if (task.path[0] > index && !beforeNode) {
+    //     beforeNode = node
+    //   }
+    // })
+    // beforeNode.insertAdjacentElement('afterend', treeNode)
   }
 
   renderSelect(task) {

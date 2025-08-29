@@ -329,33 +329,82 @@ class TaskBase extends HTMLElement {
   }
 
   mapAll(modAll) {
-    this.store('readwrite', (store) => {
+    let modTasks = []
+    const requestAll = this.store('readwrite', (store) => {
       // get all records in an array and use callbacks
       const readRequest = store.getAll()
 
       readRequest.onsuccess = ({ target }) => {
         const tasks = target.result
-        const modTasks = modAll(tasks)
+        modTasks = modAll(tasks)
 
-        modTasks.forEach((task) => {
-          // save updated tasks
-          const putRequest = store.put(task, task.id)
+        modTasks.forEach((task, index) => {
+          if (task.id) {
+            // save updated tasks
+            const putRequest = store.put(task, task.id)
 
-          putRequest.onsuccess = ({ target }) => {
-            console.log(`Updated task ${task.id}`)
+            putRequest.onsuccess = ({ target }) => {
+              console.log(`Updated task ${task.id}`)
 
-            this.dispatchEvent(
-              new CustomEvent(EVENT_REROOT, {
-                bubbles: true,
-                detail: {
-                  task,
-                },
-              })
-            )
-          }
+              if (index === modTasks.length - 1) {
+                this.dispatchEvent(
+                  new CustomEvent(EVENT_REFRESH, {
+                    bubbles: true,
+                    detail: {
+                      tasks: modTasks,
+                    },
+                  })
+                )
+              }
+              // this.dispatchEvent(
+              //   new CustomEvent(EVENT_REROOT, {
+              //     bubbles: true,
+              //     detail: {
+              //       task,
+              //     },
+              //   })
+              // )
+            }
 
-          putRequest.onerror = (event) => {
-            console.error(event.target.error)
+            putRequest.onerror = (event) => {
+              console.error(event.target.error)
+            }
+          } else {
+            const addRequest = store.add(task)
+
+            addRequest.onsuccess = ({ target }) => {
+              task.id = target.result
+
+              // another request to save the DB key in id
+              const putRequest = store.put(task, task.id)
+              // only root tasks have id
+              putRequest.onsuccess = () => {
+                console.log(`Added new root task ${task.id}`)
+
+                if (index === modTasks.length - 1) {
+                  this.dispatchEvent(
+                    new CustomEvent(EVENT_REFRESH, {
+                      bubbles: true,
+                      detail: {
+                        tasks: modTasks,
+                      },
+                    })
+                  )
+                }
+                // this.dispatchEvent(
+                //   new CustomEvent(EVENT_REROOT, {
+                //     bubbles: true,
+                //     detail: {
+                //       task,
+                //     },
+                //   })
+                // )
+              }
+
+              putRequest.onerror = (event) => {
+                console.error(event.target.error)
+              }
+            }
           }
         })
       }
