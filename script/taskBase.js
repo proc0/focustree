@@ -39,7 +39,7 @@ class TaskBase extends HTMLElement {
       console.log('TaskBase initialized.')
       // save taskBase reference
       this.taskBase = target.result
-      this.load()
+      this.loadAll()
     }
 
     initBase.onupgradeneeded = ({ target }) => {
@@ -186,6 +186,27 @@ class TaskBase extends HTMLElement {
     })
   }
 
+  delete(event) {
+    const node = event.target
+    // root task delete
+    if (node.task.id) {
+      // bubbles up to task view
+      return this.store('readwrite', (store) => {
+        const taskKey = node.task.id
+        const deleteRequest = store.delete(taskKey)
+
+        deleteRequest.onsuccess = () => {
+          console.log(`Deleted task ${taskKey}`)
+        }
+
+        return deleteRequest
+      })
+    }
+    // branch task delete
+    // is a root save
+    this.save(event)
+  }
+
   export() {
     console.log('Exporting tasks...')
 
@@ -289,25 +310,58 @@ class TaskBase extends HTMLElement {
     })
   }
 
-  delete(event) {
-    const node = event.target
-    // root task delete
-    if (node.task.id) {
-      // bubbles up to task view
-      return this.store('readwrite', (store) => {
-        const taskKey = node.task.id
-        const deleteRequest = store.delete(taskKey)
+  loadAll() {
+    console.log('Loading all tasks...')
+    this.store('readonly', (store) => {
+      const readRequest = store.getAll()
+      readRequest.onsuccess = ({ target }) => {
+        this.dispatchEvent(
+          new CustomEvent(EVENT_REFRESH, {
+            bubbles: true,
+            detail: {
+              tasks: target.result,
+            },
+          })
+        )
+      }
+      return readRequest
+    })
+  }
 
-        deleteRequest.onsuccess = () => {
-          console.log(`Deleted task ${taskKey}`)
-        }
+  mapAll(modAll) {
+    this.store('readwrite', (store) => {
+      // get all records in an array and use callbacks
+      const readRequest = store.getAll()
 
-        return deleteRequest
-      })
-    }
-    // branch task delete
-    // is a root save
-    this.save(event)
+      readRequest.onsuccess = ({ target }) => {
+        const tasks = target.result
+        const modTasks = modAll(tasks)
+
+        modTasks.forEach((task) => {
+          // save updated tasks
+          const putRequest = store.put(task, task.id)
+
+          putRequest.onsuccess = ({ target }) => {
+            console.log(`Updated task ${task.id}`)
+
+            this.dispatchEvent(
+              new CustomEvent(EVENT_REROOT, {
+                bubbles: true,
+                detail: {
+                  task,
+                },
+              })
+            )
+          }
+
+          putRequest.onerror = (event) => {
+            console.error(event.target.error)
+          }
+        })
+      }
+
+      return readRequest
+    })
   }
 
   save(event) {

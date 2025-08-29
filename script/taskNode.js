@@ -242,6 +242,17 @@ class TaskNode extends HTMLElement {
     return { slotName, fieldName, currentButton, deleteButton, taskField }
   }
 
+  getRootNode() {
+    if (this.isRoot()) {
+      return this
+    }
+    let root = this
+    while (!root.isRoot()) {
+      root = root.parentElement
+    }
+    return root
+  }
+
   graftNode(node, position = this.task.tree.length) {
     // get grafted branch from input node
     const graft = node.graftTask([...this.task.path, position])
@@ -251,7 +262,9 @@ class TaskNode extends HTMLElement {
 
   graftTask(path) {
     const graft = structuredClone(this.task)
-    graft.path = path
+    if (path) {
+      graft.path = path
+    }
     // root to branch
     if (graft.id) {
       delete graft.id

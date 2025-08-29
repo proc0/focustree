@@ -8,6 +8,7 @@ class TaskView extends HTMLElement {
     super()
     this.addEventListener(EVENT_RENDER, this.renderBranch.bind(this))
     this.addEventListener(EVENT_REROOT, this.renderRoot.bind(this))
+    this.addEventListener(EVENT_REFRESH, this.refresh.bind(this))
     this.addEventListener(EVENT_DELETE, this.deleteTree.bind(this))
     this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
     this.addEventListener(EVENT_EDIT, this.renderBranch.bind(this))
@@ -53,19 +54,57 @@ class TaskView extends HTMLElement {
       // dropping it above another node makes it its previous sibling
       if (this.placement === 'above' || this.placement === 'below') {
         if (this.underNode.isRoot()) {
-          // get new task path (order index of root)
-          const rootIndex =
-            this.placement === 'above'
-              ? this.underNode.task.path[0]
-              : this.underNode.task.path[0] + 1
-          // TODO: ALL root nodes need to update their paths because of this
-          // view needs a refresh all, and then call updateTreePaths
-          const newPath = [rootIndex >= 0 ? rootIndex : 0]
-          // create root task
-          this.querySelector('task-base').addRoot({
-            detail: { task: this.movingNode.graftTask(newPath) },
-          })
-          this.movingNode.delete()
+          if (this.movingNode.isRoot()) {
+            this.clear()
+            this.querySelector('task-base').mapAll((tasks) => {
+              tasks.sort((a, b) => {
+                return a.path[0] > b.path[0] ? 1 : -1
+              })
+              // find moving node index
+              const movingIndex = tasks.findIndex((task) => task.id === this.movingNode.task.id)
+              // const newPath = [newIndex >= 0 ? newIndex : 0]
+              // reordering of root nodes
+              const movingTask = tasks.splice(movingIndex, 1)[0]
+              const underIndex = tasks.findIndex((task) => task.id === this.underNode.task.id)
+              const newIndex = this.placement === 'above' ? underIndex : underIndex + 1
+              tasks.splice(newIndex, 0, movingTask)
+              // normalize paths
+              tasks.forEach((sub, index) => {
+                sub.path = [index]
+                this.movingNode.updateTreePaths(sub)
+              })
+              // update all paths
+              return tasks
+            })
+          } else {
+            // const underIndex = this.underNode.task.path[0]
+            // const newIndex = this.placement === 'above' ? underIndex : underIndex + 1
+            // const newTask = this.movingNode.graftTask([newIndex])
+            this.movingNode.parentElement.deleteSub(this.movingNode.task)
+            this.movingNode.parentElement.updateSubPaths()
+            const movingRoot = this.movingNode.parentElement.getRootNode().task
+
+            this.clear()
+            // branch node promotion to root and reorder
+            this.querySelector('task-base').mapAll((tasks) => {
+              tasks.sort((a, b) => {
+                return a.path[0] > b.path[0] ? 1 : -1
+              })
+              const parentIndex = tasks.findIndex((task) => task.id === movingRoot.id)
+              tasks.splice(parentIndex, 1, movingRoot)
+              const underIndex = tasks.findIndex((task) => task.id === this.underNode.task.id)
+              const newIndex = this.placement === 'above' ? underIndex : underIndex + 1
+              const newTask = this.movingNode.graftTask([newIndex])
+              tasks.splice(newIndex, 0, newTask)
+              // update all paths
+              tasks.forEach((sub, index) => {
+                sub.path = [index]
+                this.movingNode.updateTreePaths(sub)
+              })
+              return tasks
+            })
+          }
+          // this.movingNode.delete()
           // cleanup
           this.underNode.classList.remove('over')
           this.underNode.querySelector('span').classList.remove('drag-above')
@@ -187,6 +226,12 @@ class TaskView extends HTMLElement {
     })
   }
 
+  clear() {
+    this.querySelectorAll(TAG_NODE).forEach((node) => {
+      node.remove()
+    })
+  }
+
   deleteTree({ detail, target }) {
     // root task delete
     if (detail?.task.id) {
@@ -229,6 +274,18 @@ class TaskView extends HTMLElement {
   hideMenu(event) {
     event.stopPropagation()
     this.querySelector('menu').hide()
+  }
+
+  refresh({ detail }) {
+    const tasks = detail.tasks
+
+    tasks.sort((a, b) => {
+      return a.path[0] > b.path[0] ? 1 : -1
+    })
+
+    tasks.forEach((task) => {
+      this.renderRoot({ detail: { task }, target: this.querySelector('task-base') })
+    })
   }
 
   renderBranch({ detail, target }) {
