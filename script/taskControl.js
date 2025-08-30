@@ -12,13 +12,11 @@ class TaskControl extends HTMLElement {
   }
 
   bindDragEvents() {
-    this.addEventListener('dragstart', (e) => {
-      this.movingNode = e.target
-      e.target.classList.add('dragging')
+    this.addEventListener('dragstart', ({ target }) => {
+      this.movingNode = target
+      this.movingNode.classList.add('dragging')
     })
-
     this.addEventListener('dragend', this.dragEnd)
-
     this.addEventListener('dragover', this.dragOver)
   }
 
@@ -153,6 +151,12 @@ class TaskControl extends HTMLElement {
   dragOver(event) {
     event.stopPropagation()
     event.preventDefault()
+
+    // cache mouse vertical movement
+    if (!this.mouseY || this.mouseY !== event.clientY) {
+      this.mouseY = event.clientY
+    }
+
     // dragging over task-base (empty space)
     if (event.target.tagName === TAG_BASE.toUpperCase()) {
       // dropping a root node on task-base does nothing
@@ -168,6 +172,7 @@ class TaskControl extends HTMLElement {
         underTag.classList.remove('drag-below')
         underTag.classList.remove('drag-center')
       }
+      this.underNode?.classList.remove('over')
       return
     }
 
@@ -180,8 +185,8 @@ class TaskControl extends HTMLElement {
     if (event.target.getAttribute('slot') === NAME_NAME) {
       node = event.target.parentElement
     }
-    // when the under node is not the node being dragged
-    if (node && !this.movingNode.equals(node) && !node.equals(this.underNode)) {
+
+    if (node && !node.equals(this.movingNode) && !node.isAncestor(this.movingNode)) {
       // remove previous under node class
       if (this.underNode) {
         this.underNode.classList.remove('over')
@@ -189,14 +194,17 @@ class TaskControl extends HTMLElement {
       // cache the under node
       this.underNode = node
       this.underNode.classList.add('over')
-    }
-
-    // cache mouse vertical movement
-    if (!this.mouseY || this.mouseY !== event.clientY) {
-      this.mouseY = event.clientY
-    }
-
-    if (!this.underNode) {
+    } else {
+      // cleanup
+      this.underNode?.classList.remove('over')
+      const underTag = this.underNode?.querySelector('span')
+      if (underTag) {
+        underTag.classList.remove('drag-above')
+        underTag.classList.remove('drag-below')
+        underTag.classList.remove('drag-center')
+      }
+      this.underNode = null
+      this.placement = null
       return
     }
 

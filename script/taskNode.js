@@ -222,6 +222,28 @@ class TaskNode extends HTMLElement {
     return this.task.state === 1
   }
 
+  // is node an ancestor node
+  isAncestor(node) {
+    if (this.isRoot()) {
+      return false
+    }
+
+    let result = false
+    let ancestor = this.parentElement
+    if (ancestor.equals(node)) {
+      result = true
+    }
+    while (!ancestor.isRoot()) {
+      ancestor = ancestor.parentElement
+      if (ancestor.equals(node)) {
+        result = true
+        break
+      }
+    }
+
+    return result
+  }
+
   isRoot() {
     return this.parentElement.tagName === TAG_BASE.toUpperCase()
   }
