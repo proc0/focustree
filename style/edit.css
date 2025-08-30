@@ -18,6 +18,10 @@ div {
     }
   }
 }
+
+::slotted(select) {
+  padding: 0 0.2rem !important;
+}
 /* structure */
 
 div {
@@ -34,6 +38,7 @@ div {
 
   & input {
     font-size: inherit;
+    font-family: inherit;
     margin-left: -0.2rem;
   }
 
@@ -41,6 +46,10 @@ div {
     & summary {
       & span {
         padding-left: 0.25rem;
+      }
+      & slot {
+        display: inline-flex;
+        margin-left: 0.2rem;
       }
     }
   }
