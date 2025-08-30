@@ -26,7 +26,12 @@ const MODEL = {
   tree: [],
 }
 
-class TaskBase extends HTMLElement {
+class TaskBase extends TaskControl {
+  connectedCallback() {
+    // initialize view
+    this.parentElement.init()
+  }
+
   constructor() {
     super()
     const initBase = window.indexedDB.open(BASE_NAME, BASE_VERSION)
@@ -53,82 +58,17 @@ class TaskBase extends HTMLElement {
 
       // DB does not exist
       if (!taskBase.objectStoreNames.contains(BASE_STORE)) {
-        // create an objectStore for tasks
-        const taskStore = taskBase.createObjectStore(BASE_STORE, {
-          keypath: 'id',
-          autoIncrement: true,
-        })
-
-        taskStore.createIndex('name', 'name')
-
-        const taskSeed = structuredClone(TUTORIAL || MODEL)
-        // only root tasks have id
-        taskSeed.id = 1
-
-        const addRequest = taskStore.add(taskSeed)
-
-        addRequest.onsuccess = (event) => {
-          console.log(`Added task ${event.target.result}`)
-        }
-
-        addRequest.onerror = (event) => {
-          console.error(event.target.error)
-        }
+        this.createStore(taskBase)
       } else {
-        // version upgrade
-        const store = target.transaction.objectStore(BASE_STORE)
-
-        const traverseTask = (task, transform) => {
-          transform(task)
-          if (!task.tree.length) return
-
-          task.tree.forEach((sub) => {
-            traverseTask(sub, transform)
-          })
-        }
-
         // migration placeholder
         let migration = null
         // // write incremental migrations according to versions
-        // // get oldVersion from event.oldVersion
-        // if (oldVersion === 1) {
+        // if (oldVersion === 1) { // get oldVersion from event.oldVersion
         //   console.log(`Migrating TaskBase from ${oldVersion} to ${taskBase.version}...`)
         //   // version 1 -> 2 migration
-        //   migration = (task) => {
-        //     // modify task to new version here
-        //   }
+        //   migration = (task) => { // modify task to new version here }
         // }
-
-        const request = (store.openCursor().onsuccess = ({ target }) => {
-          const cursor = target.result
-
-          if (!cursor) {
-            return console.log('Tasks migration complete.')
-          }
-
-          const task = cursor.value
-          if (migration) {
-            // migrate task and subtasks
-            traverseTask(task, migration)
-          }
-
-          // save task migration
-          const putRequest = store.put(task, task.id)
-
-          putRequest.onsuccess = (success) => {
-            console.log(`Migrated task ${success.target.result}`)
-          }
-
-          putRequest.onerror = (event) => {
-            console.error(event.target.error)
-          }
-
-          cursor.continue()
-        })
-
-        request.onerror = ({ target }) => {
-          console.error(target.error)
-        }
+        this.upgrade(migration)
       }
     }
 
@@ -168,7 +108,7 @@ class TaskBase extends HTMLElement {
         putRequest.onsuccess = () => {
           console.log(`Added task ${task.id}`)
           this.dispatchEvent(
-            new CustomEvent(EVENT_REROOT, {
+            new CustomEvent(EVENT_RENDER_ROOT, {
               bubbles: true,
               detail: {
                 task,
@@ -184,6 +124,30 @@ class TaskBase extends HTMLElement {
 
       return addRequest
     })
+  }
+
+  createStore(taskBase) {
+    // create an objectStore for tasks
+    const taskStore = taskBase.createObjectStore(BASE_STORE, {
+      keypath: 'id',
+      autoIncrement: true,
+    })
+
+    taskStore.createIndex('name', 'name')
+
+    const taskSeed = structuredClone(TUTORIAL || MODEL)
+    // only root tasks have id
+    taskSeed.id = 1
+
+    const addRequest = taskStore.add(taskSeed)
+
+    addRequest.onsuccess = (event) => {
+      console.log(`Added task ${event.target.result}`)
+    }
+
+    addRequest.onerror = (event) => {
+      console.error(event.target.error)
+    }
   }
 
   delete(event) {
@@ -257,7 +221,7 @@ class TaskBase extends HTMLElement {
             addRequest.onsuccess = ({ target }) => {
               console.log(`Imported task ${target.result}`)
               this.dispatchEvent(
-                new CustomEvent(EVENT_REROOT, {
+                new CustomEvent(EVENT_RENDER_ROOT, {
                   bubbles: true,
                   detail: {
                     task,
@@ -295,7 +259,7 @@ class TaskBase extends HTMLElement {
         }
 
         this.dispatchEvent(
-          new CustomEvent(EVENT_REROOT, {
+          new CustomEvent(EVENT_RENDER_ROOT, {
             bubbles: true,
             detail: {
               task: cursor.value,
@@ -316,7 +280,7 @@ class TaskBase extends HTMLElement {
       const readRequest = store.getAll()
       readRequest.onsuccess = ({ target }) => {
         this.dispatchEvent(
-          new CustomEvent(EVENT_REFRESH, {
+          new CustomEvent(EVENT_RENDER, {
             bubbles: true,
             detail: {
               tasks: target.result,
@@ -328,17 +292,21 @@ class TaskBase extends HTMLElement {
     })
   }
 
-  mapAll(modAll) {
-    let modTasks = []
+  mapSave(transform) {
     const requestAll = this.store('readwrite', (store) => {
-      // get all records in an array and use callbacks
       const readRequest = store.getAll()
 
+      let tasks = []
       readRequest.onsuccess = ({ target }) => {
-        const tasks = target.result
-        modTasks = modAll(tasks)
+        const result = target.result
+        // sort tasks based on path
+        result.sort((a, b) => {
+          return a.path[0] > b.path[0] ? 1 : -1
+        })
 
-        modTasks.forEach((task, index) => {
+        tasks = transform(result)
+        tasks.forEach((task, index) => {
+          // root tasks
           if (task.id) {
             // save updated tasks
             const putRequest = store.put(task, task.id)
@@ -346,59 +314,42 @@ class TaskBase extends HTMLElement {
             putRequest.onsuccess = ({ target }) => {
               console.log(`Updated task ${task.id}`)
 
-              if (index === modTasks.length - 1) {
+              if (index === tasks.length - 1) {
                 this.dispatchEvent(
-                  new CustomEvent(EVENT_REFRESH, {
+                  new CustomEvent(EVENT_RENDER, {
                     bubbles: true,
                     detail: {
-                      tasks: modTasks,
+                      tasks,
                     },
                   })
                 )
               }
-              // this.dispatchEvent(
-              //   new CustomEvent(EVENT_REROOT, {
-              //     bubbles: true,
-              //     detail: {
-              //       task,
-              //     },
-              //   })
-              // )
             }
 
             putRequest.onerror = (event) => {
               console.error(event.target.error)
             }
           } else {
+            // promote branch to root
             const addRequest = store.add(task)
-
-            addRequest.onsuccess = ({ target }) => {
-              task.id = target.result
-
+            addRequest.onsuccess = (event) => {
+              task.id = event.target.result
               // another request to save the DB key in id
               const putRequest = store.put(task, task.id)
               // only root tasks have id
               putRequest.onsuccess = () => {
                 console.log(`Added new root task ${task.id}`)
 
-                if (index === modTasks.length - 1) {
+                if (index === tasks.length - 1) {
                   this.dispatchEvent(
-                    new CustomEvent(EVENT_REFRESH, {
+                    new CustomEvent(EVENT_RENDER, {
                       bubbles: true,
                       detail: {
-                        tasks: modTasks,
+                        tasks,
                       },
                     })
                   )
                 }
-                // this.dispatchEvent(
-                //   new CustomEvent(EVENT_REROOT, {
-                //     bubbles: true,
-                //     detail: {
-                //       task,
-                //     },
-                //   })
-                // )
               }
 
               putRequest.onerror = (event) => {
@@ -481,7 +432,7 @@ class TaskBase extends HTMLElement {
         }
 
         this.dispatchEvent(
-          new CustomEvent(EVENT_RENDER, {
+          new CustomEvent(EVENT_RENDER_BRANCH, {
             bubbles: true,
             detail: {
               node,
@@ -509,5 +460,43 @@ class TaskBase extends HTMLElement {
     }
 
     return request
+  }
+
+  upgrade(migration) {
+    // version upgrade
+    const store = target.transaction.objectStore(BASE_STORE)
+
+    const request = store.openCursor()
+
+    request.onsuccess = ({ target }) => {
+      const cursor = target.result
+
+      if (!cursor) {
+        return console.log('Tasks migration complete.')
+      }
+
+      const task = cursor.value
+      if (migration) {
+        // migrate task and subtasks
+        this.transformTask(task, migration)
+      }
+
+      // save task migration
+      const putRequest = store.put(task, task.id)
+
+      putRequest.onsuccess = (success) => {
+        console.log(`Migrated task ${success.target.result}`)
+      }
+
+      putRequest.onerror = (event) => {
+        console.error(event.target.error)
+      }
+
+      cursor.continue()
+    }
+
+    request.onerror = ({ target }) => {
+      console.error(target.error)
+    }
   }
 }

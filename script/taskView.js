@@ -1,229 +1,16 @@
-const CLASS_BRANCH = 'branch'
-const CLASS_LEAF = 'leaf'
-
-const QUERY_FOCUS_NODE = 'task-node[data-focused]'
-
-class TaskView extends HTMLElement {
+class TaskView extends TaskControl {
   constructor() {
     super()
-    this.addEventListener(EVENT_RENDER, this.renderBranch.bind(this))
-    this.addEventListener(EVENT_REROOT, this.renderRoot.bind(this))
-    this.addEventListener(EVENT_REFRESH, this.refresh.bind(this))
-    this.addEventListener(EVENT_DELETE, this.deleteTree.bind(this))
-    this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
+    this.addEventListener(EVENT_RENDER, this.render.bind(this))
+    this.addEventListener(EVENT_RENDER_ROOT, this.renderRoot.bind(this))
+    this.addEventListener(EVENT_RENDER_BRANCH, this.renderBranch.bind(this))
     this.addEventListener(EVENT_EDIT, this.renderBranch.bind(this))
+    this.addEventListener(EVENT_DELETE, this.deleteRoot.bind(this))
+    this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
     this.addEventListener(EVENT_MENU, this.showMenu.bind(this))
     this.addEventListener(EVENT_EXPAND, this.hideMenu.bind(this))
-
-    // dragging
-
-    this.movingNode = null
-    this.underNode = null
-    this.placement = null
-    this.mouseY = null
-
-    this.addEventListener('dragstart', (e) => {
-      this.movingNode = e.target
-      e.target.classList.add('dragging')
-    })
-
-    this.addEventListener('dragend', (e) => {
-      // dropping it on itself
-      if (!this.underNode || this.movingNode === this.underNode) {
-        // cleanup
-        this.underNode?.classList.remove('over')
-        this.movingNode = null
-        this.underNode = null
-        this.placement = null
-        return
-      }
-
-      // dropping a branch on task-base to become root
-      if (this.placement === 'root') {
-        // get new task path (order index of root)
-        const rootIndex = this.querySelectorAll('task-base > task-node').length
-        const newPath = [rootIndex >= 0 ? rootIndex : 0]
-        // create root task
-        this.querySelector('task-base').addRoot({
-          detail: { task: this.movingNode.graftTask(newPath) },
-        })
-        this.movingNode.delete()
-      }
-
-      // dropping below another node makes it its next sibling
-      // dropping it above another node makes it its previous sibling
-      if (this.placement === 'above' || this.placement === 'below') {
-        if (this.underNode.isRoot()) {
-          if (this.movingNode.isRoot()) {
-            this.clear()
-            this.querySelector('task-base').mapAll((tasks) => {
-              tasks.sort((a, b) => {
-                return a.path[0] > b.path[0] ? 1 : -1
-              })
-              // find moving node index
-              const movingIndex = tasks.findIndex((task) => task.id === this.movingNode.task.id)
-              // const newPath = [newIndex >= 0 ? newIndex : 0]
-              // reordering of root nodes
-              const movingTask = tasks.splice(movingIndex, 1)[0]
-              const underIndex = tasks.findIndex((task) => task.id === this.underNode.task.id)
-              const newIndex = this.placement === 'above' ? underIndex : underIndex + 1
-              tasks.splice(newIndex, 0, movingTask)
-              // normalize paths
-              tasks.forEach((sub, index) => {
-                sub.path = [index]
-                this.movingNode.updateTreePaths(sub)
-              })
-              // update all paths
-              return tasks
-            })
-          } else {
-            // const underIndex = this.underNode.task.path[0]
-            // const newIndex = this.placement === 'above' ? underIndex : underIndex + 1
-            // const newTask = this.movingNode.graftTask([newIndex])
-            this.movingNode.parentElement.deleteSub(this.movingNode.task)
-            this.movingNode.parentElement.updateSubPaths()
-            const movingRoot = this.movingNode.parentElement.getRootNode().task
-
-            this.clear()
-            // branch node promotion to root and reorder
-            this.querySelector('task-base').mapAll((tasks) => {
-              tasks.sort((a, b) => {
-                return a.path[0] > b.path[0] ? 1 : -1
-              })
-              const parentIndex = tasks.findIndex((task) => task.id === movingRoot.id)
-              tasks.splice(parentIndex, 1, movingRoot)
-              const underIndex = tasks.findIndex((task) => task.id === this.underNode.task.id)
-              const newIndex = this.placement === 'above' ? underIndex : underIndex + 1
-              const newTask = this.movingNode.graftTask([newIndex])
-              tasks.splice(newIndex, 0, newTask)
-              // update all paths
-              tasks.forEach((sub, index) => {
-                sub.path = [index]
-                this.movingNode.updateTreePaths(sub)
-              })
-              return tasks
-            })
-          }
-          // this.movingNode.delete()
-          // cleanup
-          this.underNode.classList.remove('over')
-          this.underNode.querySelector('span').classList.remove('drag-above')
-          this.underNode.querySelector('span').classList.remove('drag-below')
-          return
-        }
-        const underParent = this.underNode.parentElement
-        const underPosition = this.underNode.task.path[this.underNode.task.path.length - 1]
-        // update dragging item path
-        const newPosition = this.placement === 'above' ? underPosition : underPosition + 1
-        underParent.graftNode(this.movingNode, newPosition)
-        // save and delete
-        underParent.save()
-        this.movingNode.delete()
-        // cleanup
-        this.underNode.querySelector('span').classList.remove('drag-above')
-        this.underNode.querySelector('span').classList.remove('drag-below')
-      }
-
-      // dropping on top of another task makes it its child
-      if (this.placement === 'center') {
-        // open the destination node
-        this.underNode.task.meta.opened = true
-        // graft, save, and delete
-        this.underNode.graftNode(this.movingNode)
-        this.underNode.save()
-        this.movingNode.delete()
-        // cleanup
-        this.underNode.querySelector('span').classList.remove('drag-center')
-      }
-
-      // cleanup
-      this.underNode.classList.remove('over')
-      this.movingNode = null
-      this.underNode = null
-      this.placement = null
-    })
-
-    // drag over
-
-    this.addEventListener('dragover', (e) => {
-      e.preventDefault()
-      // dragging over task-base (empty space)
-      if (e.target.tagName === TAG_BASE.toUpperCase()) {
-        this.placement = 'root'
-        const underTag = this.underNode?.querySelector('span')
-        if (underTag) {
-          underTag.classList.remove('drag-above')
-          underTag.classList.remove('drag-below')
-          underTag.classList.remove('drag-center')
-        }
-        return
-      }
-
-      let node = null
-      // when the under node is task-node
-      if (e.target.tagName === TAG_NODE.toUpperCase()) {
-        node = e.target
-      }
-      // when the under node is  task-name, get the task-node
-      if (e.target.getAttribute('slot') === NAME_NAME) {
-        node = e.target.parentElement
-      }
-      // when the under node is not the node being dragged
-      if (node && !this.movingNode.equals(node) && !node.equals(this.underNode)) {
-        // remove previous under node class
-        if (this.underNode) {
-          this.underNode.classList.remove('over')
-        }
-        // cache the under node
-        this.underNode = node
-        this.underNode.classList.add('over')
-      }
-
-      // cache mouse vertical movement
-      if (!this.mouseY || this.mouseY !== e.clientY) {
-        this.mouseY = e.clientY
-      }
-
-      if (!this.underNode) {
-        return
-      }
-
-      // get bounding boxes of dragging node and unerneath node
-      const underTag = this.underNode.querySelector('span')
-      const movingTag = this.movingNode.querySelector('span')
-      const underBox = underTag.getBoundingClientRect()
-      const movingBox = movingTag.getBoundingClientRect()
-
-      // when the dragging node is above the under node
-      if (this.mouseY < underBox.top + movingBox.height && this.mouseY > underBox.top) {
-        this.placement = 'above'
-        underTag.classList.remove('drag-center')
-        underTag.classList.remove('drag-below')
-        underTag.classList.add('drag-above')
-        return
-      }
-
-      // when the dragging node is below the under node
-      if (this.mouseY > underBox.bottom - movingBox.height && this.mouseY < underBox.bottom) {
-        this.placement = 'below'
-        underTag.classList.remove('drag-above')
-        underTag.classList.remove('drag-center')
-        underTag.classList.add('drag-below')
-        return
-      }
-
-      // when the dragging node overlaps with under node
-      if (
-        this.mouseY > underBox.top + movingBox.height &&
-        this.mouseY < underBox.bottom - movingBox.height
-      ) {
-        this.placement = 'center'
-        underTag.classList.remove('drag-above')
-        underTag.classList.remove('drag-below')
-        underTag.classList.add('drag-center')
-        return
-      }
-    })
+    // parent class handlers
+    this.bindDragEvents()
   }
 
   clear() {
@@ -232,7 +19,7 @@ class TaskView extends HTMLElement {
     })
   }
 
-  deleteTree({ detail, target }) {
+  deleteRoot({ detail, target }) {
     // root task delete
     if (detail?.task.id) {
       target.remove()
@@ -240,35 +27,18 @@ class TaskView extends HTMLElement {
   }
 
   focusTree(event) {
-    const initialTask = event.target
-    // focus initial task
-    initialTask.focus()
+    const node = event.target
+
+    node.focus()
     // show focus modal
-    this.querySelector('dialog').showFocus(initialTask)
+    this.querySelector('dialog').showFocus(node)
+
+    const OFFSET = 200
     // custom scroll into view, places the focused task slightly above center
-    const taskContainer = initialTask.select('div').getBoundingClientRect()
-    const containerY = taskContainer.top + window.pageYOffset
-    const middle = containerY - window.innerHeight / 2 + 200
-    window.scrollTo(0, middle)
-  }
-
-  getNode(task) {
-    if (!task) {
-      // if no task, return the focused task
-      return this.querySelector(QUERY_FOCUS_NODE)
-    }
-
-    const taskId = task.id
-    const taskPath = task.path.toString()
-
-    let node = null
-    if (taskId) {
-      node = this.querySelector(`task-node[data-id="${taskId}"]`)
-    } else {
-      node = this.querySelector(`task-node[data-path="${taskPath}"]`)
-    }
-
-    return node
+    const nodeBounds = node.select('div').getBoundingClientRect()
+    const nodeTop = nodeBounds.top + window.pageYOffset
+    const pageOffset = nodeTop - window.innerHeight / 2 + OFFSET
+    window.scrollTo(0, pageOffset)
   }
 
   hideMenu(event) {
@@ -276,17 +46,24 @@ class TaskView extends HTMLElement {
     this.querySelector('menu').hide()
   }
 
-  refresh({ detail }) {
+  init() {
+    // called by base to initialize references
+    this.base = this.querySelector(TAG_BASE)
+    this.menu = this.querySelector('menu')
+  }
+
+  render({ detail }) {
     const tasks = detail.tasks
 
     tasks.sort((a, b) => {
       return a.path[0] > b.path[0] ? 1 : -1
     })
 
-    const base = this.querySelector('task-base')
+    this.clear()
+
     tasks.forEach((task) => {
       const treeNode = this.renderTree(task)
-      base.appendChild(treeNode)
+      this.base.appendChild(treeNode)
     })
   }
 
@@ -303,38 +80,23 @@ class TaskView extends HTMLElement {
     const task = detail.task
     const treeNode = this.renderTree(task)
     target.appendChild(treeNode)
-
-    // const currentTasks = target.querySelectorAll(TAG_NODE)
-    // if (!currentTasks.length) {
-    //   return
-    // }
-    // let beforeNode = null
-    // currentTasks.forEach((node, index) => {
-    //   if (task.path[0] > index && !beforeNode) {
-    //     beforeNode = node
-    //   }
-    // })
-    // beforeNode.insertAdjacentElement('afterend', treeNode)
   }
 
   renderSelect(task) {
     const taskState = document.createElement('select')
     taskState.setAttribute('slot', NAME_STATE)
-    // let currentState = ''
     task.data.states.forEach((state, index) => {
       const option = document.createElement('option')
       option.value = index
       option.textContent = state.toUpperCase()
-      // set current state
       if (index === task.state) {
-        // currentState = state
         option.setAttribute('selected', '')
         taskState.value = index
+        // set class to current state name
+        taskState.classList.add(state)
       }
       taskState.appendChild(option)
     })
-    // set class to current state name
-    // taskState.classList.add(currentState)
     return taskState
   }
 
@@ -343,11 +105,11 @@ class TaskView extends HTMLElement {
     const container = taskNode.shadowRoot.querySelector('div')
 
     // metadata
-    taskNode.setAttribute('data-path', task.path)
     if (task.id) {
       // only root tasks have id
-      taskNode.setAttribute('data-id', task.id)
+      taskNode.setAttribute(DATA_ID, task.id)
     }
+    taskNode.setAttribute(DATA_PATH, task.path)
     taskNode.setAttribute('draggable', 'true')
 
     // task name
@@ -381,7 +143,7 @@ class TaskView extends HTMLElement {
       const taskState = this.renderSelect(task, taskNode)
       taskNode.appendChild(taskState)
       // add edit class
-      container.classList.add('editing')
+      container.classList.add(CLASS_EDIT)
     }
 
     // state class and attributes on container
@@ -390,8 +152,8 @@ class TaskView extends HTMLElement {
 
     // focus mode
     if (task.meta.focused) {
-      taskNode.setAttribute('data-focused', '')
-      container.classList.add('focused')
+      taskNode.setAttribute(DATA_FOCUS, '')
+      container.classList.add(CLASS_FOCUS)
     }
 
     // refresh menu task node
@@ -415,7 +177,7 @@ class TaskView extends HTMLElement {
       const treeLabel = document.createElement(TAG_LABEL)
       const treeLength = task.tree.length
       treeLabel.setAttribute('slot', NAME_TITLE_TREE)
-      treeLabel.textContent = `${treeTitleSlot.getAttribute('data-text')} (${treeLength})`
+      treeLabel.textContent = `${treeTitleSlot.getAttribute(DATA_TEXT)} (${treeLength})`
       taskNode.appendChild(treeLabel)
     }
 

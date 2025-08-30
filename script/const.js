@@ -11,8 +11,8 @@ const STATES = [STATE_READY, STATE_ACTIVE, STATE_PAUSE, STATE_DONE]
 
 // global events
 const EVENT_RENDER = 'render'
-const EVENT_REFRESH = 'refresh'
-const EVENT_REROOT = 'reroot'
+const EVENT_RENDER_ROOT = 'render-root'
+const EVENT_RENDER_BRANCH = 'render-branch'
 const EVENT_UPDATE = 'update'
 const EVENT_BRANCH = 'branch'
 const EVENT_DELETE = 'delete'
@@ -59,3 +59,15 @@ const NAME_STATE = 'task-state'
 const NAME_SYNC = 'task-sync'
 const NAME_TITLE_TREE = 'tree-title'
 const NAME_TREE = 'task-tree'
+
+// attribute names
+const DATA_ID = 'data-id'
+const DATA_FOCUS = 'data-focus'
+const DATA_TEXT = 'data-text'
+const DATA_PATH = 'data-path'
+
+// classes
+const CLASS_BRANCH = 'branch'
+const CLASS_LEAF = 'leaf'
+const CLASS_FOCUS = 'focus'
+const CLASS_EDIT = 'editing'
