@@ -59,6 +59,8 @@ class TaskView extends TaskControl {
       return a.path[0] > b.path[0] ? 1 : -1
     })
 
+    this.clear()
+
     tasks.forEach((task) => {
       const treeNode = this.renderTree(task)
       this.base.appendChild(treeNode)

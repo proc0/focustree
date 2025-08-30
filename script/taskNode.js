@@ -235,6 +235,7 @@ class TaskNode extends HTMLElement {
 
   getFieldElements({ currentTarget }) {
     // assumes button element is next to field element
+    const currentButton = currentTarget
     const taskField = currentTarget.parentElement
     const { slotName, fieldName } = this.getFieldNames(taskField)
     const deleteButton = taskField.querySelector(`[name="${NAME_DELETE}"]`)

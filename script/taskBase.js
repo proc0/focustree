@@ -280,7 +280,7 @@ class TaskBase extends TaskControl {
       const readRequest = store.getAll()
       readRequest.onsuccess = ({ target }) => {
         this.dispatchEvent(
-          new CustomEvent(EVENT_REFRESH, {
+          new CustomEvent(EVENT_RENDER, {
             bubbles: true,
             detail: {
               tasks: target.result,
@@ -292,21 +292,21 @@ class TaskBase extends TaskControl {
     })
   }
 
-  mapAll(modAll) {
-    let modTasks = []
+  mapSave(transform) {
     const requestAll = this.store('readwrite', (store) => {
-      // get all records in an array and use callbacks
       const readRequest = store.getAll()
 
+      let tasks = []
       readRequest.onsuccess = ({ target }) => {
-        const tasks = target.result
+        const result = target.result
         // sort tasks based on path
-        tasks.sort((a, b) => {
+        result.sort((a, b) => {
           return a.path[0] > b.path[0] ? 1 : -1
         })
-        modTasks = modAll(tasks)
 
-        modTasks.forEach((task, index) => {
+        tasks = transform(result)
+        tasks.forEach((task, index) => {
+          // root tasks
           if (task.id) {
             // save updated tasks
             const putRequest = store.put(task, task.id)
@@ -314,12 +314,12 @@ class TaskBase extends TaskControl {
             putRequest.onsuccess = ({ target }) => {
               console.log(`Updated task ${task.id}`)
 
-              if (index === modTasks.length - 1) {
+              if (index === tasks.length - 1) {
                 this.dispatchEvent(
-                  new CustomEvent(EVENT_REFRESH, {
+                  new CustomEvent(EVENT_RENDER, {
                     bubbles: true,
                     detail: {
-                      tasks: modTasks,
+                      tasks,
                     },
                   })
                 )
@@ -330,23 +330,22 @@ class TaskBase extends TaskControl {
               console.error(event.target.error)
             }
           } else {
+            // promote branch to root
             const addRequest = store.add(task)
-
-            addRequest.onsuccess = ({ target }) => {
-              task.id = target.result
-
+            addRequest.onsuccess = (event) => {
+              task.id = event.target.result
               // another request to save the DB key in id
               const putRequest = store.put(task, task.id)
               // only root tasks have id
               putRequest.onsuccess = () => {
                 console.log(`Added new root task ${task.id}`)
 
-                if (index === modTasks.length - 1) {
+                if (index === tasks.length - 1) {
                   this.dispatchEvent(
-                    new CustomEvent(EVENT_REFRESH, {
+                    new CustomEvent(EVENT_RENDER, {
                       bubbles: true,
                       detail: {
-                        tasks: modTasks,
+                        tasks,
                       },
                     })
                   )
