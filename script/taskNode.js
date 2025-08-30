@@ -23,6 +23,7 @@ class TaskNode extends HTMLElement {
         event.stopPropagation()
         this.dispatch(EVENT_MENU)
       })
+      return
     }
 
     /* edit mode fields and buttons */
