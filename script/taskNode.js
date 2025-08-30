@@ -63,17 +63,6 @@ class TaskNode extends HTMLElement {
     })
   }
 
-  init(task) {
-    this.task = task
-
-    const template = task.meta.editing ? TEMPLATE_EDIT : TEMPLATE_NODE
-    this.attachShadow({ mode: 'open' }).appendChild(
-      document.getElementById(template).content.cloneNode(true)
-    )
-
-    return this
-  }
-
   blur() {
     this.task.meta.focused = false
     this.dispatch(EVENT_STATUS)
@@ -218,6 +207,17 @@ class TaskNode extends HTMLElement {
     this.changeState(1)
   }
 
+  init(task) {
+    this.task = task
+
+    const template = task.meta.editing ? TEMPLATE_EDIT : TEMPLATE_NODE
+    this.attachShadow({ mode: 'open' }).appendChild(
+      document.getElementById(template).content.cloneNode(true)
+    )
+
+    return this
+  }
+
   isActive() {
     return this.task.state === 1
   }
@@ -234,8 +234,8 @@ class TaskNode extends HTMLElement {
   }
 
   getFieldElements({ currentTarget }) {
-    const currentButton = currentTarget
-    const taskField = currentButton.parentElement
+    // assumes button element is next to field element
+    const taskField = currentTarget.parentElement
     const { slotName, fieldName } = this.getFieldNames(taskField)
     const deleteButton = taskField.querySelector(`[name="${NAME_DELETE}"]`)
 

@@ -300,6 +300,10 @@ class TaskBase extends TaskControl {
 
       readRequest.onsuccess = ({ target }) => {
         const tasks = target.result
+        // sort tasks based on path
+        tasks.sort((a, b) => {
+          return a.path[0] > b.path[0] ? 1 : -1
+        })
         modTasks = modAll(tasks)
 
         modTasks.forEach((task, index) => {

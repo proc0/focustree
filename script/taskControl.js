@@ -46,12 +46,8 @@ class TaskControl extends HTMLElement {
           if (this.movingNode.isRoot()) {
             this.clear()
             this.base.mapAll((tasks) => {
-              tasks.sort((a, b) => {
-                return a.path[0] > b.path[0] ? 1 : -1
-              })
               // find moving node index
               const movingIndex = tasks.findIndex((task) => task.id === this.movingNode.task.id)
-              // const newPath = [newIndex >= 0 ? newIndex : 0]
               // reordering of root nodes
               const movingTask = tasks.splice(movingIndex, 1)[0]
               const underIndex = tasks.findIndex((task) => task.id === this.underNode.task.id)
@@ -66,9 +62,6 @@ class TaskControl extends HTMLElement {
               return tasks
             })
           } else {
-            // const underIndex = this.underNode.task.path[0]
-            // const newIndex = this.placement === 'above' ? underIndex : underIndex + 1
-            // const newTask = this.movingNode.graftTask([newIndex])
             this.movingNode.parentElement.deleteSub(this.movingNode.task)
             this.movingNode.parentElement.updateSubPaths()
             const movingRoot = this.movingNode.parentElement.getRootNode().task
@@ -76,9 +69,6 @@ class TaskControl extends HTMLElement {
             this.clear()
             // branch node promotion to root and reorder
             this.base.mapAll((tasks) => {
-              tasks.sort((a, b) => {
-                return a.path[0] > b.path[0] ? 1 : -1
-              })
               const parentIndex = tasks.findIndex((task) => task.id === movingRoot.id)
               tasks.splice(parentIndex, 1, movingRoot)
               const underIndex = tasks.findIndex((task) => task.id === this.underNode.task.id)
@@ -93,7 +83,6 @@ class TaskControl extends HTMLElement {
               return tasks
             })
           }
-          // this.movingNode.delete()
           // cleanup
           this.underNode.classList.remove('over')
           this.underNode.querySelector('span').classList.remove('drag-above')
