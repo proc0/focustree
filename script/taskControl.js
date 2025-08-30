@@ -1,5 +1,6 @@
 class TaskControl extends HTMLElement {
   base = null
+  menu = null
   // dragging
   movingNode = null
   underNode = null
@@ -202,6 +203,22 @@ class TaskControl extends HTMLElement {
         return
       }
     })
+  }
+
+  getNode(task) {
+    if (!task) {
+      // if no task, return the focused task
+      return this.querySelector(`${TAG_NODE}[${DATA_FOCUS}]`)
+    }
+
+    let query = ''
+    if (task.id) {
+      query = `${TAG_NODE}[${DATA_ID}="${task.id}"]`
+    } else {
+      query = `${TAG_NODE}[${DATA_PATH}="${task.path.toString()}"]`
+    }
+
+    return this.querySelector(query)
   }
 
   transformTask(task, transform) {

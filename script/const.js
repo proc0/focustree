@@ -59,3 +59,15 @@ const NAME_STATE = 'task-state'
 const NAME_SYNC = 'task-sync'
 const NAME_TITLE_TREE = 'tree-title'
 const NAME_TREE = 'task-tree'
+
+// attribute names
+const DATA_ID = 'data-id'
+const DATA_FOCUS = 'data-focus'
+const DATA_TEXT = 'data-text'
+const DATA_PATH = 'data-path'
+
+// classes
+const CLASS_BRANCH = 'branch'
+const CLASS_LEAF = 'leaf'
+const CLASS_FOCUS = 'focus'
+const CLASS_EDIT = 'editing'

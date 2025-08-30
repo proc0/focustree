@@ -1,8 +1,3 @@
-const CLASS_BRANCH = 'branch'
-const CLASS_LEAF = 'leaf'
-
-const QUERY_FOCUS_NODE = 'task-node[data-focused]'
-
 class TaskView extends TaskControl {
   constructor() {
     super()
@@ -31,35 +26,18 @@ class TaskView extends TaskControl {
   }
 
   focusTree(event) {
-    const initialTask = event.target
-    // focus initial task
-    initialTask.focus()
+    const node = event.target
+
+    node.focus()
     // show focus modal
-    this.querySelector('dialog').showFocus(initialTask)
+    this.querySelector('dialog').showFocus(node)
+
+    const OFFSET = 200
     // custom scroll into view, places the focused task slightly above center
-    const taskContainer = initialTask.select('div').getBoundingClientRect()
-    const containerY = taskContainer.top + window.pageYOffset
-    const middle = containerY - window.innerHeight / 2 + 200
-    window.scrollTo(0, middle)
-  }
-
-  getNode(task) {
-    if (!task) {
-      // if no task, return the focused task
-      return this.querySelector(QUERY_FOCUS_NODE)
-    }
-
-    const taskId = task.id
-    const taskPath = task.path.toString()
-
-    let node = null
-    if (taskId) {
-      node = this.querySelector(`task-node[data-id="${taskId}"]`)
-    } else {
-      node = this.querySelector(`task-node[data-path="${taskPath}"]`)
-    }
-
-    return node
+    const nodeBounds = node.select('div').getBoundingClientRect()
+    const nodeTop = nodeBounds.top + window.pageYOffset
+    const pageOffset = nodeTop - window.innerHeight / 2 + OFFSET
+    window.scrollTo(0, pageOffset)
   }
 
   hideMenu(event) {
@@ -70,6 +48,7 @@ class TaskView extends TaskControl {
   init() {
     // called by base to initialize references
     this.base = this.querySelector(TAG_BASE)
+    this.menu = this.querySelector('menu')
   }
 
   refresh({ detail }) {
@@ -79,10 +58,9 @@ class TaskView extends TaskControl {
       return a.path[0] > b.path[0] ? 1 : -1
     })
 
-    const base = this.querySelector('task-base')
     tasks.forEach((task) => {
       const treeNode = this.renderTree(task)
-      base.appendChild(treeNode)
+      this.base.appendChild(treeNode)
     })
   }
 
@@ -116,21 +94,18 @@ class TaskView extends TaskControl {
   renderSelect(task) {
     const taskState = document.createElement('select')
     taskState.setAttribute('slot', NAME_STATE)
-    // let currentState = ''
     task.data.states.forEach((state, index) => {
       const option = document.createElement('option')
       option.value = index
       option.textContent = state.toUpperCase()
-      // set current state
       if (index === task.state) {
-        // currentState = state
         option.setAttribute('selected', '')
         taskState.value = index
+        // set class to current state name
+        taskState.classList.add(state)
       }
       taskState.appendChild(option)
     })
-    // set class to current state name
-    // taskState.classList.add(currentState)
     return taskState
   }
 
@@ -139,11 +114,11 @@ class TaskView extends TaskControl {
     const container = taskNode.shadowRoot.querySelector('div')
 
     // metadata
-    taskNode.setAttribute('data-path', task.path)
     if (task.id) {
       // only root tasks have id
-      taskNode.setAttribute('data-id', task.id)
+      taskNode.setAttribute(DATA_ID, task.id)
     }
+    taskNode.setAttribute(DATA_PATH, task.path)
     taskNode.setAttribute('draggable', 'true')
 
     // task name
@@ -177,7 +152,7 @@ class TaskView extends TaskControl {
       const taskState = this.renderSelect(task, taskNode)
       taskNode.appendChild(taskState)
       // add edit class
-      container.classList.add('editing')
+      container.classList.add(CLASS_EDIT)
     }
 
     // state class and attributes on container
@@ -186,8 +161,8 @@ class TaskView extends TaskControl {
 
     // focus mode
     if (task.meta.focused) {
-      taskNode.setAttribute('data-focused', '')
-      container.classList.add('focused')
+      taskNode.setAttribute(DATA_FOCUS, '')
+      container.classList.add(CLASS_FOCUS)
     }
 
     // refresh menu task node
@@ -211,7 +186,7 @@ class TaskView extends TaskControl {
       const treeLabel = document.createElement(TAG_LABEL)
       const treeLength = task.tree.length
       treeLabel.setAttribute('slot', NAME_TITLE_TREE)
-      treeLabel.textContent = `${treeTitleSlot.getAttribute('data-text')} (${treeLength})`
+      treeLabel.textContent = `${treeTitleSlot.getAttribute(DATA_TEXT)} (${treeLength})`
       taskNode.appendChild(treeLabel)
     }
 
