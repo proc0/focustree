@@ -108,7 +108,7 @@ class TaskBase extends TaskControl {
         putRequest.onsuccess = () => {
           console.log(`Added task ${task.id}`)
           this.dispatchEvent(
-            new CustomEvent(EVENT_REROOT, {
+            new CustomEvent(EVENT_RENDER_ROOT, {
               bubbles: true,
               detail: {
                 task,
@@ -221,7 +221,7 @@ class TaskBase extends TaskControl {
             addRequest.onsuccess = ({ target }) => {
               console.log(`Imported task ${target.result}`)
               this.dispatchEvent(
-                new CustomEvent(EVENT_REROOT, {
+                new CustomEvent(EVENT_RENDER_ROOT, {
                   bubbles: true,
                   detail: {
                     task,
@@ -259,7 +259,7 @@ class TaskBase extends TaskControl {
         }
 
         this.dispatchEvent(
-          new CustomEvent(EVENT_REROOT, {
+          new CustomEvent(EVENT_RENDER_ROOT, {
             bubbles: true,
             detail: {
               task: cursor.value,
@@ -324,14 +324,6 @@ class TaskBase extends TaskControl {
                   })
                 )
               }
-              // this.dispatchEvent(
-              //   new CustomEvent(EVENT_REROOT, {
-              //     bubbles: true,
-              //     detail: {
-              //       task,
-              //     },
-              //   })
-              // )
             }
 
             putRequest.onerror = (event) => {
@@ -359,14 +351,6 @@ class TaskBase extends TaskControl {
                     })
                   )
                 }
-                // this.dispatchEvent(
-                //   new CustomEvent(EVENT_REROOT, {
-                //     bubbles: true,
-                //     detail: {
-                //       task,
-                //     },
-                //   })
-                // )
               }
 
               putRequest.onerror = (event) => {
@@ -449,7 +433,7 @@ class TaskBase extends TaskControl {
         }
 
         this.dispatchEvent(
-          new CustomEvent(EVENT_RENDER, {
+          new CustomEvent(EVENT_RENDER_BRANCH, {
             bubbles: true,
             detail: {
               node,

@@ -11,8 +11,8 @@ const STATES = [STATE_READY, STATE_ACTIVE, STATE_PAUSE, STATE_DONE]
 
 // global events
 const EVENT_RENDER = 'render'
-const EVENT_REFRESH = 'refresh'
-const EVENT_REROOT = 'reroot'
+const EVENT_RENDER_ROOT = 'render-root'
+const EVENT_RENDER_BRANCH = 'render-branch'
 const EVENT_UPDATE = 'update'
 const EVENT_BRANCH = 'branch'
 const EVENT_DELETE = 'delete'

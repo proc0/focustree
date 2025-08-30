@@ -221,6 +221,10 @@ class TaskControl extends HTMLElement {
     return this.querySelector(query)
   }
 
+  getRootNodes() {
+    return this.querySelectorAll(`${TAG_BASE} > ${TAG_NODE}`)
+  }
+
   transformTask(task, transform) {
     const traverseTask = (task, transform) => {
       transform(task)

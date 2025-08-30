@@ -1,14 +1,15 @@
 class TaskView extends TaskControl {
   constructor() {
     super()
-    this.addEventListener(EVENT_RENDER, this.renderBranch.bind(this))
-    this.addEventListener(EVENT_REROOT, this.renderRoot.bind(this))
-    this.addEventListener(EVENT_REFRESH, this.refresh.bind(this))
+    this.addEventListener(EVENT_RENDER, this.render.bind(this))
+    this.addEventListener(EVENT_RENDER_ROOT, this.renderRoot.bind(this))
+    this.addEventListener(EVENT_RENDER_BRANCH, this.renderBranch.bind(this))
+    this.addEventListener(EVENT_EDIT, this.renderBranch.bind(this))
     this.addEventListener(EVENT_DELETE, this.deleteRoot.bind(this))
     this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
-    this.addEventListener(EVENT_EDIT, this.renderBranch.bind(this))
     this.addEventListener(EVENT_MENU, this.showMenu.bind(this))
     this.addEventListener(EVENT_EXPAND, this.hideMenu.bind(this))
+    // parent class handlers
     this.bindDragEvents()
   }
 
@@ -51,7 +52,7 @@ class TaskView extends TaskControl {
     this.menu = this.querySelector('menu')
   }
 
-  refresh({ detail }) {
+  render({ detail }) {
     const tasks = detail.tasks
 
     tasks.sort((a, b) => {
@@ -77,18 +78,6 @@ class TaskView extends TaskControl {
     const task = detail.task
     const treeNode = this.renderTree(task)
     target.appendChild(treeNode)
-
-    // const currentTasks = target.querySelectorAll(TAG_NODE)
-    // if (!currentTasks.length) {
-    //   return
-    // }
-    // let beforeNode = null
-    // currentTasks.forEach((node, index) => {
-    //   if (task.path[0] > index && !beforeNode) {
-    //     beforeNode = node
-    //   }
-    // })
-    // beforeNode.insertAdjacentElement('afterend', treeNode)
   }
 
   renderSelect(task) {
