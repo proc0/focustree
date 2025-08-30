@@ -3,17 +3,18 @@ const CLASS_LEAF = 'leaf'
 
 const QUERY_FOCUS_NODE = 'task-node[data-focused]'
 
-class TaskView extends Control {
+class TaskView extends TaskControl {
   constructor() {
     super()
     this.addEventListener(EVENT_RENDER, this.renderBranch.bind(this))
     this.addEventListener(EVENT_REROOT, this.renderRoot.bind(this))
     this.addEventListener(EVENT_REFRESH, this.refresh.bind(this))
-    this.addEventListener(EVENT_DELETE, this.deleteTree.bind(this))
+    this.addEventListener(EVENT_DELETE, this.deleteRoot.bind(this))
     this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
     this.addEventListener(EVENT_EDIT, this.renderBranch.bind(this))
     this.addEventListener(EVENT_MENU, this.showMenu.bind(this))
     this.addEventListener(EVENT_EXPAND, this.hideMenu.bind(this))
+    this.bindDragEvents()
   }
 
   clear() {
@@ -22,7 +23,7 @@ class TaskView extends Control {
     })
   }
 
-  deleteTree({ detail, target }) {
+  deleteRoot({ detail, target }) {
     // root task delete
     if (detail?.task.id) {
       target.remove()
@@ -64,6 +65,11 @@ class TaskView extends Control {
   hideMenu(event) {
     event.stopPropagation()
     this.querySelector('menu').hide()
+  }
+
+  init() {
+    // called by base to initialize references
+    this.base = this.querySelector(TAG_BASE)
   }
 
   refresh({ detail }) {

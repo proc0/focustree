@@ -1,13 +1,16 @@
-class Control extends HTMLElement {
+class TaskControl extends HTMLElement {
+  base = null
+  // dragging
+  movingNode = null
+  underNode = null
+  placement = null
+  mouseY = null
+
   constructor() {
     super()
+  }
 
-    // dragging
-    this.movingNode = null
-    this.underNode = null
-    this.placement = null
-    this.mouseY = null
-
+  bindDragEvents() {
     this.addEventListener('dragstart', (e) => {
       this.movingNode = e.target
       e.target.classList.add('dragging')
@@ -30,7 +33,7 @@ class Control extends HTMLElement {
         const rootIndex = this.querySelectorAll('task-base > task-node').length
         const newPath = [rootIndex >= 0 ? rootIndex : 0]
         // create root task
-        this.querySelector('task-base').addRoot({
+        this.base.addRoot({
           detail: { task: this.movingNode.graftTask(newPath) },
         })
         this.movingNode.delete()
@@ -42,7 +45,7 @@ class Control extends HTMLElement {
         if (this.underNode.isRoot()) {
           if (this.movingNode.isRoot()) {
             this.clear()
-            this.querySelector('task-base').mapAll((tasks) => {
+            this.base.mapAll((tasks) => {
               tasks.sort((a, b) => {
                 return a.path[0] > b.path[0] ? 1 : -1
               })
@@ -72,7 +75,7 @@ class Control extends HTMLElement {
 
             this.clear()
             // branch node promotion to root and reorder
-            this.querySelector('task-base').mapAll((tasks) => {
+            this.base.mapAll((tasks) => {
               tasks.sort((a, b) => {
                 return a.path[0] > b.path[0] ? 1 : -1
               })
@@ -212,7 +215,17 @@ class Control extends HTMLElement {
     })
   }
 
-  blah() {
-    console.log('blah')
+  transformTask(task, transform) {
+    const traverseTask = (task, transform) => {
+      transform(task)
+      if (!task.tree.length) return
+
+      task.tree.forEach((sub) => {
+        traverseTask(sub, transform)
+      })
+      return task
+    }
+
+    return traverseTask(task, transform)
   }
 }

@@ -26,7 +26,12 @@ const MODEL = {
   tree: [],
 }
 
-class TaskBase extends HTMLElement {
+class TaskBase extends TaskControl {
+  connectedCallback() {
+    // initialize view
+    this.parentElement.init()
+  }
+
   constructor() {
     super()
     const initBase = window.indexedDB.open(BASE_NAME, BASE_VERSION)
@@ -53,82 +58,17 @@ class TaskBase extends HTMLElement {
 
       // DB does not exist
       if (!taskBase.objectStoreNames.contains(BASE_STORE)) {
-        // create an objectStore for tasks
-        const taskStore = taskBase.createObjectStore(BASE_STORE, {
-          keypath: 'id',
-          autoIncrement: true,
-        })
-
-        taskStore.createIndex('name', 'name')
-
-        const taskSeed = structuredClone(TUTORIAL || MODEL)
-        // only root tasks have id
-        taskSeed.id = 1
-
-        const addRequest = taskStore.add(taskSeed)
-
-        addRequest.onsuccess = (event) => {
-          console.log(`Added task ${event.target.result}`)
-        }
-
-        addRequest.onerror = (event) => {
-          console.error(event.target.error)
-        }
+        this.createStore(taskBase)
       } else {
-        // version upgrade
-        const store = target.transaction.objectStore(BASE_STORE)
-
-        const traverseTask = (task, transform) => {
-          transform(task)
-          if (!task.tree.length) return
-
-          task.tree.forEach((sub) => {
-            traverseTask(sub, transform)
-          })
-        }
-
         // migration placeholder
         let migration = null
         // // write incremental migrations according to versions
-        // // get oldVersion from event.oldVersion
-        // if (oldVersion === 1) {
+        // if (oldVersion === 1) { // get oldVersion from event.oldVersion
         //   console.log(`Migrating TaskBase from ${oldVersion} to ${taskBase.version}...`)
         //   // version 1 -> 2 migration
-        //   migration = (task) => {
-        //     // modify task to new version here
-        //   }
+        //   migration = (task) => { // modify task to new version here }
         // }
-
-        const request = (store.openCursor().onsuccess = ({ target }) => {
-          const cursor = target.result
-
-          if (!cursor) {
-            return console.log('Tasks migration complete.')
-          }
-
-          const task = cursor.value
-          if (migration) {
-            // migrate task and subtasks
-            traverseTask(task, migration)
-          }
-
-          // save task migration
-          const putRequest = store.put(task, task.id)
-
-          putRequest.onsuccess = (success) => {
-            console.log(`Migrated task ${success.target.result}`)
-          }
-
-          putRequest.onerror = (event) => {
-            console.error(event.target.error)
-          }
-
-          cursor.continue()
-        })
-
-        request.onerror = ({ target }) => {
-          console.error(target.error)
-        }
+        this.upgrade(migration)
       }
     }
 
@@ -184,6 +124,30 @@ class TaskBase extends HTMLElement {
 
       return addRequest
     })
+  }
+
+  createStore(taskBase) {
+    // create an objectStore for tasks
+    const taskStore = taskBase.createObjectStore(BASE_STORE, {
+      keypath: 'id',
+      autoIncrement: true,
+    })
+
+    taskStore.createIndex('name', 'name')
+
+    const taskSeed = structuredClone(TUTORIAL || MODEL)
+    // only root tasks have id
+    taskSeed.id = 1
+
+    const addRequest = taskStore.add(taskSeed)
+
+    addRequest.onsuccess = (event) => {
+      console.log(`Added task ${event.target.result}`)
+    }
+
+    addRequest.onerror = (event) => {
+      console.error(event.target.error)
+    }
   }
 
   delete(event) {
@@ -509,5 +473,43 @@ class TaskBase extends HTMLElement {
     }
 
     return request
+  }
+
+  upgrade(migration) {
+    // version upgrade
+    const store = target.transaction.objectStore(BASE_STORE)
+
+    const request = store.openCursor()
+
+    request.onsuccess = ({ target }) => {
+      const cursor = target.result
+
+      if (!cursor) {
+        return console.log('Tasks migration complete.')
+      }
+
+      const task = cursor.value
+      if (migration) {
+        // migrate task and subtasks
+        this.transformTask(task, migration)
+      }
+
+      // save task migration
+      const putRequest = store.put(task, task.id)
+
+      putRequest.onsuccess = (success) => {
+        console.log(`Migrated task ${success.target.result}`)
+      }
+
+      putRequest.onerror = (event) => {
+        console.error(event.target.error)
+      }
+
+      cursor.continue()
+    }
+
+    request.onerror = ({ target }) => {
+      console.error(target.error)
+    }
   }
 }
