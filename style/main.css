@@ -1,5 +1,5 @@
-@import url('theme.css');
 @import url('select.css');
+@import url('theme.css');
 
 /* reset */
 
@@ -138,31 +138,6 @@ task-node.over {
         rgba(94, 199, 67, 0) 67%,
         rgba(42, 207, 39, 0) 100%
       );
-    }
-  }
-}
-
-/* styles */
-
-html.theme-forest {
-  background-color: var(--forest-background);
-  color: var(--forest-foreground);
-  font-family: Tahoma;
-
-  /* TODO: use classes instead, move task styles to task css */
-  & button,
-  & ::part(task-button) {
-    background-color: var(--forest-background);
-    color: var(--forest-foreground);
-  }
-
-  & select {
-    background-color: var(--forest-background);
-    color: var(--forest-foreground);
-
-    & option {
-      background-color: var(--forest-background);
-      color: var(--forest-foreground);
     }
   }
 }

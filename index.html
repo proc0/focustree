@@ -31,7 +31,7 @@
       <div>
         <details>
           <summary>
-            <button name="task-menu" part="task-button" title="Menu">☰</button>
+            <button name="task-menu" part="icon-button" title="Menu">☰</button>
             <slot name="task-name"></slot>
           </summary>
           <section>
@@ -75,29 +75,29 @@
       <link rel="stylesheet" href="style/edit.css" />
       <div>
         <span>
-          <button part="task-button" name="task-edit" title="Edit">✎</button>
+          <button part="icon-button" name="task-edit" title="Edit">✎</button>
           <slot name="task-name"></slot>
-          <button part="task-button" name="task-delete" title="Delete">🗙</button>
+          <button part="icon-button" name="task-delete" title="Delete">🗙</button>
         </span>
         <span>
-          <button part="task-button" name="task-edit" title="Edit">✎</button>
+          <button part="icon-button" name="task-edit" title="Edit">✎</button>
           <slot name="task-note">Add a note.</slot>
         </span>
         <menu>
           <menuitem>
-            <button part="task-button" name="task-focus" title="Focus">👁</button>
+            <button part="icon-button" name="task-focus" title="Focus">👁</button>
           </menuitem>
           <menuitem>
             <slot name="task-state"></slot>
           </menuitem>
           <menuitem>
-            <button part="task-button" name="task-sync" title="Sync state">🗘</button>
+            <button part="icon-button" name="task-sync" title="Sync state">🗘</button>
           </menuitem>
           <menuitem>
-            <button part="task-button" name="task-clone" title="clone">🗗</button>
+            <button part="icon-button" name="task-clone" title="clone">🗗</button>
           </menuitem>
           <menuitem>
-            <button part="task-button" name="task-save" title="Save">✓</button>
+            <button part="icon-button" name="task-save" title="Save">✓</button>
           </menuitem>
         </menu>
         <details>
@@ -121,20 +121,20 @@
       </ul>
       <menu>
         <menuitem>
-          <button name="task-done" title="Done">✓</button>
+          <button class="icon-button" name="task-done" title="Done">✓</button>
         </menuitem>
         <menuitem>
           <form method="dialog">
-            <button name="task-pause" title="Pause">⏸</button>
+            <button class="icon-button" name="task-pause" title="Pause">⏸</button>
           </form>
         </menuitem>
       </menu>
     </template>
     <main>
       <menu>
-        <menuitem><button id="root-add" title="New">✚</button></menuitem>
-        <menuitem><button id="root-import" title="Import">↓</button></menuitem>
-        <menuitem><button id="root-export" title="Export">↑</button></menuitem>
+        <menuitem><button class="icon-button" id="root-add" title="New">✚</button></menuitem>
+        <menuitem><button class="icon-button" id="root-import" title="Import">↓</button></menuitem>
+        <menuitem><button class="icon-button" id="root-export" title="Export">↑</button></menuitem>
       </menu>
     </main>
     <script src="script/main.js"></script>

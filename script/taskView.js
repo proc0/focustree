@@ -29,7 +29,7 @@ class TaskView extends TaskControl {
   focusTree(event) {
     const node = event.target
 
-    node.focus()
+    node.focusNode()
     // show focus modal
     this.querySelector('dialog').showFocus(node)
 

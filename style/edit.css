@@ -3,6 +3,10 @@
 /* reset */
 
 div {
+  & input {
+    margin: 0;
+  }
+
   & menu {
     display: inline-flex;
     flex-direction: row;
@@ -18,17 +22,31 @@ div {
 
 div {
   margin-left: 3rem;
-  & > span {
+
+  & span {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
+    & button {
+      margin-right: 0.25rem;
+    }
   }
+
+  & input {
+    font-size: inherit;
+    margin-left: -0.2rem;
+  }
+
   & details {
     & summary {
       & span {
         padding-left: 0.25rem;
       }
     }
+  }
+
+  & menu {
+    margin-top: 0.3rem;
   }
 }
 

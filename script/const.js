@@ -71,3 +71,7 @@ const CLASS_BRANCH = 'branch'
 const CLASS_LEAF = 'leaf'
 const CLASS_FOCUS = 'focus'
 const CLASS_EDIT = 'editing'
+
+// theme classes (should match html)
+const THEME_ICON_BUTTON = 'icon-button'
+const THEME_FIELD_INPUT = 'field-input'

@@ -16,7 +16,7 @@ class TaskFocus extends HTMLDialogElement {
     this.addEventListener('close', (event) => {
       event.stopPropagation()
       const node = this.parentElement.getNode()
-      node.blur()
+      node.blurNode()
     })
 
     // focus exit
@@ -51,7 +51,7 @@ class TaskFocus extends HTMLDialogElement {
       // DFS - get first subtask
       let nextNode = node.querySelector(TAG_NODE)
 
-      node.blur()
+      node.blurNode()
 
       // no subtasks
       if (!nextNode) {
@@ -98,7 +98,7 @@ class TaskFocus extends HTMLDialogElement {
         }
       }
 
-      nextNode.focus()
+      nextNode.focusNode()
       this.renderFocus(nextNode.task)
     })
   }

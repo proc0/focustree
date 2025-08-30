@@ -1,0 +1,14 @@
+/* color picker: https://css.land/lch/ */
+@media (color-gamut: srgb) {
+  :root {
+    --forest-background: lch(3.328% 52.498 59.084); /* rgb(8.1% 3.7% 0%) */
+    --forest-foreground: lch(81.88% 6.85 238.527); /* rgb(75.4% 80.76% 84.04%) */
+  }
+}
+
+@media (color-gamut: p3) {
+  :root {
+    --forest-background: color(display-p3 0.077 0.0381 0);
+    --forest-foreground: color(display-p3 0.7639 0.8059 0.8367);
+  }
+}

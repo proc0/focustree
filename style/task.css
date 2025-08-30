@@ -22,7 +22,7 @@ div {
   opacity: 1;
   & [name='task-name'] {
     height: 2rem;
-    box-sizing: border-box;
+    margin-left: 0.2rem;
   }
 }
 
@@ -54,11 +54,11 @@ details {
     }
   }
 }
+
 /* states */
 
 div {
   & [name='task-name'] {
-    margin-left: 0.2rem;
     &::after {
       content: '';
       display: inline-flex;

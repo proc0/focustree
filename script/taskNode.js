@@ -19,12 +19,13 @@ class TaskNode extends HTMLElement {
 
     if (!this.task.meta.editing) {
       // task menu
-      return this.selectName(NAME_MENU).addEventListener('click', (event) => {
+      this.selectName(NAME_MENU).addEventListener('click', (event) => {
         event.stopPropagation()
         this.dispatch(EVENT_MENU)
       })
     }
 
+    /* edit mode fields and buttons */
     this.selectName(NAME_FOCUS).addEventListener('click', (event) => {
       event.stopPropagation()
       this.dispatch(EVENT_FOCUS)
@@ -63,7 +64,7 @@ class TaskNode extends HTMLElement {
     })
   }
 
-  blur() {
+  blurNode() {
     this.task.meta.focused = false
     this.dispatch(EVENT_STATUS)
   }
@@ -169,19 +170,25 @@ class TaskNode extends HTMLElement {
     input.setAttribute('type', 'text')
     input.setAttribute('id', `${slotName}-${this.task.path.join('')}`)
     input.setAttribute('value', this.task[fieldName])
+    input.setAttribute('part', THEME_FIELD_INPUT)
     // spawn a save button
     const saveButton = document.createElement('button')
     const taskSaveButton = this.selectName(NAME_SAVE)
     saveButton.textContent = taskSaveButton.textContent
     saveButton.setAttribute('name', NAME_SAVE)
+    saveButton.setAttribute('part', THEME_ICON_BUTTON)
     // bind commit on save click
     saveButton.addEventListener('click', this.commit.bind(this))
 
     taskField.prepend(input)
     taskField.prepend(saveButton)
 
-    input.addEventListener('keyup', ({ key }) => {
-      if (key === 'Enter') saveButton.click()
+    input.addEventListener('keyup', (event) => {
+      event.stopImmediatePropagation()
+      if (event.key === 'Enter') {
+        saveButton.click()
+        taskSaveButton.focus()
+      }
     })
 
     input.focus()
@@ -200,7 +207,7 @@ class TaskNode extends HTMLElement {
     )
   }
 
-  focus() {
+  focusNode() {
     this.task.meta.focused = true
     this.task.meta.opened = true
     // set state active
