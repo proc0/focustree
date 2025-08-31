@@ -8,7 +8,13 @@ html.theme-forest {
   .icon-button,
   task-node::part(icon-button) {
     background-color: var(--forest-background);
-    color: var(--forest-foreground);
+    color: var(--forest-background-accent);
+  }
+
+  .icon-button:hover,
+  task-node::part(icon-button):hover {
+    background-color: var(--forest-background-shade) !important;
+    color: var(--forest-foreground-accent) !important;
   }
 
   select {
@@ -27,7 +33,7 @@ html.theme-forest {
   }
 
   task-node::part(field-input):focus {
-    background-color: var(--forest-background-accent);
+    background-color: var(--forest-background-shade);
     box-shadow: inset 2px 2px 5px var(--color-black);
   }
 }

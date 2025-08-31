@@ -2,9 +2,12 @@
 @media (color-gamut: srgb) {
   :root {
     --forest-background: lch(3.328% 52.498 59.084); /* rgb(8.1% 3.7% 0%) */
-    --forest-foreground: lch(81.88% 6.85 238.527); /* rgb(75.4% 80.76% 84.04%) */
+    --forest-background-accent: lch(29.111% 38.87 126.955); /* rgb(15.5% 30.4% 5.17%) */
+    --forest-background-shade: lch(14.329% 11.434 59.083); /* rgb(18.58% 12.97% 8.93%) */
 
-    --forest-background-accent: lch(14.329% 11.434 59.083) /* rgb(18.58% 12.97% 8.93%) */;
+    --forest-foreground: lch(81.88% 6.85 238.527); /* rgb(75.4% 80.76% 84.04%) */
+    --forest-foreground-shade: lch(46.478% 29.598 137.84); /* rgb(31.12% 47.02% 29.53%) */
+    --forest-foreground-accent: lch(64.476% 50.595 137.834); /* rgb(37.75% 68.01% 36.04%) */
 
     --color-black: lch(0% 0 0); /* rgb(0% 0% 0%) */
   }
@@ -13,9 +16,12 @@
 @media (color-gamut: p3) {
   :root {
     --forest-background: color(display-p3 0.077 0.0381 0);
-    --forest-foreground: color(display-p3 0.7639 0.8059 0.8367);
+    --forest-background-accent: color(display-p3 0.1913 0.3004 0.0968);
+    --forest-background-shade: color(display-p3 0.1772 0.132 0.0951);
 
-    --forest-background-accent: color(display-p3 0.1772 0.132 0.0951);
+    --forest-foreground: color(display-p3 0.7639 0.8059 0.8367);
+    --forest-foreground-shade: color(display-p3 0.3461 0.4659 0.3123);
+    --forest-foreground-accent: color(display-p3 0.6205 0.7007 0.5942);
 
     --color-black: color(display-p3 0 0 0);
   }

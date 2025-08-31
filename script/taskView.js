@@ -134,6 +134,8 @@ class TaskView extends TaskControl {
       taskNode.setAttribute('draggable', hasAnyChildEdit ? 'false' : 'true')
     }
 
+    taskNode.setAttribute('draggable', `${!task.meta.editing}`)
+
     // edit mode
     if (task.meta.editing) {
       // task note
@@ -150,6 +152,8 @@ class TaskView extends TaskControl {
       container.classList.add(CLASS_EDIT)
     }
 
+    // set theme palette
+    container.classList.add(document.documentElement.getAttribute('data-theme'))
     // state class and attributes on container
     const currentState = task.data.states[task.state].toLowerCase()
     container.classList.add(currentState)

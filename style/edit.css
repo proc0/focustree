@@ -29,7 +29,7 @@ div {
 /* structure */
 
 div {
-  margin-left: 3rem;
+  margin-left: 2.5rem;
 
   & span {
     display: inline-flex;

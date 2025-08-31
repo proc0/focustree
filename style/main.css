@@ -32,7 +32,7 @@ task-base > task-node {
 /* structure and layout */
 
 html {
-  font-size: 0.2in;
+  font-size: 0.22in;
   width: 100%;
 }
 
@@ -77,8 +77,13 @@ task-view {
       place-items: center;
 
       & button {
+        font-size: inherit;
         width: 1.5rem;
         height: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1.5rem;
       }
     }
   }

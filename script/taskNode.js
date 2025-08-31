@@ -11,6 +11,11 @@ class TaskNode extends HTMLElement {
     // open and close subtasks drawer
     this.select('details summary').addEventListener('click', (event) => {
       event.stopPropagation()
+
+      if (!this.task.tree.length) {
+        event.preventDefault()
+        return
+      }
       // get the details tag, somehow null open attribute means it is open
       const opened = event.currentTarget.parentElement.getAttribute('open') === null
       this.task.meta.opened = opened
