@@ -56,6 +56,10 @@ main {
         font-size: inherit;
         width: 2rem;
         height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 2rem;
       }
     }
   }
@@ -107,30 +111,33 @@ task-node {
 }
 
 /* interaction */
-
+task-node.dragging {
+  margin: 0.5rem 0;
+}
 task-node.over {
   & > span {
-    padding: 1.5rem 0;
-    transform: scale(1.2);
+    padding: 1rem 0;
 
     &.drag-above {
+      border-top: 2px solid green;
       /* border: 2px solid yellow; */
-      background: linear-gradient(
+      /* background: linear-gradient(
         180deg,
         rgba(199, 188, 90, 0.83) 0%,
         rgba(199, 242, 27, 0.27) 50%,
         rgba(237, 221, 83, 0) 50%
-      );
+      ); */
     }
 
     &.drag-below {
+      border-bottom: 2px solid green;
       /* border: 2px solid blue; */
-      background: linear-gradient(
+      /* background: linear-gradient(
         0deg,
         rgba(145, 90, 199, 0.83) 0%,
         rgba(66, 27, 242, 0.27) 50%,
         rgba(237, 221, 83, 0) 50%
-      );
+      ); */
     }
 
     &.drag-center {

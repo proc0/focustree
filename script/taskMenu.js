@@ -52,14 +52,15 @@ class TaskMenu extends HTMLMenuElement {
   }
 
   hide() {
+    if (!this.node) return
     this.node = null
-
     this.removeAttribute('style')
   }
 
   select(query) {
     return this.querySelector(query)
   }
+
   selectName(name) {
     return this.querySelector(`[name="${name}"]`)
   }

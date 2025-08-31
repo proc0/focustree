@@ -129,12 +129,13 @@ class TaskView extends TaskControl {
       taskNode.appendChild(taskName)
     }
 
-    if (task.id && !task.meta.editing) {
+    // undraggable if any descendants are being edited,
+    if (task.tree.length && !task.meta.editing) {
       const hasAnyChildEdit = taskNode.hasAnyEditingChildren()
-      taskNode.setAttribute('draggable', hasAnyChildEdit ? 'false' : 'true')
+      taskNode.setAttribute('draggable', `${!hasAnyChildEdit}`)
+    } else {
+      taskNode.setAttribute('draggable', `${!task.meta.editing}`)
     }
-
-    taskNode.setAttribute('draggable', `${!task.meta.editing}`)
 
     // edit mode
     if (task.meta.editing) {

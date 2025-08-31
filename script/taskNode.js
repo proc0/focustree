@@ -38,6 +38,8 @@ class TaskNode extends HTMLElement {
         this.dispatch(EVENT_MENU)
       })
       return
+    } else {
+      this.selectName(NAME_SAVE).focus()
     }
 
     /* edit mode fields and buttons */
@@ -237,11 +239,15 @@ class TaskNode extends HTMLElement {
     const searchTree = (sub) => {
       if (!sub.tree.length) return sub.meta.editing
 
-      let isEditing = sub.meta.editing
-      for (let i = 0; i < sub.tree.length - 1; i++) {
-        const result = searchTree(sub.tree[i])
-        if (result) {
-          isEditing = result
+      let isEditing = sub.tree.some((t) => t.meta.editing)
+
+      if (isEditing) {
+        return true
+      }
+
+      for (let i = 0; i < sub.tree.length; i++) {
+        if (searchTree(sub.tree[i])) {
+          isEditing = true
           break
         }
       }
