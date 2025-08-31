@@ -1,6 +1,15 @@
 class TaskNode extends HTMLElement {
   constructor() {
     super()
+
+    // bubbling edit event to set all ancestor nodes
+    this.addEventListener(EVENT_EDIT2, ({ detail }) => {
+      if (detail.task.meta.editing) {
+        this.setAttribute('draggable', 'false')
+      } else {
+        this.setAttribute('draggable', 'true')
+      }
+    })
   }
 
   connectedCallback() {
@@ -54,8 +63,9 @@ class TaskNode extends HTMLElement {
     this.selectName(NAME_SAVE).addEventListener('click', (event) => {
       event.stopPropagation()
       this.task.meta.editing = false
-      this.getRootNode().setAttribute('draggable', 'true')
       this.dispatch(EVENT_EDIT)
+      // Edit2 bubbles all the way to the top
+      this.dispatch(EVENT_EDIT2)
     })
 
     // task delete
@@ -203,8 +213,9 @@ class TaskNode extends HTMLElement {
 
   editMode() {
     this.task.meta.editing = true
-    this.getRootNode().setAttribute('draggable', 'false')
     this.dispatch(EVENT_EDIT)
+    // Edit2 bubbles all the way to the top
+    this.dispatch(EVENT_EDIT2)
   }
 
   equals(node) {

@@ -23,6 +23,7 @@ const EVENT_SAVE = 'save'
 const EVENT_MENU = 'menu'
 const EVENT_SYNC = 'sync'
 const EVENT_EDIT = 'edit'
+const EVENT_EDIT2 = 'edit2'
 const EVENT_DRAG = 'drag'
 
 // main menu
