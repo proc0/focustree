@@ -17,14 +17,16 @@ html.theme-forest {
     color: var(--forest-foreground-accent) !important;
   }
 
-  select {
+  select,
+  select option {
     background-color: var(--forest-background);
-    color: var(--forest-foreground);
+    color: var(--forest-background-accent);
+  }
 
-    option {
-      background-color: var(--forest-background);
-      color: var(--forest-foreground);
-    }
+  select:hover,
+  select option:hover {
+    color: var(--forest-foreground-accent) !important;
+    background-color: var(--forest-background-shade) !important;
   }
 
   task-node::part(field-input) {
@@ -35,5 +37,18 @@ html.theme-forest {
   task-node::part(field-input):focus {
     background-color: var(--forest-background-shade);
     box-shadow: inset 2px 2px 5px var(--color-black);
+  }
+
+  task-view > menu {
+    select,
+    select option {
+      color: var(--forest-background-accent);
+    }
+
+    select:hover,
+    select option:hover {
+      color: var(--forest-foreground-accent) !important;
+      background-color: var(--forest-background-shade) !important;
+    }
   }
 }

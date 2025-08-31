@@ -18,8 +18,26 @@ window.onload = () => {
   taskView.appendChild(taskFocus)
   taskView.appendChild(taskBase)
 
-  // hide task menu when clicking anywhere on the document
-  document.addEventListener('click', () => taskMenu.hide())
+  // hide menu when clicking anywhere on the document
+  // TODO: refactor somewhere else
+  document.addEventListener('click', () => {
+    taskMenu.hide()
+    const menu = document.querySelector('main > menu')
+    const isOpen = menu.classList.contains('open')
+    if (isOpen) {
+      menu.classList.remove('open')
+    }
+  })
+  main.querySelector('button[name="root-menu"]').addEventListener('click', (event) => {
+    event.stopPropagation()
+    const menuButton = event.target
+    const isOpen = menuButton.parentElement.classList.contains('open')
+    if (isOpen) {
+      menuButton.parentElement.classList.remove('open')
+    } else {
+      menuButton.parentElement.classList.add('open')
+    }
+  })
   // handle root menu events
   document.getElementById(ID_ROOT_ADD).addEventListener('click', taskBase.addRoot.bind(taskBase))
   document.getElementById(ID_ROOT_EXPORT).addEventListener('click', taskBase.export.bind(taskBase))

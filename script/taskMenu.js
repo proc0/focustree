@@ -51,6 +51,10 @@ class TaskMenu extends HTMLMenuElement {
     })
   }
 
+  isOpen() {
+    return !!this.node
+  }
+
   hide() {
     if (!this.node) return
     this.node = null
