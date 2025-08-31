@@ -5,24 +5,29 @@ html.theme-forest {
   color: var(--forest-foreground);
   font-family: Tahoma;
 
-  & .icon-button,
-  & ::part(icon-button) {
+  .icon-button,
+  task-node::part(icon-button) {
     background-color: var(--forest-background);
     color: var(--forest-foreground);
   }
 
-  & select {
+  select {
     background-color: var(--forest-background);
     color: var(--forest-foreground);
 
-    & option {
+    option {
       background-color: var(--forest-background);
       color: var(--forest-foreground);
     }
   }
 
-  & ::part(field-input) {
+  task-node::part(field-input) {
     background-color: var(--forest-background);
     color: var(--forest-foreground);
+  }
+
+  task-node::part(field-input):focus {
+    background-color: var(--forest-background-accent);
+    box-shadow: inset 2px 2px 5px var(--color-black);
   }
 }

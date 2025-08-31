@@ -3,17 +3,21 @@
 /* reset */
 
 div {
-  & input {
+  input {
     margin: 0;
+    border: none;
+    border-radius: 0;
+    &:focus {
+      outline: none;
+    }
   }
 
-  & menu {
+  & > menu {
     display: inline-flex;
     flex-direction: row;
-    margin: 0;
     padding: 0;
 
-    & menuitem {
+    menuitem {
       display: inline-flex;
     }
   }
@@ -39,7 +43,7 @@ div {
   & input {
     font-size: inherit;
     font-family: inherit;
-    margin-left: -0.2rem;
+    margin-left: -0.1rem;
   }
 
   & details {
@@ -54,8 +58,8 @@ div {
     }
   }
 
-  & menu {
-    margin-top: 0.3rem;
+  & > menu {
+    margin: 0.3rem 0;
   }
 }
 

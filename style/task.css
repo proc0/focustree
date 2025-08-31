@@ -20,12 +20,14 @@ div {
   margin-left: 1.5rem;
   visibility: visible;
   opacity: 1;
-  & slot {
+
+  slot {
     margin-left: 0.3rem;
   }
 }
 
 button {
+  font-size: inherit;
   width: 1.5rem;
   height: 1.5rem;
 }
@@ -34,7 +36,7 @@ details {
   display: inline-flex;
   flex-direction: column;
 
-  & summary {
+  summary {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
@@ -45,12 +47,20 @@ details {
       height: 1.5rem;
       text-align: center;
     }
+
+    button {
+      margin-right: 0.2rem;
+    }
   }
 
   &[open] summary {
     &::before {
       transform: rotate(90deg);
     }
+  }
+
+  section {
+    margin-bottom: 0.2rem;
   }
 }
 
@@ -95,7 +105,7 @@ div {
   }
 
   &.leaf {
-    & summary {
+    summary {
       cursor: default;
 
       &::before {

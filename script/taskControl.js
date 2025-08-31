@@ -14,6 +14,9 @@ class TaskControl extends HTMLElement {
   bindDragEvents() {
     this.addEventListener('dragstart', ({ target }) => {
       this.movingNode = target
+      if (this.movingNode.task.meta.editing) {
+        return
+      }
       this.movingNode.classList.add('dragging')
     })
     this.addEventListener('dragend', this.dragEnd)
@@ -22,6 +25,9 @@ class TaskControl extends HTMLElement {
 
   dragEnd(event) {
     event.stopPropagation()
+    if (this.movingNode.task.meta.editing) {
+      return
+    }
     // dropping it on itself
     if (!this.underNode || !this.placement || this.movingNode === this.underNode) {
       // cleanup
@@ -151,7 +157,9 @@ class TaskControl extends HTMLElement {
   dragOver(event) {
     event.stopPropagation()
     event.preventDefault()
-
+    if (this.movingNode.task.meta.editing) {
+      return
+    }
     // cache mouse vertical movement
     if (!this.mouseY || this.mouseY !== event.clientY) {
       this.mouseY = event.clientY

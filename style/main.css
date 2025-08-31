@@ -53,6 +53,7 @@ main {
       place-items: center;
 
       & button {
+        font-size: inherit;
         width: 2rem;
         height: 2rem;
       }

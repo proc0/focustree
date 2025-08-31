@@ -49,6 +49,7 @@ class TaskNode extends HTMLElement {
     this.selectName(NAME_SAVE).addEventListener('click', (event) => {
       event.stopPropagation()
       this.task.meta.editing = false
+      this.getRootNode().setAttribute('draggable', 'true')
       this.dispatch(EVENT_EDIT)
     })
 
@@ -197,6 +198,7 @@ class TaskNode extends HTMLElement {
 
   editMode() {
     this.task.meta.editing = true
+    this.getRootNode().setAttribute('draggable', 'false')
     this.dispatch(EVENT_EDIT)
   }
 
@@ -213,6 +215,23 @@ class TaskNode extends HTMLElement {
     this.task.meta.opened = true
     // set state active
     this.changeState(1)
+  }
+
+  hasAnyEditingChildren() {
+    const searchTree = (sub) => {
+      if (!sub.tree.length) return sub.meta.editing
+
+      let isEditing = sub.meta.editing
+      for (let i = 0; i < sub.tree.length - 1; i++) {
+        const result = searchTree(sub.tree[i])
+        if (result) {
+          isEditing = result
+          break
+        }
+      }
+      return isEditing
+    }
+    return searchTree(this.task)
   }
 
   init(task) {

@@ -110,7 +110,6 @@ class TaskView extends TaskControl {
       taskNode.setAttribute(DATA_ID, task.id)
     }
     taskNode.setAttribute(DATA_PATH, task.path)
-    taskNode.setAttribute('draggable', 'true')
 
     // task name
     if (taskNode.selectName(NAME_NAME)) {
@@ -128,6 +127,11 @@ class TaskView extends TaskControl {
         taskName.setAttribute('title', task.note)
       }
       taskNode.appendChild(taskName)
+    }
+
+    if (task.id && !task.meta.editing) {
+      const hasAnyChildEdit = taskNode.hasAnyEditingChildren()
+      taskNode.setAttribute('draggable', hasAnyChildEdit ? 'false' : 'true')
     }
 
     // edit mode
