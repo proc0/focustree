@@ -136,18 +136,18 @@ div {
 /* theme */
 .theme-forest {
   summary {
-    color: var(--forest-foreground-accent);
+    color: var(--forest-fg-accent);
   }
 
   &.leaf.editing {
     summary {
-      color: var(--forest-foreground-shade);
+      color: var(--forest-fg-shade);
       button {
-        color: var(--forest-background-accent) !important;
+        color: var(--forest-bg-accent) !important;
 
         &:hover {
-          background-color: var(--forest-background-shade) !important;
-          color: var(--forest-foreground-accent) !important;
+          background-color: var(--forest-bg-shade) !important;
+          color: var(--forest-fg-accent) !important;
         }
       }
     }

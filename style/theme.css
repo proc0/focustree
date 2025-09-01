@@ -1,54 +1,55 @@
 @import url('palette.css');
 
 html.theme-forest {
-  background-color: var(--forest-background);
-  color: var(--forest-foreground);
+  background-color: var(--forest-bg);
+  color: var(--forest-fg);
   font-family: Tahoma;
 
   .icon-button,
   task-node::part(icon-button) {
-    background-color: var(--forest-background);
-    color: var(--forest-background-accent);
+    background-color: var(--forest-bg);
+    color: var(--forest-bg-accent);
+    text-shadow: 0.1rem 0.2rem 0.3rem var(--color-black);
   }
 
   .icon-button:hover,
   task-node::part(icon-button):hover {
-    background-color: var(--forest-background-shade) !important;
-    color: var(--forest-foreground-accent) !important;
+    background-color: var(--forest-bg-shade) !important;
+    color: var(--forest-fg-accent) !important;
   }
 
   select,
   select option {
-    background-color: var(--forest-background);
-    color: var(--forest-background-accent);
+    background-color: var(--forest-bg);
+    color: var(--forest-bg-accent);
   }
 
   select:hover,
   select option:hover {
-    color: var(--forest-foreground-accent) !important;
-    background-color: var(--forest-background-shade) !important;
+    color: var(--forest-fg-accent) !important;
+    background-color: var(--forest-bg-shade) !important;
   }
 
   task-node::part(field-input) {
-    background-color: var(--forest-background);
-    color: var(--forest-foreground);
+    background-color: var(--forest-bg);
+    color: var(--forest-fg);
   }
 
   task-node::part(field-input):focus {
-    background-color: var(--forest-background-shade);
+    background-color: var(--forest-bg-shade);
     box-shadow: inset 2px 2px 5px var(--color-black);
   }
 
   task-view > menu {
     select,
     select option {
-      color: var(--forest-background-accent);
+      color: var(--forest-bg-accent);
     }
 
     select:hover,
     select option:hover {
-      color: var(--forest-foreground-accent) !important;
-      background-color: var(--forest-background-shade) !important;
+      color: var(--forest-fg-accent) !important;
+      background-color: var(--forest-bg-shade) !important;
     }
   }
 }

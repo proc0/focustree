@@ -133,7 +133,7 @@ main > menu.open {
 }
 
 task-node.dragging {
-  color: var(--forest-background-accent);
+  color: var(--forest-bg-accent);
 }
 
 task-node.over {
@@ -143,15 +143,15 @@ task-node.over {
     transition-property: padding;
 
     &.drag-above {
-      border-top: 2px solid var(--forest-foreground-accent);
+      border-top: 2px solid var(--forest-fg-accent);
     }
 
     &.drag-below {
-      border-bottom: 2px solid var(--forest-foreground-accent);
+      border-bottom: 2px solid var(--forest-fg-accent);
     }
 
     &.drag-center {
-      background-color: var(--forest-background-shade);
+      background-color: var(--forest-bg-shade);
     }
   }
 }

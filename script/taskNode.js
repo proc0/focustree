@@ -14,6 +14,10 @@ class TaskNode extends HTMLElement {
 
   connectedCallback() {
     this.bindEvents()
+
+    if (this.task.meta.editing) {
+      window.setTimeout(() => this.selectName(NAME_SAVE).focus(), 0)
+    }
   }
 
   bindEvents() {
@@ -206,7 +210,6 @@ class TaskNode extends HTMLElement {
       event.stopImmediatePropagation()
       if (event.key === 'Enter') {
         saveButton.click()
-        taskSaveButton.focus()
       }
     })
 
