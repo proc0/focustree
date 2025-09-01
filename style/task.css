@@ -147,18 +147,51 @@ div.focus summary {
 /* theme */
 .theme-forest {
   summary {
-    color: var(--forest-fg-accent);
+    color: var(--forest-fg);
+    &:hover {
+      color: var(--forest-fg-accent);
+    }
   }
 
   &.leaf.editing {
     summary {
       color: var(--forest-fg-shade);
+      &:hover {
+        color: var(--forest-fg-shade) !important;
+      }
+
       button {
         color: var(--forest-bg-accent) !important;
 
         &:hover {
           background-color: var(--forest-bg-shade) !important;
           color: var(--forest-fg-accent) !important;
+        }
+      }
+    }
+  }
+}
+
+.theme-gruvbox {
+  summary {
+    color: var(--gruvbox-fg);
+    &:hover {
+      color: var(--gruvbox-fg-accent) !important;
+    }
+  }
+
+  &.leaf.editing {
+    summary {
+      color: var(--gruvbox-fg-shade);
+      &:hover {
+        color: var(--gruvbox-fg-shade) !important;
+      }
+      button {
+        color: var(--gruvbox-bg-accent) !important;
+
+        &:hover {
+          background-color: var(--gruvbox-bg-shade) !important;
+          color: var(--gruvbox-fg-accent) !important;
         }
       }
     }

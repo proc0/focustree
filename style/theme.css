@@ -5,6 +5,20 @@ html.theme-forest {
   color: var(--forest-fg);
   font-family: Tahoma;
 
+  task-node.over span {
+    &.drag-above {
+      border-top: 2px solid var(--forest-highlight);
+    }
+
+    &.drag-center {
+      background-color: var(--forest-highlight);
+    }
+
+    &.drag-below {
+      border-bottom: 2px solid var(--forest-highlight);
+    }
+  }
+
   .icon-button,
   task-node::part(icon-button) {
     background-color: var(--forest-bg);
@@ -55,5 +69,100 @@ html.theme-forest {
 
   task-view > dialog {
     color: var(--forest-fg);
+  }
+
+  ::selection {
+    background-color: var(--forest-highlight);
+    color: var(--forest-bg-shade);
+  }
+
+  main.focus {
+    task-node span {
+      color: var(--forest-fg-accent);
+    }
+  }
+}
+
+html.theme-gruvbox {
+  background-color: var(--gruvbox-bg);
+  color: var(--gruvbox-fg);
+  font-family: Tahoma;
+
+  task-node.over span {
+    &.drag-above {
+      border-top: 2px solid var(--gruvbox-highlight);
+    }
+
+    &.drag-center {
+      background-color: var(--gruvbox-highlight);
+    }
+
+    &.drag-below {
+      border-bottom: 2px solid var(--gruvbox-highlight);
+    }
+  }
+
+  .icon-button,
+  task-node::part(icon-button) {
+    background-color: var(--gruvbox-bg);
+    color: var(--gruvbox-bg-accent);
+    text-shadow: 0.1rem 0.2rem 0.3rem var(--color-black);
+  }
+
+  .icon-button:hover,
+  task-node::part(icon-button):hover {
+    background-color: var(--gruvbox-bg-shade) !important;
+    color: var(--gruvbox-fg-accent) !important;
+  }
+
+  select,
+  select option {
+    background-color: var(--gruvbox-bg);
+    color: var(--gruvbox-bg-accent);
+    text-shadow: 0.1rem 0.2rem 0.3rem var(--color-black);
+  }
+
+  select:hover,
+  select option:hover {
+    color: var(--gruvbox-fg-accent) !important;
+    background-color: var(--gruvbox-bg-shade) !important;
+  }
+
+  task-node::part(field-input) {
+    background-color: var(--gruvbox-bg);
+    color: var(--gruvbox-fg);
+  }
+
+  task-node::part(field-input):focus {
+    background-color: var(--gruvbox-bg-shade);
+    box-shadow: inset 2px 2px 5px var(--color-black);
+  }
+
+  task-view > menu {
+    select,
+    select option {
+      color: var(--gruvbox-bg-accent);
+    }
+
+    select:hover,
+    select option:hover {
+      color: var(--gruvbox-fg-accent) !important;
+      background-color: var(--gruvbox-bg-shade) !important;
+    }
+  }
+
+  task-view > dialog {
+    color: var(--gruvbox-fg);
+  }
+
+  ::selection {
+    background-color: var(--gruvbox-highlight);
+    color: var(--gruvbox-bg-shade);
+  }
+
+  main.focus {
+    task-node[data-focus] > span {
+      color: var(--gruvbox-fg-accent);
+    }
   }
 }

@@ -143,17 +143,5 @@ task-node.over {
     padding: 1rem 0;
     transition-delay: 200ms;
     transition-property: padding;
-
-    &.drag-above {
-      border-top: 2px solid var(--forest-fg-accent);
-    }
-
-    &.drag-below {
-      border-bottom: 2px solid var(--forest-fg-accent);
-    }
-
-    &.drag-center {
-      background-color: var(--forest-bg-shade);
-    }
   }
 }
