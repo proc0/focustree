@@ -86,7 +86,7 @@ html.theme-forest {
 html.theme-gruvbox {
   background-color: var(--gruvbox-bg);
   color: var(--gruvbox-fg);
-  font-family: Tahoma;
+  font-family: Monospace;
 
   task-node.over span {
     &.drag-above {
