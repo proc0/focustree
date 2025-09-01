@@ -1,17 +1,22 @@
 /* color picker: https://css.land/lch/ */
 @media (color-gamut: srgb) {
   :root {
+    --color-black: lch(0% 0 0); /* rgb(0% 0% 0%) */
+
+    /* forest */
     --forest-bg: lch(3.328% 52.498 59.084); /* rgb(8.1% 3.7% 0%) */
     --forest-bg-shade: lch(14.329% 11.434 59.083); /* rgb(18.58% 12.97% 8.93%) */
     --forest-bg-accent: lch(38.111% 33.87 126.955); /* rgb(25.85% 38.51% 16.89%) */
 
     --forest-fg: lch(64.476% 50.595 137.834); /* rgb(37.75% 68.01% 36.04%) */
+    --forest-fg-neutral: lch(90.466% 3.077 229.097); /* rgb(87.06% 89.8% 90.98%) */
     --forest-fg-accent: lch(81.88% 6.85 238.527); /* rgb(75.4% 80.76% 84.04%) */
     --forest-fg-shade: lch(46.478% 29.598 137.84); /* rgb(31.12% 47.02% 29.53%) */
 
     --forest-highlight: lch(74.003% 94.58 91.974); /* rgb(79.89% 71.16% 0%) */
-
-    --color-black: lch(0% 0 0); /* rgb(0% 0% 0%) */
+    --forest-state-active: lch(82.603% 80.741 100.581); /* rgb(81.96% 83.14% 6.67%) */
+    --forest-state-pause: lch(36.869% 72.277 43.404); /* rgb(64.71% 12.94% 1.18%) */
+    --forest-state-done: lch(64.463% 67.969 106.725); /* rgb(57.25% 64.71% 1.18%) */
 
     /* gruvbox */
     --gruvbox-bg: #282828;
@@ -19,26 +24,35 @@
     --gruvbox-bg-shade: #1d2021;
 
     --gruvbox-fg: #fbf1c7;
+    --gruvbox-fg-neutral: hsla(198, 18%, 89%, 1);
     --gruvbox-fg-accent: #d79921;
     --gruvbox-fg-shade: #a89984;
 
     --gruvbox-highlight: #076678;
+    --gruvbox-state-active: #fabd2f;
+    --gruvbox-state-pause: #fb4934;
+    --gruvbox-state-done: #b8bb26;
   }
 }
 
 @media (color-gamut: p3) {
   :root {
+    --color-black: color(display-p3 0 0 0);
+
+    /* forest */
     --forest-bg: color(display-p3 0.077 0.0381 0);
     --forest-bg-accent: color(display-p3 0.286 0.3817 0.196);
     --forest-bg-shade: color(display-p3 0.1772 0.132 0.0951);
 
     --forest-fg: color(display-p3 0.6205 0.7007 0.5942);
+    --forest-fg-neutral: color(display-p3 0.8755 0.8971 0.9083);
     --forest-fg-accent: color(display-p3 0.7639 0.8059 0.8367);
     --forest-fg-shade: color(display-p3 0.3461 0.4659 0.3123);
 
     --forest-highlight: color(display-p3 0.7883 0.7158 0.0609);
-
-    --color-black: color(display-p3 0 0 0);
+    --forest-state-active: color(display-p3 0.8217 0.831 0.2799);
+    --forest-state-pause: color(display-p3 0.5945 0.1799 0.0887);
+    --forest-state-done: color(display-p3 0.5867 0.6448 0.1996);
 
     /* gruvbox */
     --gruvbox-bg: #282828;
@@ -46,10 +60,14 @@
     --gruvbox-bg-shade: #1d2021;
 
     --gruvbox-fg: #fbf1c7;
+    --gruvbox-fg-neutral: hsla(198, 18%, 89%, 1);
     --gruvbox-fg-accent: #d79921;
     --gruvbox-fg-shade: #a89984;
 
     --gruvbox-highlight: #076678;
+    --gruvbox-state-active: #fabd2f;
+    --gruvbox-state-pause: #fb4934;
+    --gruvbox-state-done: #b8bb26;
   }
 }
 

@@ -138,19 +138,6 @@ html.theme-gruvbox {
     box-shadow: inset 2px 2px 5px var(--color-black);
   }
 
-  task-view > menu {
-    select,
-    select option {
-      color: var(--gruvbox-bg-accent);
-    }
-
-    select:hover,
-    select option:hover {
-      color: var(--gruvbox-fg-accent) !important;
-      background-color: var(--gruvbox-bg-shade) !important;
-    }
-  }
-
   task-view > dialog {
     color: var(--gruvbox-fg);
   }

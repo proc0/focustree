@@ -7,8 +7,8 @@ select {
   background: white;
   border: 0;
   border-radius: 0;
-  padding: 0 0.3rem;
   cursor: pointer;
+  outline: none;
 
   &::picker(select) {
     appearance: base-select;
@@ -32,4 +32,35 @@ select {
 select {
   font-size: 0.9rem;
   height: 1.5rem;
+  padding: 0 0.3rem;
+}
+
+/* theme */
+
+.theme-forest {
+  select.done {
+    color: var(--forest-state-done) !important;
+  }
+
+  select.pause {
+    color: var(--forest-state-pause) !important;
+  }
+
+  select.active {
+    color: var(--forest-state-active) !important;
+  }
+}
+
+.theme-gruvbox {
+  select.done {
+    color: var(--gruvbox-state-done) !important;
+  }
+
+  select.pause {
+    color: var(--gruvbox-state-pause) !important;
+  }
+
+  select.active {
+    color: var(--gruvbox-state-active) !important;
+  }
 }

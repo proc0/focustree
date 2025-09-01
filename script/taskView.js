@@ -210,8 +210,7 @@ class TaskView extends TaskControl {
     const menu = this.querySelector('menu')
     if (menu.isOpen()) {
       menu.hide()
-    } else {
-      menu.show(event)
     }
+    menu.show(event)
   }
 }
