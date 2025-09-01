@@ -110,9 +110,9 @@ class TaskFocus extends HTMLDialogElement {
     this.close()
     // cleanup
     this.seed = null
-    this.querySelectorAll('ul li').forEach((taskName) => taskName.remove())
+    // this.querySelectorAll('ul li').forEach((taskName) => taskName.remove())
     this.querySelector('header h1').remove()
-    document.querySelector('main').classList.remove('focused')
+    document.querySelector('main').classList.remove(CLASS_FOCUS)
   }
 
   renderFocus(task) {
@@ -124,10 +124,10 @@ class TaskFocus extends HTMLDialogElement {
       const focusTaskName = focusTitleEl.textContent
       focusTitleEl.textContent = task.name
       // completed task list
-      const taskName = document.createElement('li')
-      taskName.setAttribute('slot', NAME_NAME)
-      taskName.textContent = focusTaskName
-      this.querySelector('ul').prepend(taskName)
+      // const taskName = document.createElement('li')
+      // taskName.setAttribute('slot', NAME_NAME)
+      // taskName.textContent = focusTaskName
+      // this.querySelector('ul').prepend(taskName)
     } else {
       const focusTitle = document.createElement('h1')
       focusTitle.setAttribute('slot', 'task-focus-name')
@@ -146,7 +146,7 @@ class TaskFocus extends HTMLDialogElement {
   }
 
   showFocus(node) {
-    document.querySelector('main').classList.add('focused')
+    document.querySelector('main').classList.add(CLASS_FOCUS)
     // cache initial task
     this.seed = node
 

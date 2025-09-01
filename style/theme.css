@@ -52,4 +52,8 @@ html.theme-forest {
       background-color: var(--forest-bg-shade) !important;
     }
   }
+
+  task-view > dialog {
+    color: var(--forest-fg);
+  }
 }

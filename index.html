@@ -30,7 +30,7 @@
       <link rel="stylesheet" href="style/task.css" />
       <div>
         <details>
-          <summary>
+          <summary part="summary">
             <button name="task-menu" part="icon-button" title="Menu">☰</button>
             <slot name="task-name"></slot>
           </summary>
@@ -101,7 +101,7 @@
           </menuitem>
         </menu>
         <details>
-          <summary>
+          <summary part="summary">
             <slot name="tree-title" data-text="Subtasks">No subtasks</slot>
             <button name="task-add" part="icon-button" title="Add subtask">✚</button>
           </summary>

@@ -1,0 +1,71 @@
+/* reset */
+
+task-view > dialog {
+  border: none;
+  appearance: base-select;
+  background: transparent;
+  margin: 0;
+
+  menuitem button {
+    background-color: transparent !important;
+  }
+}
+
+/* structure */
+
+task-view > dialog {
+  position: fixed;
+  top: 0;
+  height: 100%;
+
+  header {
+    margin-left: 2rem;
+  }
+
+  menu {
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin: 3rem 2rem;
+
+    menuitem {
+      margin-right: 1rem;
+    }
+
+    menuitem button {
+      display: flex;
+      place-items: center;
+      width: 5rem;
+      height: 5rem;
+      font-size: 4rem;
+    }
+  }
+}
+
+main.focus {
+  task-node {
+    padding-left: 2rem;
+  }
+
+  task-node:not([data-focus])::part(summary) {
+    filter: blur(3px);
+  }
+
+  task-node:not([data-focus])::part(summary):before {
+    display: none;
+  }
+
+  task-node::part(icon-button) {
+    display: none;
+  }
+
+  task-base {
+    margin-top: 8%;
+  }
+
+  & > menu {
+    visibility: hidden;
+  }
+}
