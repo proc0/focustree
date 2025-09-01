@@ -187,7 +187,9 @@ class TaskControl extends HTMLElement {
     let node = null
     // when the under node is task-node
     if (event.target.tagName === TAG_NODE.toUpperCase()) {
-      node = event.target
+      // prevents jitter when hovering on border of task-node and task-base
+      // node = event.target
+      return
     }
     // when the under node is  task-name, get the task-node
     if (event.target.getAttribute('slot') === NAME_NAME) {
@@ -222,8 +224,9 @@ class TaskControl extends HTMLElement {
     const underBox = underTag.getBoundingClientRect()
     const movingBox = movingTag.getBoundingClientRect()
 
+    const PAD = 5
     // when the dragging node is above the under node
-    if (this.mouseY < underBox.top + movingBox.height && this.mouseY > underBox.top) {
+    if (this.mouseY < underBox.top + movingBox.height && this.mouseY > underBox.top + PAD) {
       this.placement = 'above'
       underTag.classList.remove('drag-center')
       underTag.classList.remove('drag-below')
@@ -232,7 +235,7 @@ class TaskControl extends HTMLElement {
     }
 
     // when the dragging node is below the under node
-    if (this.mouseY > underBox.bottom - movingBox.height && this.mouseY < underBox.bottom) {
+    if (this.mouseY > underBox.bottom - movingBox.height && this.mouseY < underBox.bottom + PAD) {
       this.placement = 'below'
       underTag.classList.remove('drag-above')
       underTag.classList.remove('drag-center')
