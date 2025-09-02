@@ -18,7 +18,7 @@ Local usage: clone or download, and open index.html in a browser.
 - Simple and straight forward implementation
 - No accounts needed, full control over task data
 
-![FocusTree screenshot](assets/FocusTree_screenshot.png)
+![FocusTree screenshot](assets/screenshot.png)
 
 ## A simple task app with full control
 
