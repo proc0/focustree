@@ -12,20 +12,30 @@ class TaskControl extends HTMLElement {
   }
 
   bindDragEvents() {
-    this.addEventListener('dragstart', ({ target }) => {
-      this.movingNode = target
-      if (this.movingNode.task.meta.editing) {
-        return
-      }
-      this.movingNode.classList.add('dragging')
-    })
+    this.addEventListener('dragstart', this.dragStart)
     this.addEventListener('dragend', this.dragEnd)
     this.addEventListener('dragover', this.dragOver)
   }
 
+  dragStart({ target }) {
+    let node
+    // when the under node is  task-name, get the task-node
+    if (target.getAttribute('slot') === NAME_NAME) {
+      node = target.parentElement
+    } else {
+      return
+    }
+
+    this.movingNode = node
+    if (this.movingNode.task.meta.editing) {
+      return
+    }
+    this.movingNode.classList.add('dragging')
+  }
+
   dragEnd(event) {
     event.stopPropagation()
-    if (this.movingNode.task.meta.editing) {
+    if (this.movingNode.task?.meta.editing) {
       return
     }
     // dropping it on itself
@@ -157,7 +167,7 @@ class TaskControl extends HTMLElement {
   dragOver(event) {
     event.stopPropagation()
     event.preventDefault()
-    if (this.movingNode.task.meta.editing) {
+    if (this.movingNode.task?.meta.editing) {
       return
     }
     // cache mouse vertical movement
