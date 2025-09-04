@@ -43,7 +43,7 @@ body {
 }
 
 main {
-  padding: 1%;
+  padding: 1rem;
   width: 100%;
 
   button {
@@ -112,14 +112,21 @@ task-base {
   width: 100%;
 }
 
-task-base > task-node {
-  margin-bottom: 2rem;
-}
-
 task-node {
   display: flex;
   flex-direction: column;
   padding-left: 1.5rem;
+}
+
+task-base > task-node {
+  margin-bottom: 1rem;
+  padding-left: 0.25rem;
+}
+
+@media only screen and (max-width: 600px) {
+  main {
+    padding: 0.2rem;
+  }
 }
 
 /* interaction */
