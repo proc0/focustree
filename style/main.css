@@ -124,6 +124,10 @@ task-base > task-node {
 }
 
 @media only screen and (max-width: 600px) {
+  html {
+    font-size: 0.18in;
+  }
+
   main {
     padding: 0.2rem;
   }
