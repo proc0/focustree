@@ -52,6 +52,7 @@ details {
     }
 
     button {
+      align-self: flex-start;
       margin-bottom: -0.2rem;
     }
 
