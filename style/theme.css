@@ -54,6 +54,20 @@ html.theme-forest {
     box-shadow: inset 2px 2px 5px var(--color-black);
   }
 
+  /* task-node {
+    .drop-above {
+      border-top: 2px solid var(--forest-highlight);
+    }
+
+    .drop-over {
+      background-color: var(--forest-highlight);
+    }
+
+    .drop-below {
+      border-bottom: 2px solid var(--forest-highlight);
+    }
+  } */
+
   task-view > menu {
     select,
     select option {
@@ -87,20 +101,6 @@ html.theme-gruvbox {
   background-color: var(--gruvbox-bg);
   color: var(--gruvbox-fg);
   font-family: Monospace;
-
-  task-node.over {
-    &.drop-above span {
-      border-top: 2px solid var(--gruvbox-highlight);
-    }
-
-    &.drop-over span {
-      background-color: var(--gruvbox-highlight);
-    }
-
-    &.drop-below span {
-      border-bottom: 2px solid var(--gruvbox-highlight);
-    }
-  }
 
   .icon-button,
   task-node::part(icon-button) {
@@ -137,6 +137,20 @@ html.theme-gruvbox {
     background-color: var(--gruvbox-bg-shade);
     box-shadow: inset 2px 2px 5px var(--color-black);
   }
+
+  /* task-node {
+    .drop-above {
+      border-top: 2px solid var(--gruvbox-highlight);
+    }
+
+    .drop-over {
+      background-color: var(--gruvbox-highlight);
+    }
+
+    .drop-below {
+      border-bottom: 2px solid var(--gruvbox-highlight);
+    }
+  } */
 
   /* task-node::part(summary) {
     color: var(--gruvbox-fg);

@@ -55,11 +55,53 @@ class TaskControl extends HTMLElement {
       !overNode.parentElement.isAncestor(this.dragNode)
     ) {
       this.dropNode?.select('div').classList.remove('drag-hover')
+      this.dropNode?.select('summary').classList.remove(CLASS_DROP_ABOVE)
+      this.dropNode?.select('summary').classList.remove(CLASS_DROP_OVER)
+      this.dropNode?.select('summary').classList.remove(CLASS_DROP_ABOVE)
+
       this.dropNode = overNode.parentElement
       this.dropNode.select('div').classList.add('drag-hover')
-    } else if (!this.dropNode?.select('div').classList.contains('drag-hover')) {
-      this.dropNode?.select('div').classList.remove('drag-hover')
     }
+
+    if (!this.dropNode) {
+      return
+    }
+
+    // get bounding boxes of dragging node and unerneath node
+    const dropLabel = this.dropNode.select('summary')
+    const dragLabel = this.dragNode.select('summary')
+    const dropRect = dropLabel.getBoundingClientRect()
+    const dragRect = dragLabel.getBoundingClientRect()
+
+    const PAD = 5
+    // when the dragging node overlaps with under node
+    if (info.clientY > dropRect.top && info.clientY < dropRect.bottom) {
+      this.placement = CLASS_DROP_OVER
+      dropLabel.classList.remove(CLASS_DROP_ABOVE)
+      dropLabel.classList.remove(CLASS_DROP_BELOW)
+      dropLabel.classList.add(CLASS_DROP_OVER)
+      return
+    }
+    // when the dragging node is above the under node
+    if (info.clientY > dropRect.top - dragRect.height && info.clientY < dropRect.top) {
+      this.placement = CLASS_DROP_ABOVE
+      dropLabel.classList.remove(CLASS_DROP_OVER)
+      dropLabel.classList.remove(CLASS_DROP_BELOW)
+      dropLabel.classList.add(CLASS_DROP_ABOVE)
+      return
+    }
+    // when the dragging node is below the under node
+    if (info.clientY > dropRect.bottom && info.clientY < dropRect.bottom + dragRect.height) {
+      this.placement = CLASS_DROP_BELOW
+      dropLabel.classList.remove(CLASS_DROP_ABOVE)
+      dropLabel.classList.remove(CLASS_DROP_OVER)
+      dropLabel.classList.add(CLASS_DROP_BELOW)
+      return
+    }
+
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_ABOVE)
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_OVER)
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_BELOW)
   }
 
   dragEnd(event) {
@@ -83,6 +125,9 @@ class TaskControl extends HTMLElement {
 
     this.dragNode.select('div').classList.remove(CLASS_DRAG_NODE)
     this.dropNode.select('div').classList.remove('drag-hover')
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_ABOVE)
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_OVER)
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_BELOW)
     this.dragNode = null
     this.dropNode = null
   }

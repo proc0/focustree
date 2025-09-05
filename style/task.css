@@ -12,6 +12,7 @@ summary {
 ::slotted([title]) {
   cursor: help;
 }
+
 /* structure */
 
 div {
@@ -43,6 +44,11 @@ details {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
+    -moz-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    -webkit-transition: all 0.25s ease;
 
     &::before {
       content: '➤';
@@ -84,10 +90,12 @@ div.drag-hover {
   }
 
   summary {
+    height: 2.4rem;
     margin: 1rem 0;
+    padding: 1rem 0;
+    /* transition-delay: 200ms;
+    transition-property: padding, margin, height; */
   }
-  /* transition-delay: 200ms;
-  transition-property: padding; */
 }
 
 div.drag-node {
@@ -174,6 +182,20 @@ div.focus summary {
     }
   }
 
+  &.drag-hover {
+    .drop-above {
+      border-top: 0.2rem solid var(--forest-highlight);
+    }
+
+    .drop-over {
+      background-color: var(--forest-highlight);
+    }
+
+    .drop-below {
+      border-bottom: 0.2rem solid var(--forest-highlight);
+    }
+  }
+
   summary {
     color: var(--forest-fg);
 
@@ -225,6 +247,20 @@ div.theme-gruvbox {
       &:hover {
         color: var(--gruvbox-fg-accent);
       }
+    }
+  }
+
+  &.drag-hover {
+    .drop-above {
+      border-top: 0.2rem solid var(--gruvbox-highlight);
+    }
+
+    .drop-over {
+      background-color: var(--gruvbox-highlight);
+    }
+
+    .drop-below {
+      border-bottom: 0.2rem solid var(--gruvbox-highlight);
     }
   }
 

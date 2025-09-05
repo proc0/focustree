@@ -14,13 +14,15 @@ main {
   box-sizing: border-box;
 
   & > menu {
-    margin: 0;
-    padding: 0;
-
     menuitem {
       display: none;
     }
   }
+}
+
+menu {
+  margin: 0;
+  padding: 0;
 }
 
 button {
@@ -63,14 +65,14 @@ main {
   width: 100%;
 
   & > menu {
-    & menuitem {
-      place-items: center;
+    button {
+      width: 2rem;
+      height: 2rem;
+      line-height: 2rem;
+    }
 
-      & button {
-        width: 2rem;
-        height: 2rem;
-        line-height: 2rem;
-      }
+    menuitem {
+      place-items: center;
     }
   }
 }
