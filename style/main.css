@@ -46,34 +46,29 @@ body {
   width: 100%;
 }
 
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: inherit;
+}
+
+menu {
+  display: flex;
+  flex-direction: row;
+}
+
 main {
   padding: 1rem;
   width: 100%;
 
-  button {
-    font-size: inherit;
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 2rem;
-  }
-
   & > menu {
-    display: flex;
-    flex-direction: row;
-
     & menuitem {
       place-items: center;
 
       & button {
-        font-size: inherit;
         width: 2rem;
         height: 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         line-height: 2rem;
       }
     }
@@ -85,8 +80,6 @@ task-view {
   width: 100%;
 
   & > menu {
-    display: flex;
-    flex-direction: row;
     position: absolute;
     visibility: hidden;
     opacity: 0;
@@ -96,12 +89,8 @@ task-view {
       place-items: center;
 
       & button {
-        font-size: inherit;
         width: 1.5rem;
         height: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         line-height: 1.5rem;
       }
     }
@@ -144,8 +133,14 @@ main > menu.open {
   }
 }
 
-task-node.drag-node {
+/* task-node.drag-node {
   opacity: 0.5;
+}
+
+task-node.drag-hover {
+  & > [slot='task-name'] {
+    padding: 1rem 0;
+  }
 }
 
 task-node.over {
@@ -162,4 +157,4 @@ task-node.over {
     transition-delay: 200ms;
     transition-property: padding;
   }
-}
+} */

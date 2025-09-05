@@ -52,11 +52,6 @@ details {
       align-self: flex-start;
     }
 
-    button {
-      align-self: flex-start;
-      margin-bottom: -0.2rem;
-    }
-
     & button:first-child {
       margin-right: 0.35rem;
     }
@@ -75,6 +70,28 @@ details {
   section {
     margin-bottom: 0.2rem;
   }
+}
+
+/* interactions */
+
+div.drag-hover {
+  .icon-button {
+    align-self: center;
+  }
+
+  summary::before {
+    align-self: center;
+  }
+
+  summary {
+    margin: 1rem 0;
+  }
+  /* transition-delay: 200ms;
+  transition-property: padding; */
+}
+
+div.drag-node {
+  opacity: 0.5;
 }
 
 /* states */
@@ -149,12 +166,16 @@ div.focus summary {
 /* theme */
 
 .theme-forest {
+  &:not(.drag-hover) {
+    summary {
+      &:hover {
+        color: var(--forest-fg-accent);
+      }
+    }
+  }
+
   summary {
     color: var(--forest-fg);
-
-    &:hover {
-      color: var(--forest-fg-accent);
-    }
 
     &::before {
       color: var(--forest-highlight) !important;
@@ -198,13 +219,17 @@ div.focus summary {
   }
 }
 
-.theme-gruvbox {
+div.theme-gruvbox {
+  &:not(.drag-hover) {
+    summary {
+      &:hover {
+        color: var(--gruvbox-fg-accent);
+      }
+    }
+  }
+
   summary {
     color: var(--gruvbox-fg);
-
-    &:hover {
-      color: var(--gruvbox-fg-accent);
-    }
 
     &::before {
       color: var(--gruvbox-highlight) !important;

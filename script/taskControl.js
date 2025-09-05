@@ -32,13 +32,15 @@ class TaskControl extends HTMLElement {
     // only drag with name label and do not drag tasks in edit mode
     if (startNode?.getAttribute('slot') === NAME_NAME && !startNode.parentElement.isEditing()) {
       this.dragNode = startNode.parentElement
-      this.dragNode.classList.add(CLASS_DRAG_NODE)
+      this.dragNode.select('div').classList.add(CLASS_DRAG_NODE)
+    } else {
+      event.preventDefault()
     }
   }
 
   dragOver(event) {
-    event.preventDefault()
     event.stopPropagation()
+    event.preventDefault()
 
     if (!this.dragNode) {
       return
@@ -48,13 +50,15 @@ class TaskControl extends HTMLElement {
     const overNode = document.elementFromPoint(info.clientX, info.clientY)
     if (
       overNode?.getAttribute('slot') === NAME_NAME &&
-      !overNode.parentElement.classList.contains('over') &&
+      !overNode.parentElement.select('div').classList.contains('drag-hover') &&
       !overNode.parentElement.equals(this.dragNode) &&
       !overNode.parentElement.isAncestor(this.dragNode)
     ) {
-      this.dropNode?.classList.remove('over')
+      this.dropNode?.select('div').classList.remove('drag-hover')
       this.dropNode = overNode.parentElement
-      this.dropNode.classList.add('over')
+      this.dropNode.select('div').classList.add('drag-hover')
+    } else if (!this.dropNode?.select('div').classList.contains('drag-hover')) {
+      this.dropNode?.select('div').classList.remove('drag-hover')
     }
   }
 
@@ -64,21 +68,21 @@ class TaskControl extends HTMLElement {
     if (!this.dragNode) {
       return
     } else if (!this.dropNode) {
-      this.dragNode.classList.remove(CLASS_DRAG_NODE)
+      this.dragNode.select('div').classList.remove(CLASS_DRAG_NODE)
       this.dragNode = null
       return
     }
 
     if (this.dropNode.equals(this.dragNode) || this.dropNode.isAncestor(this.dragNode)) {
-      this.dragNode.classList.remove(CLASS_DRAG_NODE)
-      this.dropNode.classList.remove('over')
+      this.dragNode.select('div').classList.remove(CLASS_DRAG_NODE)
+      this.dropNode.select('div').classList.remove('drag-hover')
       this.dragNode = null
       this.dropNode = null
       return
     }
 
-    this.dragNode.classList.remove(CLASS_DRAG_NODE)
-    this.dropNode.classList.remove('over')
+    this.dragNode.select('div').classList.remove(CLASS_DRAG_NODE)
+    this.dropNode.select('div').classList.remove('drag-hover')
     this.dragNode = null
     this.dropNode = null
   }

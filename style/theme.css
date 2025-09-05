@@ -138,6 +138,26 @@ html.theme-gruvbox {
     box-shadow: inset 2px 2px 5px var(--color-black);
   }
 
+  /* task-node::part(summary) {
+    color: var(--gruvbox-fg);
+  }
+
+  task-node::part(summary)::before {
+    color: var(--gruvbox-highlight) !important;
+  }
+
+  task-node span:hover {
+    color: var(--gruvbox-fg-accent);
+  }
+
+  task-node.drag-hover span:hover {
+    color: white;
+  } */
+
+  /* task-node ~ task-node.drag-node > span:hover {
+    color: inherit !important;
+  } */
+
   task-view > dialog {
     color: var(--gruvbox-fg);
   }
