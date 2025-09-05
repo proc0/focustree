@@ -92,7 +92,7 @@ div.drag-hover {
   summary {
     height: 2.4rem;
     margin: 1rem 0;
-    padding: 1rem 0;
+    padding: 1.5rem 0;
     /* transition-delay: 200ms;
     transition-property: padding, margin, height; */
   }
@@ -174,28 +174,6 @@ div.focus summary {
 /* theme */
 
 .theme-forest {
-  &:not(.drag-hover) {
-    summary {
-      &:hover {
-        color: var(--forest-fg-accent);
-      }
-    }
-  }
-
-  &.drag-hover {
-    .drop-above {
-      border-top: 0.2rem solid var(--forest-highlight);
-    }
-
-    .drop-over {
-      background-color: var(--forest-highlight);
-    }
-
-    .drop-below {
-      border-bottom: 0.2rem solid var(--forest-highlight);
-    }
-  }
-
   summary {
     color: var(--forest-fg);
 
@@ -239,31 +217,33 @@ div.focus summary {
       color: var(--forest-state-active);
     }
   }
+
+  .drop-above {
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 95%,
+      var(--forest-highlight) 96%,
+      var(--forest-highlight) 100%
+    );
+  }
+
+  .drop-over {
+    background-color: var(--forest-highlight);
+  }
+
+  .drop-below {
+    background: linear-gradient(
+      0deg,
+      var(--forest-highlight) 0%,
+      var(--forest-highlight) 4%,
+      rgba(0, 0, 0, 0) 5%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
 }
 
 div.theme-gruvbox {
-  &:not(.drag-hover) {
-    summary {
-      &:hover {
-        color: var(--gruvbox-fg-accent);
-      }
-    }
-  }
-
-  &.drag-hover {
-    .drop-above {
-      border-top: 0.2rem solid var(--gruvbox-highlight);
-    }
-
-    .drop-over {
-      background-color: var(--gruvbox-highlight);
-    }
-
-    .drop-below {
-      border-bottom: 0.2rem solid var(--gruvbox-highlight);
-    }
-  }
-
   summary {
     color: var(--gruvbox-fg);
 
@@ -309,5 +289,29 @@ div.theme-gruvbox {
     & [name='task-name']::after {
       color: var(--gruvbox-state-active);
     }
+  }
+
+  .drop-above {
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 95%,
+      var(--gruvbox-highlight) 96%,
+      var(--gruvbox-highlight) 100%
+    );
+  }
+
+  .drop-over {
+    background-color: var(--gruvbox-highlight);
+  }
+
+  .drop-below {
+    background: linear-gradient(
+      0deg,
+      var(--gruvbox-highlight) 0%,
+      var(--gruvbox-highlight) 4%,
+      rgba(0, 0, 0, 0) 5%,
+      rgba(0, 0, 0, 0) 100%
+    );
   }
 }

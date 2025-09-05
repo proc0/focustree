@@ -33,6 +33,7 @@ class TaskControl extends HTMLElement {
     if (startNode?.getAttribute('slot') === NAME_NAME && !startNode.parentElement.isEditing()) {
       this.dragNode = startNode.parentElement
       this.dragNode.select('div').classList.add(CLASS_DRAG_NODE)
+      this.classList.add('dragging')
     } else {
       event.preventDefault()
     }
@@ -50,6 +51,7 @@ class TaskControl extends HTMLElement {
     const overNode = document.elementFromPoint(info.clientX, info.clientY)
     if (
       overNode?.getAttribute('slot') === NAME_NAME &&
+      overNode.parentElement &&
       !overNode.parentElement.select('div').classList.contains('drag-hover') &&
       !overNode.parentElement.equals(this.dragNode) &&
       !overNode.parentElement.isAncestor(this.dragNode)
@@ -57,7 +59,7 @@ class TaskControl extends HTMLElement {
       this.dropNode?.select('div').classList.remove('drag-hover')
       this.dropNode?.select('summary').classList.remove(CLASS_DROP_ABOVE)
       this.dropNode?.select('summary').classList.remove(CLASS_DROP_OVER)
-      this.dropNode?.select('summary').classList.remove(CLASS_DROP_ABOVE)
+      this.dropNode?.select('summary').classList.remove(CLASS_DROP_BELOW)
 
       this.dropNode = overNode.parentElement
       this.dropNode.select('div').classList.add('drag-hover')
@@ -73,35 +75,25 @@ class TaskControl extends HTMLElement {
     const dropRect = dropLabel.getBoundingClientRect()
     const dragRect = dragLabel.getBoundingClientRect()
 
-    const PAD = 5
-    // when the dragging node overlaps with under node
-    if (info.clientY > dropRect.top && info.clientY < dropRect.bottom) {
-      this.placement = CLASS_DROP_OVER
-      dropLabel.classList.remove(CLASS_DROP_ABOVE)
-      dropLabel.classList.remove(CLASS_DROP_BELOW)
-      dropLabel.classList.add(CLASS_DROP_OVER)
-      return
-    }
-    // when the dragging node is above the under node
-    if (info.clientY > dropRect.top - dragRect.height && info.clientY < dropRect.top) {
-      this.placement = CLASS_DROP_ABOVE
-      dropLabel.classList.remove(CLASS_DROP_OVER)
-      dropLabel.classList.remove(CLASS_DROP_BELOW)
-      dropLabel.classList.add(CLASS_DROP_ABOVE)
-      return
-    }
-    // when the dragging node is below the under node
+    dropLabel.classList.remove(CLASS_DROP_ABOVE)
+    dropLabel.classList.remove(CLASS_DROP_OVER)
+    dropLabel.classList.remove(CLASS_DROP_BELOW)
+
     if (info.clientY > dropRect.bottom && info.clientY < dropRect.bottom + dragRect.height) {
-      this.placement = CLASS_DROP_BELOW
-      dropLabel.classList.remove(CLASS_DROP_ABOVE)
-      dropLabel.classList.remove(CLASS_DROP_OVER)
+      // when the dragging node is below the under node
       dropLabel.classList.add(CLASS_DROP_BELOW)
       return
     }
-
-    this.dropNode.select('summary').classList.remove(CLASS_DROP_ABOVE)
-    this.dropNode.select('summary').classList.remove(CLASS_DROP_OVER)
-    this.dropNode.select('summary').classList.remove(CLASS_DROP_BELOW)
+    if (info.clientY > dropRect.top && info.clientY < dropRect.bottom) {
+      // when the dragging node overlaps with under node
+      dropLabel.classList.add(CLASS_DROP_OVER)
+      return
+    }
+    if (info.clientY > dropRect.top - dragRect.height && info.clientY < dropRect.top) {
+      // when the dragging node is above the under node
+      dropLabel.classList.add(CLASS_DROP_ABOVE)
+      return
+    }
   }
 
   dragEnd(event) {
@@ -118,6 +110,10 @@ class TaskControl extends HTMLElement {
     if (this.dropNode.equals(this.dragNode) || this.dropNode.isAncestor(this.dragNode)) {
       this.dragNode.select('div').classList.remove(CLASS_DRAG_NODE)
       this.dropNode.select('div').classList.remove('drag-hover')
+      this.dropNode.select('summary').classList.remove(CLASS_DROP_ABOVE)
+      this.dropNode.select('summary').classList.remove(CLASS_DROP_OVER)
+      this.dropNode.select('summary').classList.remove(CLASS_DROP_BELOW)
+      this.classList.remove('dragging')
       this.dragNode = null
       this.dropNode = null
       return
@@ -128,6 +124,7 @@ class TaskControl extends HTMLElement {
     this.dropNode.select('summary').classList.remove(CLASS_DROP_ABOVE)
     this.dropNode.select('summary').classList.remove(CLASS_DROP_OVER)
     this.dropNode.select('summary').classList.remove(CLASS_DROP_BELOW)
+    this.classList.remove('dragging')
     this.dragNode = null
     this.dropNode = null
   }

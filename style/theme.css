@@ -5,20 +5,6 @@ html.theme-forest {
   color: var(--forest-fg);
   font-family: Tahoma;
 
-  task-node.over {
-    &.drop-above span {
-      border-top: 2px solid var(--forest-highlight);
-    }
-
-    &.drop-over span {
-      background-color: var(--forest-highlight);
-    }
-
-    &.drop-below span {
-      border-bottom: 2px solid var(--forest-highlight);
-    }
-  }
-
   .icon-button,
   task-node::part(icon-button) {
     background-color: var(--forest-bg);
@@ -53,20 +39,6 @@ html.theme-forest {
     background-color: var(--forest-bg-shade);
     box-shadow: inset 2px 2px 5px var(--color-black);
   }
-
-  /* task-node {
-    .drop-above {
-      border-top: 2px solid var(--forest-highlight);
-    }
-
-    .drop-over {
-      background-color: var(--forest-highlight);
-    }
-
-    .drop-below {
-      border-bottom: 2px solid var(--forest-highlight);
-    }
-  } */
 
   task-view > menu {
     select,
@@ -138,39 +110,11 @@ html.theme-gruvbox {
     box-shadow: inset 2px 2px 5px var(--color-black);
   }
 
-  /* task-node {
-    .drop-above {
-      border-top: 2px solid var(--gruvbox-highlight);
+  task-view:not(.dragging) {
+    task-node::part(summary):hover {
+      color: var(--gruvbox-fg-accent);
     }
-
-    .drop-over {
-      background-color: var(--gruvbox-highlight);
-    }
-
-    .drop-below {
-      border-bottom: 2px solid var(--gruvbox-highlight);
-    }
-  } */
-
-  /* task-node::part(summary) {
-    color: var(--gruvbox-fg);
   }
-
-  task-node::part(summary)::before {
-    color: var(--gruvbox-highlight) !important;
-  }
-
-  task-node span:hover {
-    color: var(--gruvbox-fg-accent);
-  }
-
-  task-node.drag-hover span:hover {
-    color: white;
-  } */
-
-  /* task-node ~ task-node.drag-node > span:hover {
-    color: inherit !important;
-  } */
 
   task-view > dialog {
     color: var(--gruvbox-fg);
