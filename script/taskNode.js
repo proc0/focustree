@@ -296,6 +296,10 @@ class TaskNode extends HTMLElement {
     return result
   }
 
+  isEditing() {
+    return this.task.meta.editing
+  }
+
   isRoot() {
     return this.parentElement.tagName === TAG_BASE.toUpperCase()
   }

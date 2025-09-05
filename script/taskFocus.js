@@ -15,7 +15,7 @@ class TaskFocus extends HTMLDialogElement {
     // focus exit
     this.addEventListener('close', (event) => {
       event.stopPropagation()
-      const node = this.parentElement.getNode()
+      const node = this.parentElement.queryNode()
       node.blurNode()
     })
 
@@ -23,7 +23,7 @@ class TaskFocus extends HTMLDialogElement {
     this.querySelector(`[name="${NAME_PAUSE}"]`).addEventListener('click', (event) => {
       event.stopPropagation()
       // pause current task
-      const node = this.parentElement.getNode()
+      const node = this.parentElement.queryNode()
       node.pause()
 
       let parent = node.parentElement
@@ -47,7 +47,7 @@ class TaskFocus extends HTMLDialogElement {
     this.querySelector(`[name="${NAME_DONE}"]`).addEventListener('click', (event) => {
       event.stopPropagation()
       // get current task
-      const node = this.parentElement.getNode()
+      const node = this.parentElement.queryNode()
       // DFS - get first subtask
       let nextNode = node.querySelector(TAG_NODE)
 
@@ -104,7 +104,7 @@ class TaskFocus extends HTMLDialogElement {
   }
 
   hideFocus() {
-    const node = this.parentElement.getNode(this.seed.task)
+    const node = this.parentElement.queryNode(this.seed.task)
     node.scrollIntoView({ behavior: 'smooth' })
 
     this.close()

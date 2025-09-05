@@ -13,9 +13,13 @@ body {
 main {
   box-sizing: border-box;
 
-  & menu {
+  & > menu {
     margin: 0;
     padding: 0;
+
+    menuitem {
+      display: none;
+    }
   }
 }
 
@@ -61,7 +65,6 @@ main {
     flex-direction: row;
 
     & menuitem {
-      display: flex;
       place-items: center;
 
       & button {
@@ -135,21 +138,25 @@ task-base > task-node {
 
 /* interaction */
 
-main > menu menuitem {
-  display: none;
-}
-
 main > menu.open {
   & menuitem {
     display: flex;
   }
 }
 
-task-node.dragging {
-  color: var(--forest-bg-accent);
+task-node.drag-node {
+  opacity: 0.5;
 }
 
 task-node.over {
+  &::part(icon-button) {
+    align-self: center;
+  }
+
+  &::part(summary)::before {
+    align-self: center;
+  }
+
   & > span {
     padding: 1rem 0;
     transition-delay: 200ms;

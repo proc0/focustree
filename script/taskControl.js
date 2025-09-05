@@ -2,10 +2,14 @@ class TaskControl extends HTMLElement {
   base = null
   menu = null
   // dragging
-  movingNode = null
-  underNode = null
-  placement = null
-  mouseY = null
+
+  dragNode = null
+  dropNode = null
+  dropZone = null
+  // movingNode = null
+  // underNode = null
+  // placement = null
+  // mouseY = null
 
   constructor() {
     super()
@@ -13,27 +17,89 @@ class TaskControl extends HTMLElement {
 
   bindDragEvents() {
     this.addEventListener('dragstart', this.dragStart)
-    this.addEventListener('dragend', this.dragEnd)
+    this.addEventListener('touchstart', this.dragStart)
     this.addEventListener('dragover', this.dragOver)
+    this.addEventListener('touchmove', this.dragOver)
+    this.addEventListener('dragend', this.dragEnd)
+    this.addEventListener('touchend', this.dragEnd)
   }
 
-  dragStart({ target }) {
-    let node
-    // when the under node is  task-name, get the task-node
-    if (target.getAttribute('slot') === NAME_NAME) {
-      node = target.parentElement
-    } else {
+  dragStart(event) {
+    event.stopPropagation()
+
+    const info = event.type === 'touchstart' ? event.touches[0] : event
+    const startNode = document.elementFromPoint(info.clientX, info.clientY)
+    // only drag with name label and do not drag tasks in edit mode
+    if (startNode?.getAttribute('slot') === NAME_NAME && !startNode.parentElement.isEditing()) {
+      this.dragNode = startNode.parentElement
+      this.dragNode.classList.add(CLASS_DRAG_NODE)
+    }
+  }
+
+  dragOver(event) {
+    event.preventDefault()
+    event.stopPropagation()
+
+    if (!this.dragNode) {
       return
     }
 
-    this.movingNode = node
-    if (this.movingNode.task.meta.editing) {
-      return
+    const info = event.type === 'touchmove' ? event.touches[0] : event
+    const overNode = document.elementFromPoint(info.clientX, info.clientY)
+    if (
+      overNode?.getAttribute('slot') === NAME_NAME &&
+      !overNode.parentElement.classList.contains('over') &&
+      !overNode.parentElement.equals(this.dragNode) &&
+      !overNode.parentElement.isAncestor(this.dragNode)
+    ) {
+      this.dropNode?.classList.remove('over')
+      this.dropNode = overNode.parentElement
+      this.dropNode.classList.add('over')
     }
-    this.movingNode.classList.add('dragging')
   }
 
   dragEnd(event) {
+    event.stopPropagation()
+
+    if (!this.dragNode) {
+      return
+    } else if (!this.dropNode) {
+      this.dragNode.classList.remove(CLASS_DRAG_NODE)
+      this.dragNode = null
+      return
+    }
+
+    if (this.dropNode.equals(this.dragNode) || this.dropNode.isAncestor(this.dragNode)) {
+      this.dragNode.classList.remove(CLASS_DRAG_NODE)
+      this.dropNode.classList.remove('over')
+      this.dragNode = null
+      this.dropNode = null
+      return
+    }
+
+    this.dragNode.classList.remove(CLASS_DRAG_NODE)
+    this.dropNode.classList.remove('over')
+    this.dragNode = null
+    this.dropNode = null
+  }
+
+  // dragStart2({ target }) {
+  //   let node
+  //   // when the under node is  task-name, get the task-node
+  //   if (target.getAttribute('slot') === NAME_NAME) {
+  //     node = target.parentElement
+  //   } else {
+  //     node = target
+  //   }
+
+  //   this.movingNode = node
+  //   if (this.movingNode.task.meta.editing) {
+  //     return
+  //   }
+  //   this.movingNode.classList.add('dragging')
+  // }
+
+  dragEnd2(event) {
     event.stopPropagation()
     if (this.movingNode.task?.meta.editing) {
       return
@@ -164,7 +230,7 @@ class TaskControl extends HTMLElement {
     this.placement = null
   }
 
-  dragOver(event) {
+  dragOver2(event) {
     event.stopPropagation()
     event.preventDefault()
     if (this.movingNode.task?.meta.editing) {
@@ -266,7 +332,27 @@ class TaskControl extends HTMLElement {
     }
   }
 
-  getNode(task) {
+  findRelativeNode(element) {
+    let node = null
+
+    if (this.isNode(element)) {
+      node = element
+    } else if (this.isNode(element.parentElement)) {
+      node = element.parentElement
+    }
+
+    return node
+  }
+
+  getRootNodes() {
+    return this.querySelectorAll(`${TAG_BASE} > ${TAG_NODE}`)
+  }
+
+  isNode(element) {
+    return element.tagName === TAG_NODE.toUpperCase() && element.task
+  }
+
+  queryNode(task) {
     if (!task) {
       // if no task, return the focused task
       return this.querySelector(`${TAG_NODE}[${DATA_FOCUS}]`)
@@ -280,10 +366,6 @@ class TaskControl extends HTMLElement {
     }
 
     return this.querySelector(query)
-  }
-
-  getRootNodes() {
-    return this.querySelectorAll(`${TAG_BASE} > ${TAG_NODE}`)
   }
 
   transformTask(task, transform) {

@@ -147,11 +147,17 @@ div.focus summary {
 }
 
 /* theme */
+
 .theme-forest {
   summary {
     color: var(--forest-fg);
+
     &:hover {
       color: var(--forest-fg-accent);
+    }
+
+    &::before {
+      color: var(--forest-highlight) !important;
     }
   }
 
@@ -195,8 +201,9 @@ div.focus summary {
 .theme-gruvbox {
   summary {
     color: var(--gruvbox-fg);
+
     &:hover {
-      color: var(--gruvbox-fg-accent) !important;
+      color: var(--gruvbox-fg-accent);
     }
 
     &::before {

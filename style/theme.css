@@ -5,16 +5,16 @@ html.theme-forest {
   color: var(--forest-fg);
   font-family: Tahoma;
 
-  task-node.over span {
-    &.drag-above {
+  task-node.over {
+    &.drop-above span {
       border-top: 2px solid var(--forest-highlight);
     }
 
-    &.drag-center {
+    &.drop-over span {
       background-color: var(--forest-highlight);
     }
 
-    &.drag-below {
+    &.drop-below span {
       border-bottom: 2px solid var(--forest-highlight);
     }
   }
@@ -88,16 +88,16 @@ html.theme-gruvbox {
   color: var(--gruvbox-fg);
   font-family: Monospace;
 
-  task-node.over span {
-    &.drag-above {
+  task-node.over {
+    &.drop-above span {
       border-top: 2px solid var(--gruvbox-highlight);
     }
 
-    &.drag-center {
+    &.drop-over span {
       background-color: var(--gruvbox-highlight);
     }
 
-    &.drag-below {
+    &.drop-below span {
       border-bottom: 2px solid var(--gruvbox-highlight);
     }
   }
