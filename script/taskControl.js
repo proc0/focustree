@@ -1,11 +1,11 @@
 class TaskControl extends HTMLElement {
   base = null
   menu = null
+
   // dragging
-  movingNode = null
-  underNode = null
-  placement = null
-  mouseY = null
+  dragNode = null
+  dropNode = null
+  dropZone = null
 
   constructor() {
     super()
@@ -13,260 +13,210 @@ class TaskControl extends HTMLElement {
 
   bindDragEvents() {
     this.addEventListener('dragstart', this.dragStart)
-    this.addEventListener('dragend', this.dragEnd)
+    this.addEventListener('touchstart', this.dragStart)
     this.addEventListener('dragover', this.dragOver)
+    this.addEventListener('touchmove', this.dragOver)
+    this.addEventListener('dragend', this.dragEnd)
+    this.addEventListener('touchend', this.dragEnd)
   }
 
-  dragStart({ target }) {
-    let node
-    // when the under node is  task-name, get the task-node
-    if (target.getAttribute('slot') === NAME_NAME) {
-      node = target.parentElement
-    } else {
-      return
-    }
-
-    this.movingNode = node
-    if (this.movingNode.task.meta.editing) {
-      return
-    }
-    this.movingNode.classList.add('dragging')
+  clearDrag() {
+    // reset drag node
+    this.dragNode.removeClass(CLASS_DRAG_NODE)
+    this.dragNode = null
+    // reset drop node
+    this.dropNode.removeClass(CLASS_DROP_HOVER)
+    this.clearDropNode()
+    this.dropNode = null
+    // remove task view class
+    this.classList.remove(CLASS_DRAGGING)
   }
 
-  dragEnd(event) {
-    event.stopPropagation()
-    if (this.movingNode.task?.meta.editing) {
-      return
-    }
-    // dropping it on itself
-    if (!this.underNode || !this.placement || this.movingNode === this.underNode) {
-      // cleanup
-      this.underNode?.classList.remove('over')
-      this.movingNode = null
-      this.underNode = null
-      this.placement = null
-      return
-    }
+  clearDropNode() {
+    if (!this.dropNode) return
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_ABOVE)
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_OVER)
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_BELOW)
+  }
 
-    // dropping a branch on task-base to become root
-    if (this.placement === 'root') {
-      // scenario: a branch node is promoted to root node
-      const newIndex = this.getRootNodes().length
-      const newTask = this.movingNode.graftTask([newIndex])
-      // update the moving node's parent, and get the root for saving
-      const movingParent = this.movingNode.parentElement
-      const movingRoot = movingParent.getRootNode().task
-      movingParent.deleteSub(this.movingNode.task)
-      movingParent.updateSubPaths()
-      // get all tasks from base, replace moving root and insert new root
-      this.base.mapSave((tasks) => {
-        // replace the parent node with the updated one
-        const movingIndex = tasks.findIndex((task) => task.id === movingRoot.id)
-        tasks.splice(movingIndex, 1, movingRoot)
-        // insert the moving node as a root (promotes to root in base)
-        tasks.splice(newIndex, 0, newTask)
-        // update all paths
-        tasks.forEach((sub, index) => {
-          sub.path = [index]
-          // helper function
-          movingParent.updateTreePaths(sub)
-        })
-        return tasks
-      })
+  dragStart(event) {
+    // hide task menus
+    this.menu.hide()
+    // get dragging target node
+    const info = event.type === 'touchstart' ? event.touches[0] : event
+    const target = document.elementFromPoint(info.clientX, info.clientY)
+    // only drag on task name label
+    const node = target?.getAttribute('slot') === NAME_NAME && target?.parentElement
+    // do not drag tasks in edit mode
+    if (node && !node.isEditing()) {
+      this.dragNode = node
+      this.dragNode.addClass(CLASS_DRAG_NODE)
+      this.classList.add(CLASS_DRAGGING)
+    } else if (event.type !== 'touchstart') {
+      event.stopPropagation()
+      // prevent dragging
+      event.preventDefault()
     }
-
-    // dropping below another node makes it its next sibling
-    // dropping it above another node makes it its previous sibling
-    if (this.placement === 'above' || this.placement === 'below') {
-      if (this.underNode.isRoot()) {
-        // placing a node above or below a root node
-        if (this.movingNode.isRoot()) {
-          // scenario: reordering root nodes
-          this.base.mapSave((tasks) => {
-            // find moving node index
-            const movingIndex = tasks.findIndex((task) => task.id === this.movingNode.task.id)
-            // reordering of root nodes
-            const movingTask = tasks.splice(movingIndex, 1)[0]
-            const underIndex = tasks.findIndex((task) => task.id === this.underNode.task.id)
-            const newIndex = this.placement === 'above' ? underIndex : underIndex + 1
-            tasks.splice(newIndex, 0, movingTask)
-            // normalize paths
-            tasks.forEach((sub, index) => {
-              sub.path = [index]
-              // helper function
-              this.movingNode.updateTreePaths(sub)
-            })
-            // update all paths
-            return tasks
-          })
-        } else {
-          // scenario: a branch node is promoted to root node
-          // update the moving node's parent, and get the root for saving
-          const movingParent = this.movingNode.parentElement
-          const movingRoot = movingParent.getRootNode().task
-          movingParent.deleteSub(this.movingNode.task)
-          movingParent.updateSubPaths()
-          // get all tasks from base, replace moving root and insert new root
-          this.base.mapSave((tasks) => {
-            // replace the parent node with the updated one
-            const parentIndex = tasks.findIndex((task) => task.id === movingRoot.id)
-            tasks.splice(parentIndex, 1, movingRoot)
-            // find under node index in task list
-            const underIndex = tasks.findIndex((task) => task.id === this.underNode.task.id)
-            // insert the moving node as a root (promotes to root in base)
-            const newIndex = this.placement === 'above' ? underIndex : underIndex + 1
-            const newTask = this.movingNode.graftTask([newIndex])
-            tasks.splice(newIndex, 0, newTask)
-            // update all paths
-            tasks.forEach((sub, index) => {
-              sub.path = [index]
-              // helper function
-              movingParent.updateTreePaths(sub)
-            })
-            return tasks
-          })
-        }
-        // cleanup
-        this.underNode.classList.remove('over')
-        this.underNode.querySelector('span').classList.remove('drag-above')
-        this.underNode.querySelector('span').classList.remove('drag-below')
-        return
-      }
-      const underParent = this.underNode.parentElement
-      const underPosition = this.underNode.task.path[this.underNode.task.path.length - 1]
-      // update dragging item path
-      const newPosition = this.placement === 'above' ? underPosition : underPosition + 1
-      underParent.graftNode(this.movingNode, newPosition)
-      // save and delete
-      underParent.save()
-      this.movingNode.delete()
-      // cleanup
-      this.underNode.querySelector('span').classList.remove('drag-above')
-      this.underNode.querySelector('span').classList.remove('drag-below')
-    }
-
-    // dropping on top of another node makes it its child
-    if (this.placement === 'center') {
-      // open the destination node
-      this.underNode.task.meta.opened = true
-      // graft, save, and delete
-      this.underNode.graftNode(this.movingNode)
-      this.underNode.save()
-      this.movingNode.delete()
-      // cleanup
-      this.underNode.querySelector('span').classList.remove('drag-center')
-    }
-
-    // cleanup
-    this.underNode.classList.remove('over')
-    this.movingNode = null
-    this.underNode = null
-    this.placement = null
   }
 
   dragOver(event) {
     event.stopPropagation()
     event.preventDefault()
-    if (this.movingNode.task?.meta.editing) {
-      return
-    }
-    // cache mouse vertical movement
-    if (!this.mouseY || this.mouseY !== event.clientY) {
-      this.mouseY = event.clientY
-    }
 
-    // dragging over task-base (empty space)
-    if (event.target.tagName === TAG_BASE.toUpperCase()) {
-      // dropping a root node on task-base does nothing
-      if (!this.movingNode.isRoot()) {
-        this.placement = 'root'
-      } else {
-        this.placement = null
-      }
-      // cleanup
-      const underTag = this.underNode?.querySelector('span')
-      if (underTag) {
-        underTag.classList.remove('drag-above')
-        underTag.classList.remove('drag-below')
-        underTag.classList.remove('drag-center')
-      }
-      this.underNode?.classList.remove('over')
+    if (!this.dragNode) {
       return
     }
 
-    let node = null
-    // when the under node is task-node
-    if (event.target.tagName === TAG_NODE.toUpperCase()) {
-      // prevents jitter when hovering on border of task-node and task-base
-      // node = event.target
-      return
-    }
-    // when the under node is  task-name, get the task-node
-    if (event.target.getAttribute('slot') === NAME_NAME) {
-      node = event.target.parentElement
+    // get drop target node
+    const info = event.type === 'touchmove' ? event.touches[0] : event
+    const target = document.elementFromPoint(info.clientX, info.clientY)
+    const node = target?.getAttribute('slot') === NAME_NAME && target?.parentElement
+    // check if valid drop node
+    if (
+      node &&
+      !node.select('div').classList.contains(CLASS_DROP_HOVER) &&
+      !node.equals(this.dragNode) &&
+      !node.isAncestor(this.dragNode)
+    ) {
+      // previous drop node clear
+      this.dropNode?.removeClass(CLASS_DROP_HOVER)
+      this.clearDropNode()
+      // new node is now drop node
+      this.dropNode = node
+      this.dropNode.addClass(CLASS_DROP_HOVER)
     }
 
-    if (node && !node.equals(this.movingNode) && !node.isAncestor(this.movingNode)) {
-      // remove previous under node class
-      if (this.underNode) {
-        this.underNode.classList.remove('over')
-      }
-      // cache the under node
-      this.underNode = node
-      this.underNode.classList.add('over')
-    } else {
-      // cleanup
-      this.underNode?.classList.remove('over')
-      const underTag = this.underNode?.querySelector('span')
-      if (underTag) {
-        underTag.classList.remove('drag-above')
-        underTag.classList.remove('drag-below')
-        underTag.classList.remove('drag-center')
-      }
-      this.underNode = null
-      this.placement = null
+    if (!this.dropNode) {
       return
     }
 
-    // get bounding boxes of dragging node and unerneath node
-    const underTag = this.underNode.querySelector('span')
-    const movingTag = this.movingNode.querySelector('span')
-    const underBox = underTag.getBoundingClientRect()
-    const movingBox = movingTag.getBoundingClientRect()
+    // get bounding boxes of task summary element
+    const dropLabel = this.dropNode.select('summary')
+    const dragLabel = this.dragNode.select('summary')
+    const dropRect = dropLabel.getBoundingClientRect()
+    const dragRect = dragLabel.getBoundingClientRect()
 
-    const PAD = 5
-    // when the dragging node is above the under node
-    if (this.mouseY < underBox.top + movingBox.height && this.mouseY > underBox.top + PAD) {
-      this.placement = 'above'
-      underTag.classList.remove('drag-center')
-      underTag.classList.remove('drag-below')
-      underTag.classList.add('drag-above')
-      return
-    }
+    this.clearDropNode()
 
     // when the dragging node is below the under node
-    if (this.mouseY > underBox.bottom - movingBox.height && this.mouseY < underBox.bottom + PAD) {
-      this.placement = 'below'
-      underTag.classList.remove('drag-above')
-      underTag.classList.remove('drag-center')
-      underTag.classList.add('drag-below')
+    if (info.clientY > dropRect.bottom && info.clientY < dropRect.bottom + dragRect.height) {
+      this.dropZone = CLASS_DROP_BELOW
+      dropLabel.classList.add(CLASS_DROP_BELOW)
       return
     }
-
     // when the dragging node overlaps with under node
-    if (
-      this.mouseY > underBox.top + movingBox.height &&
-      this.mouseY < underBox.bottom - movingBox.height
-    ) {
-      this.placement = 'center'
-      underTag.classList.remove('drag-above')
-      underTag.classList.remove('drag-below')
-      underTag.classList.add('drag-center')
+    if (info.clientY > dropRect.top && info.clientY < dropRect.bottom) {
+      this.dropZone = CLASS_DROP_OVER
+      dropLabel.classList.add(CLASS_DROP_OVER)
+      return
+    }
+    // when the dragging node is above the under node
+    if (info.clientY > dropRect.top - dragRect.height && info.clientY < dropRect.top) {
+      this.dropZone = CLASS_DROP_ABOVE
+      dropLabel.classList.add(CLASS_DROP_ABOVE)
       return
     }
   }
 
-  getNode(task) {
+  dragEnd(event) {
+    event.stopPropagation()
+
+    if (!this.dragNode) {
+      return
+    } else if (!this.dropNode) {
+      // reset drag node
+      this.dragNode.removeClass(CLASS_DRAG_NODE)
+      this.dragNode = null
+      return
+    }
+
+    // check invalid drop target
+    if (this.dropNode.equals(this.dragNode) || this.dropNode.isAncestor(this.dragNode)) {
+      return this.clearDrag()
+    }
+
+    if (this.dropZone === CLASS_DROP_ABOVE || this.dropZone === CLASS_DROP_BELOW) {
+      if (this.dropNode.isRoot() && this.dragNode.isRoot()) {
+        // scenario: reordering root nodes
+        this.base.mapSave((tasks) => {
+          // find moving node index
+          const dragIndex = tasks.findIndex((task) => task.id === this.dragNode.task.id)
+          // reordering of root nodes
+          const dragTask = tasks.splice(dragIndex, 1)[0]
+          const dropIndex = tasks.findIndex((task) => task.id === this.dropNode.task.id)
+          const dropPosition = this.dropZone === CLASS_DROP_ABOVE ? dropIndex : dropIndex + 1
+          tasks.splice(dropPosition, 0, dragTask)
+          // normalize paths
+          tasks.forEach((sub, index) => {
+            sub.path = [index]
+            // helper function
+            this.dragNode.updateTreePaths(sub)
+          })
+          this.clearDrag()
+          // update all paths
+          return tasks
+        })
+      } else if (this.dropNode.isRoot()) {
+        // scenario: a branch node is promoted to root node
+        // update the moving node's parent, and get the root for saving
+        const dragParent = this.dragNode.parentElement
+        const dragRoot = dragParent.getRootNode().task
+        dragParent.deleteSub(this.dragNode.task)
+        dragParent.updateSubPaths()
+        // get all tasks from base, replace moving root and insert new root
+        this.base.mapSave((tasks) => {
+          // replace the parent node with the updated one
+          const dragRootIndex = tasks.findIndex((task) => task.id === dragRoot.id)
+          tasks.splice(dragRootIndex, 1, dragRoot)
+          // find under node index in task list
+          const dropIndex = tasks.findIndex((task) => task.id === this.dropNode.task.id)
+          // insert the moving node as a root (promotes to root in base)
+          const dropPosition = this.dropZone === CLASS_DROP_ABOVE ? dropIndex : dropIndex + 1
+          const dropTask = this.dragNode.graftTask([dropPosition])
+          tasks.splice(dropPosition, 0, dropTask)
+          // update all paths
+          tasks.forEach((sub, index) => {
+            sub.path = [index]
+            // helper function
+            dragParent.updateTreePaths(sub)
+          })
+
+          this.clearDrag()
+          return tasks
+        })
+      } else {
+        const dropParent = this.dropNode.parentElement
+        const dropIndex = this.dropNode.task.path[this.dropNode.task.path.length - 1]
+        // update dragging item path
+        const dropPosition = this.dropZone === CLASS_DROP_ABOVE ? dropIndex : dropIndex + 1
+        dropParent.graftNode(this.dragNode, dropPosition)
+        // save and delete
+        dropParent.save()
+        this.dragNode.delete()
+        this.clearDrag()
+      }
+    } else if (this.dropZone === CLASS_DROP_OVER) {
+      // open the destination node
+      this.dropNode.task.meta.opened = true
+      // graft, save, and delete
+      this.dropNode.graftNode(this.dragNode)
+      this.dropNode.save()
+      this.dragNode.delete()
+      this.clearDrag()
+    } else {
+      this.clearDrag()
+    }
+  }
+
+  getRootNodes() {
+    return this.querySelectorAll(`${TAG_BASE} > ${TAG_NODE}`)
+  }
+
+  isNode(element) {
+    return element.tagName === TAG_NODE.toUpperCase() && element.task
+  }
+
+  queryNode(task) {
     if (!task) {
       // if no task, return the focused task
       return this.querySelector(`${TAG_NODE}[${DATA_FOCUS}]`)
@@ -280,10 +230,6 @@ class TaskControl extends HTMLElement {
     }
 
     return this.querySelector(query)
-  }
-
-  getRootNodes() {
-    return this.querySelectorAll(`${TAG_BASE} > ${TAG_NODE}`)
   }
 
   transformTask(task, transform) {

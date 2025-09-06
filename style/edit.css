@@ -1,4 +1,6 @@
-/* task style overrides */
+/*########################*|
+|*      Task Edit
+|*########################*/
 
 /* reset */
 
@@ -26,6 +28,7 @@ div {
 ::slotted(select) {
   padding: 0 0.2rem !important;
 }
+
 /* structure */
 
 div {

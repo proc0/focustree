@@ -15,7 +15,7 @@ class TaskFocus extends HTMLDialogElement {
     // focus exit
     this.addEventListener('close', (event) => {
       event.stopPropagation()
-      const node = this.parentElement.getNode()
+      const node = this.parentElement.queryNode()
       node.blurNode()
     })
 
@@ -23,7 +23,7 @@ class TaskFocus extends HTMLDialogElement {
     this.querySelector(`[name="${NAME_PAUSE}"]`).addEventListener('click', (event) => {
       event.stopPropagation()
       // pause current task
-      const node = this.parentElement.getNode()
+      const node = this.parentElement.queryNode()
       node.pause()
 
       let parent = node.parentElement
@@ -47,7 +47,7 @@ class TaskFocus extends HTMLDialogElement {
     this.querySelector(`[name="${NAME_DONE}"]`).addEventListener('click', (event) => {
       event.stopPropagation()
       // get current task
-      const node = this.parentElement.getNode()
+      const node = this.parentElement.queryNode()
       // DFS - get first subtask
       let nextNode = node.querySelector(TAG_NODE)
 
@@ -104,13 +104,13 @@ class TaskFocus extends HTMLDialogElement {
   }
 
   hideFocus() {
-    const node = this.parentElement.getNode(this.seed.task)
+    const node = this.parentElement.queryNode(this.seed.task)
     node.scrollIntoView({ behavior: 'smooth' })
 
     this.close()
     // cleanup
     this.seed = null
-    // this.querySelectorAll('ul li').forEach((taskName) => taskName.remove())
+    this.querySelectorAll('ul li').forEach((taskName) => taskName.remove())
     this.querySelector('header h1').remove()
     document.querySelector('main').classList.remove(CLASS_FOCUS)
   }
@@ -124,10 +124,10 @@ class TaskFocus extends HTMLDialogElement {
       const focusTaskName = focusTitleEl.textContent
       focusTitleEl.textContent = task.name
       // completed task list
-      // const taskName = document.createElement('li')
-      // taskName.setAttribute('slot', NAME_NAME)
-      // taskName.textContent = focusTaskName
-      // this.querySelector('ul').prepend(taskName)
+      const taskName = document.createElement('li')
+      taskName.setAttribute('slot', NAME_NAME)
+      taskName.textContent = focusTaskName
+      this.querySelector('ul').prepend(taskName)
     } else {
       const focusTitle = document.createElement('h1')
       focusTitle.setAttribute('slot', 'task-focus-name')

@@ -13,10 +13,16 @@ body {
 main {
   box-sizing: border-box;
 
-  & menu {
-    margin: 0;
-    padding: 0;
+  & > menu {
+    menuitem {
+      display: none;
+    }
   }
+}
+
+menu {
+  margin: 0;
+  padding: 0;
 }
 
 button {
@@ -31,7 +37,7 @@ task-base > task-node {
   }
 }
 
-/* structure and layout */
+/* structure */
 
 html {
   font-size: 0.22in;
@@ -42,37 +48,31 @@ body {
   width: 100%;
 }
 
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: inherit;
+}
+
+menu {
+  display: flex;
+  flex-direction: row;
+}
+
 main {
   padding: 1rem;
   width: 100%;
 
-  button {
-    font-size: inherit;
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 2rem;
-  }
-
   & > menu {
-    display: flex;
-    flex-direction: row;
+    button {
+      width: 2rem;
+      height: 2rem;
+      line-height: 2rem;
+    }
 
-    & menuitem {
-      display: flex;
+    menuitem {
       place-items: center;
-
-      & button {
-        font-size: inherit;
-        width: 2rem;
-        height: 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 2rem;
-      }
     }
   }
 }
@@ -82,23 +82,18 @@ task-view {
   width: 100%;
 
   & > menu {
-    display: flex;
-    flex-direction: row;
     position: absolute;
     visibility: hidden;
     opacity: 0;
+    z-index: 9999;
 
     & menuitem {
       display: flex;
       place-items: center;
 
       & button {
-        font-size: inherit;
         width: 1.5rem;
         height: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         line-height: 1.5rem;
       }
     }
@@ -135,24 +130,51 @@ task-base > task-node {
 
 /* interaction */
 
-main > menu menuitem {
-  display: none;
-}
-
 main > menu.open {
   & menuitem {
     display: flex;
   }
 }
 
-task-node.dragging {
-  color: var(--forest-bg-accent);
+/* effects */
+
+menu {
+  transition: opacity 250ms ease-in;
+  -moz-transition: opacity 250ms ease-in;
+  -o-transition: opacity 250ms ease-in;
+  -webkit-transition: opacity 250ms ease-in;
 }
 
-task-node.over {
-  & > span {
-    padding: 1rem 0;
-    transition-delay: 200ms;
-    transition-property: padding;
+task-node {
+  opacity: 1;
+  animation-name: OpacityFadeIn;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 100ms;
+  animation-fill-mode: forwards;
+}
+
+@keyframes OpacityFadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 0.04;
+
+  50% {
+    opacity: 0.25;
+  }
+
+  75% {
+    opacity: 0.64;
+  }
+
+  90% {
+    opacity: 0.81;
+  }
+
+  100% {
+    opacity: 1;
   }
 }

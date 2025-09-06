@@ -20,6 +20,10 @@ class TaskNode extends HTMLElement {
     }
   }
 
+  addClass(className, query = 'div') {
+    this.select(query).classList.add(className)
+  }
+
   bindEvents() {
     // open and close subtasks drawer
     this.select('details summary').addEventListener('click', (event) => {
@@ -296,6 +300,10 @@ class TaskNode extends HTMLElement {
     return result
   }
 
+  isEditing() {
+    return this.task.meta.editing
+  }
+
   isRoot() {
     return this.parentElement.tagName === TAG_BASE.toUpperCase()
   }
@@ -350,6 +358,10 @@ class TaskNode extends HTMLElement {
   pause() {
     this.task.meta.focused = false
     this.changeState(2)
+  }
+
+  removeClass(className, query = 'div') {
+    this.select(query).classList.remove(className)
   }
 
   save() {

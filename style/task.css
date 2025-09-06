@@ -1,4 +1,9 @@
+/*########################*|
+|*         Task
+|*########################*/
+
 /* reset */
+
 button {
   cursor: pointer;
   background: none;
@@ -12,7 +17,9 @@ summary {
 ::slotted([title]) {
   cursor: help;
 }
-/* structure */
+
+/*       Structure
+|*-------------------------*/
 
 div {
   display: inline-flex;
@@ -43,18 +50,24 @@ details {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
+    box-sizing: border-box;
+
+    transition: all 0.25s ease;
+    -moz-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    -webkit-transition: all 0.25s ease;
 
     &::before {
       content: '➤';
       width: 1.5rem;
       height: 1.5rem;
       text-align: center;
-      align-self: flex-start;
-    }
+      align-self: center;
 
-    button {
-      align-self: flex-start;
-      margin-bottom: -0.2rem;
+      transition: all 0.25s ease;
+      -moz-transition: all 0.25s ease;
+      -o-transition: all 0.25s ease;
+      -webkit-transition: all 0.25s ease;
     }
 
     & button:first-child {
@@ -71,10 +84,20 @@ details {
       transform: rotate(90deg);
     }
   }
+}
 
-  section {
-    margin-bottom: 0.2rem;
+/*      Interaction
+|*-------------------------*/
+
+div.drop-hover {
+  summary {
+    margin: 0.5rem 0;
+    padding: 0.5rem 0;
   }
+}
+
+div.drag-node {
+  opacity: 0.5;
 }
 
 /* states */
@@ -146,12 +169,17 @@ div.focus summary {
   visibility: hidden;
 }
 
-/* theme */
+/*         Theme
+|*-------------------------*/
+
+/* forest */
+
 .theme-forest {
   summary {
     color: var(--forest-fg);
-    &:hover {
-      color: var(--forest-fg-accent);
+
+    &::before {
+      color: var(--forest-highlight) !important;
     }
   }
 
@@ -173,6 +201,7 @@ div.focus summary {
     }
   }
 
+  /* states */
   &.done {
     & [name='task-name']::after {
       color: var(--forest-state-done);
@@ -190,14 +219,38 @@ div.focus summary {
       color: var(--forest-state-active);
     }
   }
+
+  /* drag-n-drop */
+  .drop-above {
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 95%,
+      var(--forest-highlight) 96%,
+      var(--forest-highlight) 100%
+    );
+  }
+
+  .drop-over {
+    background-color: var(--forest-highlight);
+  }
+
+  .drop-below {
+    background: linear-gradient(
+      0deg,
+      var(--forest-highlight) 0%,
+      var(--forest-highlight) 4%,
+      rgba(0, 0, 0, 0) 5%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
 }
 
-.theme-gruvbox {
+/* gruvbox */
+
+div.theme-gruvbox {
   summary {
     color: var(--gruvbox-fg);
-    &:hover {
-      color: var(--gruvbox-fg-accent) !important;
-    }
 
     &::before {
       color: var(--gruvbox-highlight) !important;
@@ -225,6 +278,7 @@ div.focus summary {
     color: var(--gruvbox-fg-neutral);
   }
 
+  /* states */
   &.done {
     & [name='task-name']::after {
       color: var(--gruvbox-state-done);
@@ -241,5 +295,30 @@ div.focus summary {
     & [name='task-name']::after {
       color: var(--gruvbox-state-active);
     }
+  }
+
+  /* drag-n-drop */
+  .drop-above {
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 95%,
+      var(--gruvbox-highlight) 96%,
+      var(--gruvbox-highlight) 100%
+    );
+  }
+
+  .drop-over {
+    background-color: var(--gruvbox-highlight);
+  }
+
+  .drop-below {
+    background: linear-gradient(
+      0deg,
+      var(--gruvbox-highlight) 0%,
+      var(--gruvbox-highlight) 4%,
+      rgba(0, 0, 0, 0) 5%,
+      rgba(0, 0, 0, 0) 100%
+    );
   }
 }

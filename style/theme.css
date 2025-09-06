@@ -5,20 +5,6 @@ html.theme-forest {
   color: var(--forest-fg);
   font-family: Tahoma;
 
-  task-node.over span {
-    &.drag-above {
-      border-top: 2px solid var(--forest-highlight);
-    }
-
-    &.drag-center {
-      background-color: var(--forest-highlight);
-    }
-
-    &.drag-below {
-      border-bottom: 2px solid var(--forest-highlight);
-    }
-  }
-
   .icon-button,
   task-node::part(icon-button) {
     background-color: var(--forest-bg);
@@ -88,20 +74,6 @@ html.theme-gruvbox {
   color: var(--gruvbox-fg);
   font-family: Monospace;
 
-  task-node.over span {
-    &.drag-above {
-      border-top: 2px solid var(--gruvbox-highlight);
-    }
-
-    &.drag-center {
-      background-color: var(--gruvbox-highlight);
-    }
-
-    &.drag-below {
-      border-bottom: 2px solid var(--gruvbox-highlight);
-    }
-  }
-
   .icon-button,
   task-node::part(icon-button) {
     background-color: var(--gruvbox-bg);
@@ -136,6 +108,12 @@ html.theme-gruvbox {
   task-node::part(field-input):focus {
     background-color: var(--gruvbox-bg-shade);
     box-shadow: inset 2px 2px 5px var(--color-black);
+  }
+
+  task-view:not(.dragging) {
+    task-node::part(summary):hover {
+      color: var(--gruvbox-fg-accent);
+    }
   }
 
   task-view > dialog {
