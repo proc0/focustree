@@ -40,7 +40,6 @@ class TaskControl extends HTMLElement {
   }
 
   dragStart(event) {
-    event.stopPropagation()
     // get dragging target node
     const info = event.type === 'touchstart' ? event.touches[0] : event
     const target = document.elementFromPoint(info.clientX, info.clientY)
@@ -51,7 +50,8 @@ class TaskControl extends HTMLElement {
       this.dragNode = node
       this.dragNode.addClass(CLASS_DRAG_NODE)
       this.classList.add(CLASS_DRAGGING)
-    } else {
+    } else if (event.type !== 'touchstart') {
+      event.stopPropagation()
       // prevent dragging
       event.preventDefault()
     }
