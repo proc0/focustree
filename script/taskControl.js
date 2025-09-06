@@ -24,17 +24,27 @@ class TaskControl extends HTMLElement {
     this.addEventListener('touchend', this.dragEnd)
   }
 
+  clearDropNode() {
+    if (!this.dropNode) return
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_ABOVE)
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_OVER)
+    this.dropNode.select('summary').classList.remove(CLASS_DROP_BELOW)
+  }
+
   dragStart(event) {
     event.stopPropagation()
-
+    // get dragging target node
     const info = event.type === 'touchstart' ? event.touches[0] : event
-    const startNode = document.elementFromPoint(info.clientX, info.clientY)
-    // only drag with name label and do not drag tasks in edit mode
-    if (startNode?.getAttribute('slot') === NAME_NAME && !startNode.parentElement.isEditing()) {
-      this.dragNode = startNode.parentElement
-      this.dragNode.select('div').classList.add(CLASS_DRAG_NODE)
-      this.classList.add('dragging')
+    const target = document.elementFromPoint(info.clientX, info.clientY)
+    // only drag on task name label
+    const node = target?.getAttribute('slot') === NAME_NAME && target?.parentElement
+    // do not drag tasks in edit mode
+    if (node && !node.isEditing()) {
+      this.dragNode = node
+      this.dragNode.addClass(CLASS_DRAG_NODE)
+      this.classList.add(CLASS_DRAGGING)
     } else {
+      // prevent dragging
       event.preventDefault()
     }
   }
@@ -47,50 +57,52 @@ class TaskControl extends HTMLElement {
       return
     }
 
+    // get drop target node
     const info = event.type === 'touchmove' ? event.touches[0] : event
-    const overNode = document.elementFromPoint(info.clientX, info.clientY)
+    const target = document.elementFromPoint(info.clientX, info.clientY)
+    const node = target?.getAttribute('slot') === NAME_NAME && target?.parentElement
+    // check if valid drop node
     if (
-      overNode?.getAttribute('slot') === NAME_NAME &&
-      overNode.parentElement &&
-      !overNode.parentElement.select('div').classList.contains('drag-hover') &&
-      !overNode.parentElement.equals(this.dragNode) &&
-      !overNode.parentElement.isAncestor(this.dragNode)
+      node &&
+      !node.select('div').classList.contains(CLASS_DROP_HOVER) &&
+      !node.equals(this.dragNode) &&
+      !node.isAncestor(this.dragNode)
     ) {
-      this.dropNode?.select('div').classList.remove('drag-hover')
-      this.dropNode?.select('summary').classList.remove(CLASS_DROP_ABOVE)
-      this.dropNode?.select('summary').classList.remove(CLASS_DROP_OVER)
-      this.dropNode?.select('summary').classList.remove(CLASS_DROP_BELOW)
-
-      this.dropNode = overNode.parentElement
-      this.dropNode.select('div').classList.add('drag-hover')
+      // previous drop node clear
+      this.dropNode?.removeClass(CLASS_DROP_HOVER)
+      this.clearDropNode()
+      // new node is now drop node
+      this.dropNode = node
+      this.dropNode.addClass(CLASS_DROP_HOVER)
     }
 
     if (!this.dropNode) {
       return
     }
 
-    // get bounding boxes of dragging node and unerneath node
+    // get bounding boxes of task summary element
     const dropLabel = this.dropNode.select('summary')
     const dragLabel = this.dragNode.select('summary')
     const dropRect = dropLabel.getBoundingClientRect()
     const dragRect = dragLabel.getBoundingClientRect()
 
-    dropLabel.classList.remove(CLASS_DROP_ABOVE)
-    dropLabel.classList.remove(CLASS_DROP_OVER)
-    dropLabel.classList.remove(CLASS_DROP_BELOW)
+    this.clearDropNode()
 
+    // when the dragging node is below the under node
     if (info.clientY > dropRect.bottom && info.clientY < dropRect.bottom + dragRect.height) {
-      // when the dragging node is below the under node
+      this.dropZone = CLASS_DROP_BELOW
       dropLabel.classList.add(CLASS_DROP_BELOW)
       return
     }
+    // when the dragging node overlaps with under node
     if (info.clientY > dropRect.top && info.clientY < dropRect.bottom) {
-      // when the dragging node overlaps with under node
+      this.dropZone = CLASS_DROP_OVER
       dropLabel.classList.add(CLASS_DROP_OVER)
       return
     }
+    // when the dragging node is above the under node
     if (info.clientY > dropRect.top - dragRect.height && info.clientY < dropRect.top) {
-      // when the dragging node is above the under node
+      this.dropZone = CLASS_DROP_ABOVE
       dropLabel.classList.add(CLASS_DROP_ABOVE)
       return
     }
@@ -102,31 +114,35 @@ class TaskControl extends HTMLElement {
     if (!this.dragNode) {
       return
     } else if (!this.dropNode) {
-      this.dragNode.select('div').classList.remove(CLASS_DRAG_NODE)
+      // reset drag node
+      this.dragNode.removeClass(CLASS_DRAG_NODE)
       this.dragNode = null
       return
     }
 
+    // check invalid drop target
     if (this.dropNode.equals(this.dragNode) || this.dropNode.isAncestor(this.dragNode)) {
-      this.dragNode.select('div').classList.remove(CLASS_DRAG_NODE)
-      this.dropNode.select('div').classList.remove('drag-hover')
-      this.dropNode.select('summary').classList.remove(CLASS_DROP_ABOVE)
-      this.dropNode.select('summary').classList.remove(CLASS_DROP_OVER)
-      this.dropNode.select('summary').classList.remove(CLASS_DROP_BELOW)
-      this.classList.remove('dragging')
+      // reset drag node
+      this.dragNode.removeClass(CLASS_DRAG_NODE)
       this.dragNode = null
+      // reset drop node
+      this.dropNode.removeClass(CLASS_DROP_HOVER)
+      this.clearDropNode()
       this.dropNode = null
+
+      this.classList.remove(CLASS_DRAGGING)
       return
     }
 
-    this.dragNode.select('div').classList.remove(CLASS_DRAG_NODE)
-    this.dropNode.select('div').classList.remove('drag-hover')
-    this.dropNode.select('summary').classList.remove(CLASS_DROP_ABOVE)
-    this.dropNode.select('summary').classList.remove(CLASS_DROP_OVER)
-    this.dropNode.select('summary').classList.remove(CLASS_DROP_BELOW)
-    this.classList.remove('dragging')
+    // reset drag node
+    this.dragNode.removeClass(CLASS_DRAG_NODE)
     this.dragNode = null
+    // reset drop node
+    this.dropNode.removeClass(CLASS_DROP_HOVER)
+    this.clearDropNode()
     this.dropNode = null
+
+    this.classList.remove(CLASS_DRAGGING)
   }
 
   // dragStart2({ target }) {
@@ -142,7 +158,7 @@ class TaskControl extends HTMLElement {
   //   if (this.movingNode.task.meta.editing) {
   //     return
   //   }
-  //   this.movingNode.classList.add('dragging')
+  //   this.movingNode.classList.add(CLASS_DRAGGING)
   // }
 
   dragEnd2(event) {
@@ -276,119 +292,119 @@ class TaskControl extends HTMLElement {
     this.placement = null
   }
 
-  dragOver2(event) {
-    event.stopPropagation()
-    event.preventDefault()
-    if (this.movingNode.task?.meta.editing) {
-      return
-    }
-    // cache mouse vertical movement
-    if (!this.mouseY || this.mouseY !== event.clientY) {
-      this.mouseY = event.clientY
-    }
+  // dragOver2(event) {
+  //   event.stopPropagation()
+  //   event.preventDefault()
+  //   if (this.movingNode.task?.meta.editing) {
+  //     return
+  //   }
+  //   // cache mouse vertical movement
+  //   if (!this.mouseY || this.mouseY !== event.clientY) {
+  //     this.mouseY = event.clientY
+  //   }
 
-    // dragging over task-base (empty space)
-    if (event.target.tagName === TAG_BASE.toUpperCase()) {
-      // dropping a root node on task-base does nothing
-      if (!this.movingNode.isRoot()) {
-        this.placement = 'root'
-      } else {
-        this.placement = null
-      }
-      // cleanup
-      const underTag = this.underNode?.querySelector('span')
-      if (underTag) {
-        underTag.classList.remove('drag-above')
-        underTag.classList.remove('drag-below')
-        underTag.classList.remove('drag-center')
-      }
-      this.underNode?.classList.remove('over')
-      return
-    }
+  //   // dragging over task-base (empty space)
+  //   if (event.target.tagName === TAG_BASE.toUpperCase()) {
+  //     // dropping a root node on task-base does nothing
+  //     if (!this.movingNode.isRoot()) {
+  //       this.placement = 'root'
+  //     } else {
+  //       this.placement = null
+  //     }
+  //     // cleanup
+  //     const underTag = this.underNode?.querySelector('span')
+  //     if (underTag) {
+  //       underTag.classList.remove('drag-above')
+  //       underTag.classList.remove('drag-below')
+  //       underTag.classList.remove('drag-center')
+  //     }
+  //     this.underNode?.classList.remove('over')
+  //     return
+  //   }
 
-    let node = null
-    // when the under node is task-node
-    if (event.target.tagName === TAG_NODE.toUpperCase()) {
-      // prevents jitter when hovering on border of task-node and task-base
-      // node = event.target
-      return
-    }
-    // when the under node is  task-name, get the task-node
-    if (event.target.getAttribute('slot') === NAME_NAME) {
-      node = event.target.parentElement
-    }
+  //   let node = null
+  //   // when the under node is task-node
+  //   if (event.target.tagName === TAG_NODE.toUpperCase()) {
+  //     // prevents jitter when hovering on border of task-node and task-base
+  //     // node = event.target
+  //     return
+  //   }
+  //   // when the under node is  task-name, get the task-node
+  //   if (event.target.getAttribute('slot') === NAME_NAME) {
+  //     node = event.target.parentElement
+  //   }
 
-    if (node && !node.equals(this.movingNode) && !node.isAncestor(this.movingNode)) {
-      // remove previous under node class
-      if (this.underNode) {
-        this.underNode.classList.remove('over')
-      }
-      // cache the under node
-      this.underNode = node
-      this.underNode.classList.add('over')
-    } else {
-      // cleanup
-      this.underNode?.classList.remove('over')
-      const underTag = this.underNode?.querySelector('span')
-      if (underTag) {
-        underTag.classList.remove('drag-above')
-        underTag.classList.remove('drag-below')
-        underTag.classList.remove('drag-center')
-      }
-      this.underNode = null
-      this.placement = null
-      return
-    }
+  //   if (node && !node.equals(this.movingNode) && !node.isAncestor(this.movingNode)) {
+  //     // remove previous under node class
+  //     if (this.underNode) {
+  //       this.underNode.classList.remove('over')
+  //     }
+  //     // cache the under node
+  //     this.underNode = node
+  //     this.underNode.classList.add('over')
+  //   } else {
+  //     // cleanup
+  //     this.underNode?.classList.remove('over')
+  //     const underTag = this.underNode?.querySelector('span')
+  //     if (underTag) {
+  //       underTag.classList.remove('drag-above')
+  //       underTag.classList.remove('drag-below')
+  //       underTag.classList.remove('drag-center')
+  //     }
+  //     this.underNode = null
+  //     this.placement = null
+  //     return
+  //   }
 
-    // get bounding boxes of dragging node and unerneath node
-    const underTag = this.underNode.querySelector('span')
-    const movingTag = this.movingNode.querySelector('span')
-    const underBox = underTag.getBoundingClientRect()
-    const movingBox = movingTag.getBoundingClientRect()
+  //   // get bounding boxes of dragging node and unerneath node
+  //   const underTag = this.underNode.querySelector('span')
+  //   const movingTag = this.movingNode.querySelector('span')
+  //   const underBox = underTag.getBoundingClientRect()
+  //   const movingBox = movingTag.getBoundingClientRect()
 
-    const PAD = 5
-    // when the dragging node is above the under node
-    if (this.mouseY < underBox.top + movingBox.height && this.mouseY > underBox.top + PAD) {
-      this.placement = 'above'
-      underTag.classList.remove('drag-center')
-      underTag.classList.remove('drag-below')
-      underTag.classList.add('drag-above')
-      return
-    }
+  //   const PAD = 5
+  //   // when the dragging node is above the under node
+  //   if (this.mouseY < underBox.top + movingBox.height && this.mouseY > underBox.top + PAD) {
+  //     this.placement = 'above'
+  //     underTag.classList.remove('drag-center')
+  //     underTag.classList.remove('drag-below')
+  //     underTag.classList.add('drag-above')
+  //     return
+  //   }
 
-    // when the dragging node is below the under node
-    if (this.mouseY > underBox.bottom - movingBox.height && this.mouseY < underBox.bottom + PAD) {
-      this.placement = 'below'
-      underTag.classList.remove('drag-above')
-      underTag.classList.remove('drag-center')
-      underTag.classList.add('drag-below')
-      return
-    }
+  //   // when the dragging node is below the under node
+  //   if (this.mouseY > underBox.bottom - movingBox.height && this.mouseY < underBox.bottom + PAD) {
+  //     this.placement = 'below'
+  //     underTag.classList.remove('drag-above')
+  //     underTag.classList.remove('drag-center')
+  //     underTag.classList.add('drag-below')
+  //     return
+  //   }
 
-    // when the dragging node overlaps with under node
-    if (
-      this.mouseY > underBox.top + movingBox.height &&
-      this.mouseY < underBox.bottom - movingBox.height
-    ) {
-      this.placement = 'center'
-      underTag.classList.remove('drag-above')
-      underTag.classList.remove('drag-below')
-      underTag.classList.add('drag-center')
-      return
-    }
-  }
+  //   // when the dragging node overlaps with under node
+  //   if (
+  //     this.mouseY > underBox.top + movingBox.height &&
+  //     this.mouseY < underBox.bottom - movingBox.height
+  //   ) {
+  //     this.placement = 'center'
+  //     underTag.classList.remove('drag-above')
+  //     underTag.classList.remove('drag-below')
+  //     underTag.classList.add('drag-center')
+  //     return
+  //   }
+  // }
 
-  findRelativeNode(element) {
-    let node = null
+  // findRelativeNode(element) {
+  //   let node = null
 
-    if (this.isNode(element)) {
-      node = element
-    } else if (this.isNode(element.parentElement)) {
-      node = element.parentElement
-    }
+  //   if (this.isNode(element)) {
+  //     node = element
+  //   } else if (this.isNode(element.parentElement)) {
+  //     node = element.parentElement
+  //   }
 
-    return node
-  }
+  //   return node
+  // }
 
   getRootNodes() {
     return this.querySelectorAll(`${TAG_BASE} > ${TAG_NODE}`)

@@ -72,10 +72,12 @@ const CLASS_BRANCH = 'branch'
 const CLASS_LEAF = 'leaf'
 const CLASS_FOCUS = 'focus'
 const CLASS_EDIT = 'editing'
+const CLASS_DRAGGING = 'dragging'
 const CLASS_DRAG_NODE = 'drag-node'
 const CLASS_DROP_ABOVE = 'drop-above'
 const CLASS_DROP_OVER = 'drop-over'
 const CLASS_DROP_BELOW = 'drop-below'
+const CLASS_DROP_HOVER = 'drop-hover'
 
 // theme classes (should match html)
 const THEME_ICON_BUTTON = 'icon-button'

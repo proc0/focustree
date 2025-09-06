@@ -80,7 +80,7 @@ details {
 
 /* interactions */
 
-div.drag-hover {
+div.drop-hover {
   .icon-button {
     align-self: center;
   }
@@ -90,11 +90,9 @@ div.drag-hover {
   }
 
   summary {
-    height: 2.4rem;
-    margin: 1rem 0;
-    padding: 1.5rem 0;
-    /* transition-delay: 200ms;
-    transition-property: padding, margin, height; */
+    height: 2rem;
+    margin: 0.5rem 0;
+    padding: 1.3rem 0;
   }
 }
 
