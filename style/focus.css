@@ -1,3 +1,7 @@
+/*########################*|
+|*      Task Focus
+|*########################*/
+
 /* reset */
 
 task-view > dialog {
@@ -22,6 +26,28 @@ task-view > dialog {
     margin-left: 2rem;
   }
 
+  ul {
+    display: flex;
+    flex-direction: column;
+    place-items: flex-end;
+    padding: 0 55% 0 0;
+    margin-top: 5em;
+    height: 50%;
+    overflow: hidden;
+
+    li {
+      display: flex;
+      text-align: left;
+      margin-left: 0.5em;
+      font-size: 1.5em;
+      &:before {
+        padding-right: 0.5em;
+        font-weight: bold;
+        content: '✓';
+      }
+    }
+  }
+
   menu {
     display: flex;
     flex-direction: row;
@@ -43,6 +69,8 @@ task-view > dialog {
     }
   }
 }
+
+/* focus */
 
 main.focus {
   task-node {
@@ -67,5 +95,47 @@ main.focus {
 
   & > menu {
     visibility: hidden;
+  }
+}
+
+/* effects */
+
+task-view > dialog {
+  opacity: 0;
+  transform: translateY(0);
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out,
+    overlay 0.25s ease-out allow-discrete, display 0.25s ease-out allow-discrete;
+}
+
+/* Open state of the dialog */
+task-view > dialog:open {
+  opacity: 1;
+  transform: translateY(1em);
+}
+
+/* Before open state  */
+/* Needs to be after dialog:open take effect, (same specificity) */
+@starting-style {
+  task-view > dialog:open {
+    opacity: 0;
+    transform: translateY(0);
+  }
+}
+
+/* theme */
+
+.theme-forest {
+  task-view > dialog {
+    ul li {
+      color: var(--forest-fg-accent);
+    }
+  }
+}
+
+.theme-gruvbox {
+  task-view > dialog {
+    ul li {
+      color: var(--gruvbox-fg-accent);
+    }
   }
 }

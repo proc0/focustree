@@ -1,4 +1,9 @@
+/*########################*|
+|*         Task
+|*########################*/
+
 /* reset */
+
 button {
   cursor: pointer;
   background: none;
@@ -13,7 +18,8 @@ summary {
   cursor: help;
 }
 
-/* structure */
+/*       Structure
+|*-------------------------*/
 
 div {
   display: inline-flex;
@@ -45,6 +51,7 @@ details {
     flex-direction: row;
     align-items: center;
     box-sizing: border-box;
+
     transition: all 0.25s ease;
     -moz-transition: all 0.25s ease;
     -o-transition: all 0.25s ease;
@@ -56,6 +63,11 @@ details {
       height: 1.5rem;
       text-align: center;
       align-self: center;
+
+      transition: all 0.25s ease;
+      -moz-transition: all 0.25s ease;
+      -o-transition: all 0.25s ease;
+      -webkit-transition: all 0.25s ease;
     }
 
     & button:first-child {
@@ -74,7 +86,8 @@ details {
   }
 }
 
-/* interactions */
+/*      Interaction
+|*-------------------------*/
 
 div.drop-hover {
   summary {
@@ -156,7 +169,10 @@ div.focus summary {
   visibility: hidden;
 }
 
-/* theme */
+/*         Theme
+|*-------------------------*/
+
+/* forest */
 
 .theme-forest {
   summary {
@@ -185,6 +201,7 @@ div.focus summary {
     }
   }
 
+  /* states */
   &.done {
     & [name='task-name']::after {
       color: var(--forest-state-done);
@@ -203,6 +220,7 @@ div.focus summary {
     }
   }
 
+  /* drag-n-drop */
   .drop-above {
     background: linear-gradient(
       0deg,
@@ -227,6 +245,8 @@ div.focus summary {
     );
   }
 }
+
+/* gruvbox */
 
 div.theme-gruvbox {
   summary {
@@ -258,6 +278,7 @@ div.theme-gruvbox {
     color: var(--gruvbox-fg-neutral);
   }
 
+  /* states */
   &.done {
     & [name='task-name']::after {
       color: var(--gruvbox-state-done);
@@ -276,6 +297,7 @@ div.theme-gruvbox {
     }
   }
 
+  /* drag-n-drop */
   .drop-above {
     background: linear-gradient(
       0deg,

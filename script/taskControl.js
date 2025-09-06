@@ -40,6 +40,8 @@ class TaskControl extends HTMLElement {
   }
 
   dragStart(event) {
+    // hide task menus
+    this.menu.hide()
     // get dragging target node
     const info = event.type === 'touchstart' ? event.touches[0] : event
     const target = document.elementFromPoint(info.clientX, info.clientY)

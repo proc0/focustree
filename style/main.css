@@ -37,7 +37,7 @@ task-base > task-node {
   }
 }
 
-/* structure and layout */
+/* structure */
 
 html {
   font-size: 0.22in;
@@ -85,6 +85,7 @@ task-view {
     position: absolute;
     visibility: hidden;
     opacity: 0;
+    z-index: 9999;
 
     & menuitem {
       display: flex;
@@ -135,28 +136,45 @@ main > menu.open {
   }
 }
 
-/* task-node.drag-node {
-  opacity: 0.5;
+/* effects */
+
+menu {
+  transition: opacity 250ms ease-in;
+  -moz-transition: opacity 250ms ease-in;
+  -o-transition: opacity 250ms ease-in;
+  -webkit-transition: opacity 250ms ease-in;
 }
 
-task-node.drag-hover {
-  & > [slot='task-name'] {
-    padding: 1rem 0;
-  }
+task-node {
+  opacity: 1;
+  animation-name: OpacityFadeIn;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 100ms;
+  animation-fill-mode: forwards;
 }
 
-task-node.over {
-  &::part(icon-button) {
-    align-self: center;
+@keyframes OpacityFadeIn {
+  0% {
+    opacity: 0;
   }
 
-  &::part(summary)::before {
-    align-self: center;
+  25% {
+    opacity: 0.04;
+
+  50% {
+    opacity: 0.25;
   }
 
-  & > span {
-    padding: 1rem 0;
-    transition-delay: 200ms;
-    transition-property: padding;
+  75% {
+    opacity: 0.64;
   }
-} */
+
+  90% {
+    opacity: 0.81;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
