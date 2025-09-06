@@ -72,10 +72,6 @@ details {
       transform: rotate(90deg);
     }
   }
-
-  section {
-    margin-bottom: 0.2rem;
-  }
 }
 
 /* interactions */
@@ -90,9 +86,8 @@ div.drop-hover {
   }
 
   summary {
-    height: 2rem;
     margin: 0.5rem 0;
-    padding: 1.3rem 0;
+    padding: 0.5rem 0;
   }
 }
 
