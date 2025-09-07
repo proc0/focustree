@@ -136,7 +136,7 @@ div {
 
   &.pause {
     & [name='task-name']::after {
-      content: '⏸';
+      content: '❙❙';
     }
   }
 

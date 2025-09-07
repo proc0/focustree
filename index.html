@@ -54,13 +54,13 @@
         <slot name="task-state"></slot>
       </menuitem>
       <menuitem>
-        <button class="icon-button" name="task-sync" title="Sync state">🗘</button>
+        <button class="icon-button" name="task-sync" title="Sync state">⇣</button>
       </menuitem>
       <menuitem>
-        <button class="icon-button" name="task-clone" title="Clone">🗗</button>
+        <button class="icon-button" name="task-clone" title="Clone">⚯</button>
       </menuitem>
       <menuitem>
-        <button class="icon-button" name="task-delete" title="Delete">🗙</button>
+        <button class="icon-button" name="task-delete" title="Delete">✖</button>
       </menuitem>
     </template>
     <template id="template-edit">
@@ -77,7 +77,7 @@
         <span>
           <button part="icon-button" name="task-edit" title="Edit">✎</button>
           <slot name="task-name"></slot>
-          <button part="icon-button" name="task-delete" title="Delete">🗙</button>
+          <button part="icon-button" name="task-delete" title="Delete">✖</button>
         </span>
         <span>
           <button part="icon-button" name="task-edit" title="Edit">✎</button>
@@ -91,10 +91,10 @@
             <slot name="task-state"></slot>
           </menuitem>
           <menuitem>
-            <button part="icon-button" name="task-sync" title="Sync state">🗘</button>
+            <button part="icon-button" name="task-sync" title="Sync state">⇣</button>
           </menuitem>
           <menuitem>
-            <button part="icon-button" name="task-clone" title="clone">🗗</button>
+            <button part="icon-button" name="task-clone" title="clone">⚯</button>
           </menuitem>
           <menuitem>
             <button part="icon-button" name="task-save" title="Save">✔</button>
@@ -125,7 +125,7 @@
         </menuitem>
         <menuitem>
           <form method="dialog">
-            <button class="icon-button" name="task-pause" title="Pause">⏸</button>
+            <button class="icon-button" name="task-pause" title="Pause">❙❙</button>
           </form>
         </menuitem>
       </menu>
@@ -134,18 +134,12 @@
       <menu>
         <button name="root-menu" class="icon-button" title="Menu">☰</button>
         <menuitem><button class="icon-button" id="root-add" title="New">✚</button></menuitem>
-        <menuitem
-          ><button class="icon-button" id="root-import" title="Import">&#11123;</button></menuitem
-        >
-        <menuitem
-          ><button class="icon-button" id="root-export" title="Export">&#11121;</button></menuitem
-        >
+        <menuitem><button class="icon-button" id="root-import" title="Import">↧</button></menuitem>
+        <menuitem><button class="icon-button" id="root-export" title="Export">↥</button></menuitem>
         <menuitem
           ><button class="icon-button" id="root-settings" title="Settings">⛭</button></menuitem
         >
-        <menuitem
-          ><button class="icon-button" id="root-info" title="Info">&#9432;</button></menuitem
-        >
+        <menuitem><button class="icon-button" id="root-info" title="Info">⯑</button></menuitem>
       </menu>
     </main>
     <script src="script/main.js"></script>
