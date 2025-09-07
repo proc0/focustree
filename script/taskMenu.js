@@ -85,9 +85,13 @@ class TaskMenu extends HTMLMenuElement {
     const menuTop =
       menuButtonRect.y + window.pageYOffset - menuRect.height / 2 + menuButtonRect.height / 2
     const menuRight = menuButtonRect.x + menuButtonRect.width + window.pageXOffset - 1
+    const menuWidth =
+      this.node.querySelector("[slot='task-name']").getBoundingClientRect().width + 7
+    const finalWidth =
+      menuRect.width > menuWidth && window.devicePixelRatio === 1 ? menuRect.width : menuWidth
     this.setAttribute(
       'style',
-      `top:${menuTop}px; left:${menuRight}px; visibility: visible; opacity: 1`
+      `top:${menuTop}px; left:${menuRight}px; width:${finalWidth}px; visibility: visible; opacity: 1`
     )
   }
 }

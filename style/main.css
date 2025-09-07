@@ -84,14 +84,15 @@ task-view {
 
   & > menu {
     position: absolute;
+    justify-content: start;
     visibility: hidden;
     opacity: 0;
     z-index: 9999;
-    justify-content: space-between;
 
     & menuitem {
       display: flex;
       place-items: center;
+      padding: 0 0.2rem;
 
       & button {
         width: 1.5rem;
