@@ -42,7 +42,8 @@ class TaskControl extends HTMLElement {
   dragStart(event) {
     if (
       event.type === 'touchstart' &&
-      (event.target.tagName !== TAG_NODE || event.target.getAttribute('slot') !== NAME_NAME)
+      event.target.tagName !== TAG_NODE &&
+      event.target.getAttribute('slot') !== NAME_NAME
     ) {
       return
     }
