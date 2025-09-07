@@ -57,8 +57,9 @@ class TaskMenu extends HTMLMenuElement {
 
   hide() {
     if (!this.node) return
-    this.node = null
     this.removeAttribute('style')
+    this.node.removeClass(CLASS_MENU_OPEN)
+    this.node = null
   }
 
   select(query) {
@@ -75,14 +76,15 @@ class TaskMenu extends HTMLMenuElement {
     this.querySelector(`[name="${NAME_STATE}"] select`)?.remove()
     const stateSelect = this.parentElement.renderSelect(this.node.task)
     this.selectName(NAME_STATE).appendChild(stateSelect)
+    this.node.addClass(CLASS_MENU_OPEN)
 
     const menuButton = this.node.selectName(NAME_MENU)
     const menuButtonRect = menuButton.getBoundingClientRect()
     const menuRect = this.getBoundingClientRect()
 
-    const menuTop = menuButtonRect.y + window.pageYOffset
+    const menuTop =
+      menuButtonRect.y + window.pageYOffset - menuRect.height / 2 + menuButtonRect.height / 2
     const menuRight = menuButtonRect.x + menuButtonRect.width + window.pageXOffset - 1
-
     this.setAttribute(
       'style',
       `top:${menuTop}px; left:${menuRight}px; visibility: visible; opacity: 1`

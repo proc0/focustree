@@ -78,6 +78,7 @@ const CLASS_DROP_ABOVE = 'drop-above'
 const CLASS_DROP_OVER = 'drop-over'
 const CLASS_DROP_BELOW = 'drop-below'
 const CLASS_DROP_HOVER = 'drop-hover'
+const CLASS_MENU_OPEN = 'menu-open'
 
 // theme classes (should match html)
 const THEME_ICON_BUTTON = 'icon-button'

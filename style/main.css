@@ -58,6 +58,7 @@ button {
 menu {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 
 main {
@@ -86,6 +87,7 @@ task-view {
     visibility: hidden;
     opacity: 0;
     z-index: 9999;
+    justify-content: space-between;
 
     & menuitem {
       display: flex;
@@ -125,6 +127,30 @@ task-base > task-node {
 
   main {
     padding: 0.2rem;
+
+    & > menu {
+      font-size: 1.7rem;
+      menuitem {
+        margin: 0 0.3rem;
+      }
+    }
+  }
+
+  task-view > menu {
+    padding: 0.6rem;
+    
+    menuitem {
+      font-size: 1.5rem;
+      margin:0.2rem;
+    }
+
+    select {
+      font-size: 1.5rem;
+    }
+  }
+
+  task-node::part(icon-button) {
+    font-size: 1.5rem;
   }
 }
 
