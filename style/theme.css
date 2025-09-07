@@ -15,12 +15,12 @@ html.theme-forest {
   .icon-button:hover,
   task-node::part(icon-button):hover {
     background-color: var(--forest-bg-shade) !important;
-    border-right: 0.2rem solid var(--forest-bg-shade) !important;
+    border-right: 0.2rem solid var(--color-black-50) !important;
     color: var(--forest-fg-accent) !important;
   }
 
   task-view > menu {
-    background-color: var(--forest-bg);
+    background-color: var(--forest-bg-shade);
     border: 0.4rem solid var(--forest-bg);
     border-left: none;
     border-right: none;
@@ -34,7 +34,7 @@ html.theme-forest {
     &:hover {
       color: var(--forest-fg-accent) !important;
       background-color: var(--forest-bg) !important;
-      border-right: 0.2rem solid var(--forest-bg-shade) !important;
+      border-right: 0.2rem solid var(--color-black-50) !important;
     }
     option {
       color: var(--forest-fg-shade);
@@ -93,12 +93,12 @@ html.theme-gruvbox {
   .icon-button:hover,
   task-node::part(icon-button):hover {
     background-color: var(--gruvbox-bg) !important;
-    border-right: 0.2rem solid var(--gruvbox-bg-shade) !important;
+    border-right: 0.2rem solid var(--color-black-50) !important;
     color: var(--gruvbox-fg-accent) !important;
   }
 
   task-view > menu {
-    background-color: var(--gruvbox-bg);
+    background-color: var(--gruvbox-bg-shade);
     border: 0.4rem solid var(--gruvbox-bg);
     border-left: none;
     border-right: none;
@@ -112,7 +112,7 @@ html.theme-gruvbox {
     &:hover {
       color: var(--gruvbox-fg-accent) !important;
       background-color: var(--gruvbox-bg) !important;
-      border-right: 0.2rem solid var(--gruvbox-bg-shade) !important;
+      border-right: 0.2rem solid var(--color-black-50) !important;
     }
     option {
       color: var(--gruvbox-fg-shade);
