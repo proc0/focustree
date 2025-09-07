@@ -30,6 +30,7 @@ html.theme-forest {
 
   select {
     background-color: transparent;
+    border-right: 0.2rem solid transparent;
     &:hover {
       color: var(--forest-fg-accent) !important;
       background-color: var(--forest-bg) !important;
@@ -107,6 +108,7 @@ html.theme-gruvbox {
 
   select {
     background-color: transparent;
+    border-right: 0.2rem solid transparent;
     &:hover {
       color: var(--gruvbox-fg-accent) !important;
       background-color: var(--gruvbox-bg) !important;
