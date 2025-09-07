@@ -196,7 +196,7 @@ class TaskNode extends HTMLElement {
     const input = document.createElement('input')
     input.setAttribute('type', 'text')
     input.setAttribute('id', `${slotName}-${this.task.path.join('')}`)
-    input.setAttribute('value', this.task[fieldName])
+    input.setAttribute('value', this.task[fieldName] === NEW_NAME ? '' : this.task[fieldName])
     input.setAttribute('part', THEME_FIELD_INPUT)
     // spawn a save button
     const saveButton = document.createElement('button')

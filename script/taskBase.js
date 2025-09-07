@@ -19,7 +19,7 @@ const MODEL = {
     focused: false,
     opened: false,
   },
-  name: 'New Task: Edit name.',
+  name: NEW_NAME,
   note: '',
   path: [0],
   state: 0,

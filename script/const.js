@@ -9,6 +9,8 @@ const STATE_DONE = 'done'
 // define states above and add them to the state list
 const STATES = [STATE_READY, STATE_ACTIVE, STATE_PAUSE, STATE_DONE]
 
+const NEW_NAME = 'New Task: Edit name.'
+
 // global events
 const EVENT_RENDER = 'render'
 const EVENT_RENDER_ROOT = 'render-root'
