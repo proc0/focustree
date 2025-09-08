@@ -26,7 +26,10 @@ class TaskMenu extends HTMLMenuElement {
       this.hide()
     })
 
-    this.bindEvent(NAME_ADD, () => this.node.dispatch(EVENT_BRANCH))
+    this.bindEvent(NAME_ADD, () => {
+      this.node.dispatch(EVENT_BRANCH)
+      setTimeout(() => this.hide(), 1200)
+    })
 
     this.bindEvent(NAME_EDIT, () => {
       this.node.editMode()
@@ -84,7 +87,7 @@ class TaskMenu extends HTMLMenuElement {
 
     const menuTop =
       menuButtonRect.y + window.pageYOffset - menuRect.height / 2 + menuButtonRect.height / 2
-    const menuRight = menuButtonRect.x + menuButtonRect.width + window.pageXOffset - 1
+    const menuRight = menuButtonRect.x + menuButtonRect.width + window.pageXOffset + 5
     this.setAttribute(
       'style',
       `top:${menuTop}px; left:${menuRight}px; visibility: visible; opacity: 1`

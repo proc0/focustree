@@ -72,6 +72,7 @@ details {
 
     & button:first-child {
       margin-right: 0.35rem;
+      font-size: 1.24rem;
     }
 
     & button:last-child {
@@ -102,7 +103,12 @@ div.drag-node {
 
 div.menu-open {
   summary {
-    opacity: 0.5;
+    ::slotted(span) {
+      opacity: 0;
+    }
+    ::after {
+      opacity: 0;
+    }
   }
 }
 
