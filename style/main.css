@@ -165,12 +165,12 @@ main > menu.open {
 
 /* effects */
 
-menu {
+/* menu {
   transition: opacity 250ms ease-in;
   -moz-transition: opacity 250ms ease-in;
   -o-transition: opacity 250ms ease-in;
   -webkit-transition: opacity 250ms ease-in;
-}
+} */
 
 task-node {
   opacity: 1;
