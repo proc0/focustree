@@ -23,8 +23,13 @@ select {
   }
 
   & option {
-    padding: 0 0.3rem;
-
+    padding: 0.1rem 0.5rem;
+    &:first-child {
+      padding-top: 0.2rem;
+    }
+    &:last-child {
+      padding-bottom: 0.2rem;
+    }
     &::checkmark {
       display: none;
     }

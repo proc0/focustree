@@ -61,10 +61,10 @@ html.theme-forest {
     }
     option {
       color: var(--forest-fg-shade);
-      background-color: var(--forest-bg);
+      background-color: var(--forest-bg-shade);
       &:hover {
         color: var(--forest-fg-accent) !important;
-        background-color: var(--forest-bg-shade) !important;
+        background-color: var(--forest-bg) !important;
       }
     }
   }
@@ -162,10 +162,10 @@ html.theme-gruvbox {
     }
     option {
       color: var(--gruvbox-fg-shade);
-      background-color: var(--gruvbox-bg);
+      background-color: var(--gruvbox-bg-shade);
       &:hover {
         color: var(--gruvbox-fg-accent) !important;
-        background-color: var(--gruvbox-bg-shade) !important;
+        background-color: var(--gruvbox-bg) !important;
       }
     }
   }
