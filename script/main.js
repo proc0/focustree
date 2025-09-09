@@ -22,20 +22,21 @@ window.onload = () => {
   // TODO: refactor somewhere else
   document.addEventListener('click', () => {
     taskMenu.hide()
-    const menu = document.querySelector('main > menu')
+    const menu = document.querySelector('main > menu') || document.querySelector('header > menu')
     const isOpen = menu.classList.contains('open')
     if (isOpen) {
       menu.classList.remove('open')
     }
   })
-  main.querySelector('button[name="root-menu"]').addEventListener('click', (event) => {
+  document.querySelector('header > button[name="root-menu"]').addEventListener('click', (event) => {
     event.stopPropagation()
-    const menuButton = event.target
-    const isOpen = menuButton.parentElement.classList.contains('open')
+    // const menuButton = event.target
+    const rootMenu = document.querySelector('header > menu')
+    const isOpen = rootMenu.classList.contains('open')
     if (isOpen) {
-      menuButton.parentElement.classList.remove('open')
+      rootMenu.classList.remove('open')
     } else {
-      menuButton.parentElement.classList.add('open')
+      rootMenu.classList.add('open')
     }
   })
   // handle root menu events

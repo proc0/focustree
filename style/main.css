@@ -48,6 +48,11 @@ body {
   width: 100%;
 }
 
+main {
+  padding: 0.5rem 1rem 1rem;
+  width: 100%;
+}
+
 button {
   display: flex;
   align-items: center;
@@ -61,17 +66,26 @@ menu {
   flex-wrap: wrap;
 }
 
-main {
-  padding: 1rem;
-  width: 100%;
+header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 1rem;
 
-  & > menu {
-    button {
-      height: 2rem;
-      line-height: 2rem;
-    }
+  & > button[name="root-menu"], & > menu menuitem button {
+    font-size: 1.5rem;
+    min-width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+  }
+
+  menu {
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
 
     menuitem {
+      display: flex;
       place-items: center;
     }
   }
@@ -106,7 +120,6 @@ task-view {
 task-base {
   display: flex;
   flex-direction: column;
-  padding: 1rem 0;
   width: 100%;
 }
 
@@ -120,6 +133,8 @@ task-base > task-node {
   margin-bottom: 1rem;
   padding-left: 0.25rem;
 }
+
+/* mobile */
 
 @media only screen and (max-width: 600px) {
   html {
@@ -157,10 +172,9 @@ task-base > task-node {
 
 /* interaction */
 
-main > menu.open {
-  & menuitem {
-    display: flex;
-  }
+header > menu.open {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* effects */

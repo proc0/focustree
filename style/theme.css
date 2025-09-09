@@ -12,6 +12,10 @@ html.theme-forest {
     border-right: 0.1rem solid transparent;
     text-shadow: 0.1rem 0.2rem 0.3rem var(--color-black);
   }
+  
+  header > .icon-button, header > menu {
+    border: none !important;
+  }
 
   .icon-button:hover {
     color: var(--forest-fg-accent) !important;
@@ -21,11 +25,15 @@ html.theme-forest {
     text-shadow: none;
   }
 
-  task-view > menu menuitem:last-child button:hover {
+  header > .icon-button:hover {
+    border: none !important;
+  }
+
+  task-view > menu menuitem:last-child button:hover, header > menu menuitem:last-child button:hover {
     border-right: 0.1rem solid transparent !important;
   }
 
-  task-view > menu menuitem:first-child button:hover {
+  task-view > menu menuitem:first-child button:hover, header > menu menuitem:first-child button:hover {
     border-left: 0.1rem solid transparent !important;
   }
 
@@ -41,7 +49,7 @@ html.theme-forest {
     text-shadow: none;
   }
 
-  task-view > menu {
+  header > menu, task-view > menu {
     background-color: var(--forest-bg-shade);
     border: 0.45rem solid var(--forest-bg);
     border-left: none;
@@ -114,6 +122,10 @@ html.theme-gruvbox {
     text-shadow: 0.1rem 0.2rem 0.3rem var(--color-black);
   }
 
+  header > .icon-button, header > menu {
+    border: none !important;
+  }
+
   .icon-button:hover {
     color: var(--gruvbox-fg-accent) !important;
     background-color: var(--gruvbox-bg) !important;
@@ -122,11 +134,15 @@ html.theme-gruvbox {
     text-shadow: none;
   }
 
-  task-view > menu menuitem:last-child button:hover {
+  header > .icon-button:hover {
+    border: none !important;
+  }
+
+  task-view > menu menuitem:last-child button:hover, header > menu menuitem:last-child button:hover {
     border-right: 0.1rem solid transparent !important;
   }
 
-  task-view > menu menuitem:first-child button:hover {
+  task-view > menu menuitem:first-child button:hover, header > menu menuitem:first-child button:hover {
     border-left: 0.1rem solid transparent !important;
   }
 
@@ -142,7 +158,7 @@ html.theme-gruvbox {
     text-shadow: none;
   }
 
-  task-view > menu {
+  header > menu, task-view > menu {
     background-color: var(--gruvbox-bg-shade);
     border: 0.45rem solid var(--gruvbox-bg);
     border-left: none;
