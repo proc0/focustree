@@ -35,7 +35,7 @@ class TaskView extends TaskControl {
 
     const OFFSET = 200
     // custom scroll into view, places the focused task slightly above center
-    const nodeBounds = node.select('div').getBoundingClientRect()
+    const nodeBounds = node.select().getBoundingClientRect()
     const nodeTop = nodeBounds.top + window.pageYOffset
     const pageOffset = nodeTop - window.innerHeight / 2 + OFFSET
     window.scrollTo(0, pageOffset)
@@ -43,7 +43,7 @@ class TaskView extends TaskControl {
 
   hideMenu(event) {
     event.stopPropagation()
-    this.querySelector('menu').hide()
+    this.menu.hide()
   }
 
   init() {
@@ -102,7 +102,7 @@ class TaskView extends TaskControl {
 
   renderTree(task) {
     const taskNode = document.createElement(TAG_NODE).init(task)
-    const container = taskNode.shadowRoot.querySelector('div')
+    const container = taskNode.select()
 
     // metadata
     if (task.id) {
@@ -154,7 +154,7 @@ class TaskView extends TaskControl {
     }
 
     // set theme palette
-    container.classList.add(document.documentElement.getAttribute('data-theme'))
+    container.classList.add(document.documentElement.getAttribute(DATA_THEME))
     // state class and attributes on container
     const currentState = task.data.states[task.state].toLowerCase()
     container.classList.add(currentState)

@@ -69,6 +69,7 @@ const DATA_ID = 'data-id'
 const DATA_FOCUS = 'data-focus'
 const DATA_TEXT = 'data-text'
 const DATA_PATH = 'data-path'
+const DATA_THEME = 'data-theme'
 
 // classes
 const CLASS_BRANCH = 'branch'
