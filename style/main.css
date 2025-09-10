@@ -10,14 +10,10 @@ body {
   box-sizing: border-box;
 }
 
-main {
-  box-sizing: border-box;
-
-  & > menu {
-    menuitem {
-      display: none;
-    }
-  }
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 
 menu {
@@ -25,10 +21,13 @@ menu {
   padding: 0;
 }
 
-button {
-  cursor: pointer;
-  background: none;
-  border: none;
+main {
+  box-sizing: border-box;
+  & > menu {
+    menuitem {
+      display: none;
+    }
+  }
 }
 
 task-base > task-node {
@@ -72,7 +71,8 @@ header {
   align-items: center;
   padding: 0.5rem 1rem;
 
-  & > button[name="root-menu"], & > menu menuitem button {
+  button[name="root-menu"], 
+  menu menuitem button {
     font-size: 1.5rem;
     min-width: 2rem;
     height: 2rem;
@@ -178,13 +178,6 @@ header > menu.open {
 }
 
 /* effects */
-
-/* menu {
-  transition: opacity 250ms ease-in;
-  -moz-transition: opacity 250ms ease-in;
-  -o-transition: opacity 250ms ease-in;
-  -webkit-transition: opacity 250ms ease-in;
-} */
 
 task-node {
   opacity: 1;

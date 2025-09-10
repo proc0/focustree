@@ -29,11 +29,13 @@ html.theme-forest {
     border: none !important;
   }
 
-  task-view > menu menuitem:last-child button:hover, header > menu menuitem:last-child button:hover {
+  task-view > menu menuitem:last-child button:hover, 
+  header > menu menuitem:last-child button:hover {
     border-right: 0.1rem solid transparent !important;
   }
 
-  task-view > menu menuitem:first-child button:hover, header > menu menuitem:first-child button:hover {
+  task-view > menu menuitem:first-child button:hover, 
+  header > menu menuitem:first-child button:hover {
     border-left: 0.1rem solid transparent !important;
   }
 
@@ -138,11 +140,13 @@ html.theme-gruvbox {
     border: none !important;
   }
 
-  task-view > menu menuitem:last-child button:hover, header > menu menuitem:last-child button:hover {
+  task-view > menu menuitem:last-child button:hover, 
+  header > menu menuitem:last-child button:hover {
     border-right: 0.1rem solid transparent !important;
   }
 
-  task-view > menu menuitem:first-child button:hover, header > menu menuitem:first-child button:hover {
+  task-view > menu menuitem:first-child button:hover, 
+  header > menu menuitem:first-child button:hover {
     border-left: 0.1rem solid transparent !important;
   }
 
