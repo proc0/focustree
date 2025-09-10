@@ -1,15 +1,16 @@
 //placeholder
 TUTORIAL = null
 
+const NEW_NAME = 'New Task: Edit name.'
+
 // more states can be added
 const STATE_READY = 'ready'
 const STATE_ACTIVE = 'active'
 const STATE_PAUSE = 'pause'
 const STATE_DONE = 'done'
+const STATE_REJECT = 'reject'
 // define states above and add them to the state list
 const STATES = [STATE_READY, STATE_ACTIVE, STATE_PAUSE, STATE_DONE]
-
-const NEW_NAME = 'New Task: Edit name.'
 
 // global events
 const EVENT_RENDER = 'render'
@@ -25,7 +26,7 @@ const EVENT_SAVE = 'save'
 const EVENT_MENU = 'menu'
 const EVENT_SYNC = 'sync'
 const EVENT_EDIT = 'edit'
-const EVENT_EDIT2 = 'edit2'
+const EVENT_TREE_EDIT = 'tree-edit'
 const EVENT_DRAG = 'drag'
 
 // main menu

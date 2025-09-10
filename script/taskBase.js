@@ -2,31 +2,30 @@ const BASE_NAME = 'taskbase'
 const BASE_STORE = 'task'
 const BASE_VERSION = 1
 
-const MODEL = {
-  // id: 0, (root only)
-  data: {
-    record: [],
-    // record: [{
-    // stateStart,
-    // stateEnd,
-    // timeStart,
-    // timeEnd,
-    // }]
-    states: STATES,
-  },
-  meta: {
-    editing: true,
-    focused: false,
-    opened: false,
-  },
-  name: NEW_NAME,
-  note: '',
-  path: [0],
-  state: 0,
-  tree: [],
-}
-
 class TaskBase extends TaskControl {
+  model = {
+    // id: 0,
+    data: {
+      record: [
+        // stateStart,
+        // stateEnd,
+        // timeStart,
+        // timeEnd,
+      ],
+      states: STATES,
+    },
+    meta: {
+      editing: true,
+      focused: false,
+      opened: false,
+    },
+    name: NEW_NAME,
+    note: '',
+    path: [0],
+    state: 0,
+    tree: [],
+  }
+
   connectedCallback() {
     // initialize view
     this.parentElement.init()
@@ -91,7 +90,7 @@ class TaskBase extends TaskControl {
     let task = detail?.task
 
     if (!task) {
-      task = structuredClone(MODEL)
+      task = structuredClone(this.model)
       // get new task path (order index of root)
       const rootIndex = this.querySelectorAll('& > task-node').length
       task.path = [rootIndex >= 0 ? rootIndex : 0]
@@ -135,7 +134,7 @@ class TaskBase extends TaskControl {
 
     taskStore.createIndex('name', 'name')
 
-    const taskSeed = structuredClone(TUTORIAL || MODEL)
+    const taskSeed = structuredClone(TUTORIAL || this.model)
     // only root tasks have id
     taskSeed.id = 1
 
@@ -391,7 +390,7 @@ class TaskBase extends TaskControl {
     const task = event.detail.task
     if (event.type === EVENT_BRANCH) {
       // create new task and add path
-      const newTask = structuredClone(MODEL)
+      const newTask = structuredClone(this.model)
       newTask.path = [...task.path, task.tree.length]
       task.tree.push(newTask)
       // open drawer

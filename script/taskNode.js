@@ -3,7 +3,7 @@ class TaskNode extends HTMLElement {
     super()
 
     // bubbling edit event to set all ancestor nodes
-    this.addEventListener(EVENT_EDIT2, ({ detail }) => {
+    this.addEventListener(EVENT_TREE_EDIT, ({ detail }) => {
       if (detail.task.meta.editing) {
         this.setAttribute('draggable', 'false')
       } else {
@@ -26,7 +26,7 @@ class TaskNode extends HTMLElement {
 
   bindEvents() {
     // open and close subtasks drawer
-    this.select('details summary').addEventListener('click', (event) => {
+    this.select('summary').addEventListener('click', (event) => {
       event.stopPropagation()
 
       if (!this.task.tree.length) {
@@ -74,8 +74,8 @@ class TaskNode extends HTMLElement {
       event.stopPropagation()
       this.task.meta.editing = false
       this.dispatch(EVENT_EDIT)
-      // Edit2 bubbles all the way to the top
-      this.dispatch(EVENT_EDIT2)
+      // bubbles all the way to the top
+      this.dispatch(EVENT_TREE_EDIT)
     })
 
     // task delete
@@ -224,7 +224,7 @@ class TaskNode extends HTMLElement {
     this.task.meta.editing = true
     this.dispatch(EVENT_EDIT)
     // Edit2 bubbles all the way to the top
-    this.dispatch(EVENT_EDIT2)
+    this.dispatch(EVENT_TREE_EDIT)
   }
 
   equals(node) {
@@ -244,22 +244,25 @@ class TaskNode extends HTMLElement {
 
   hasAnyEditingChildren() {
     const searchTree = (sub) => {
-      if (!sub.tree.length) return sub.meta.editing
+      if (!sub.tree.length) {
+        return sub.meta.editing
+      }
 
-      let isEditing = sub.tree.some((t) => t.meta.editing)
-
-      if (isEditing) {
+      if (sub.tree.some(({ meta }) => meta.editing)) {
         return true
       }
 
+      let isEditing = false
       for (let i = 0; i < sub.tree.length; i++) {
         if (searchTree(sub.tree[i])) {
           isEditing = true
           break
         }
       }
+
       return isEditing
     }
+
     return searchTree(this.task)
   }
 
@@ -284,11 +287,12 @@ class TaskNode extends HTMLElement {
       return false
     }
 
-    let result = false
     let ancestor = this.parentElement
     if (ancestor.equals(node)) {
-      result = true
+      return true
     }
+
+    let result = false
     while (!ancestor.isRoot()) {
       ancestor = ancestor.parentElement
       if (ancestor.equals(node)) {
@@ -368,7 +372,7 @@ class TaskNode extends HTMLElement {
     this.dispatch(EVENT_SAVE)
   }
 
-  select(query) {
+  select(query = 'div') {
     return this.shadowRoot.querySelector(query)
   }
 
