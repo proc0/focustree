@@ -39,33 +39,17 @@ class TaskBase extends TaskControl {
 
   constructor() {
     super()
-    const initBase = window.indexedDB.open(BASE_NAME, BASE_VERSION)
 
-    initBase.onerror = this.throwError('Initializing')
-    initBase.onsuccess = ({ target }) => {
+    const openRequest = window.indexedDB.open(BASE_NAME, BASE_VERSION)
+    openRequest.onerror = this.throwError('Initializing')
+    openRequest.onupgradeneeded = this.upgrade.bind(this)
+    openRequest.onsuccess = ({ target }) => {
       console.log('Initialization complete.')
       // save database reference
-      this.taskBase = target.result
+      this.database = target.result
       this.load()
     }
 
-    initBase.onupgradeneeded = ({ target }) => {
-      console.log('Upgrade needed.')
-      const taskBase = target.result
-      taskBase.onerror = this.throwError('Upgrading')
-      // database does not exist
-      if (!taskBase.objectStoreNames.contains(BASE_STORE)) {
-        this.seed(taskBase)
-      } else {
-        // define migration function for version upgrades
-        // if (oldVersion === 1) { // get oldVersion from event.oldVersion
-        //   console.log(`Migrating version ${oldVersion} to ${taskBase.version}.`)
-        //   migration = (task) => { /* modify task to new version here */ }
-        // }
-        let migration = null
-        this.migrate(migration, target)
-      }
-    }
     // bind events
     this.addEventListener(EVENT_DELETE, this.delete.bind(this))
     this.saveEvents.forEach((eventName) => {
@@ -75,6 +59,7 @@ class TaskBase extends TaskControl {
 
   addRoot({ detail }) {
     let task = detail?.task
+
     if (!task) {
       // add default model
       task = structuredClone(this.model)
@@ -153,16 +138,15 @@ class TaskBase extends TaskControl {
       const file = event.target.files[0]
 
       if (!file) {
-        conosole.Error('No file selected. Please choose a file.')
-        return
+        return this.throwError('No file provided.')
       }
 
       const reader = new FileReader()
-
+      reader.onerror = this.throwError(`Reading file ${file}`)
       reader.onload = () => {
+        // parse tasks
         const tasks = JSON.parse(reader.result)
-        console.log(tasks)
-
+        // save tasks
         this.transact('readwrite', (store) => {
           tasks.forEach((task) => {
             const addRequest = store.add(task, task.id)
@@ -177,7 +161,6 @@ class TaskBase extends TaskControl {
         input.remove()
       }
 
-      reader.onerror = this.throwError(`Reading file ${file}`)
       reader.readAsText(file)
     })
 
@@ -336,10 +319,10 @@ class TaskBase extends TaskControl {
     })
   }
 
-  seed(taskBase) {
+  seed(database) {
     console.log('Seeding...')
     // create an objectStore for tasks
-    const store = taskBase.createObjectStore(BASE_STORE, {
+    const store = database.createObjectStore(BASE_STORE, {
       keypath: 'id',
       autoIncrement: true,
     })
@@ -364,7 +347,7 @@ class TaskBase extends TaskControl {
   }
 
   transact(operation, order) {
-    const transaction = this.taskBase.transaction(BASE_STORE, operation)
+    const transaction = this.database.transaction(BASE_STORE, operation)
     const store = transaction.objectStore(BASE_STORE)
 
     const request = order(store)
@@ -373,5 +356,23 @@ class TaskBase extends TaskControl {
     }
 
     return request
+  }
+
+  upgrade({ target }) {
+    console.log('Upgrade needed.')
+    const database = target.result
+    database.onerror = this.throwError('Upgrading')
+    // database does not exist
+    if (!database.objectStoreNames.contains(BASE_STORE)) {
+      this.seed(database)
+    } else {
+      // define migration function for version upgrades
+      // if (oldVersion === 1) { // get oldVersion from event.oldVersion
+      //   console.log(`Migrating version ${oldVersion} to ${database.version}.`)
+      //   migration = (task) => { /* modify task to new version here */ }
+      // }
+      let migration = null
+      this.migrate(migration, target)
+    }
   }
 }
