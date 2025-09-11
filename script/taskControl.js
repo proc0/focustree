@@ -239,17 +239,17 @@ class TaskControl extends HTMLElement {
     return this.querySelector(query)
   }
 
-  transformTask(task, transform) {
-    const traverseTask = (task, transform) => {
+  transformTask(transform, task) {
+    const traverseTask = (transform, task) => {
       transform(task)
       if (!task.tree.length) return
 
       task.tree.forEach((sub) => {
-        traverseTask(sub, transform)
+        traverseTask(transform, sub)
       })
       return task
     }
 
-    return traverseTask(task, transform)
+    return traverseTask(transform, task)
   }
 }
