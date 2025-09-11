@@ -92,7 +92,7 @@ class TaskBase extends TaskControl {
     if (!task) {
       task = structuredClone(this.model)
       // get new task path (order index of root)
-      const rootIndex = this.querySelectorAll('& > task-node').length
+      const rootIndex = this.getRootNodes().length
       task.path = [rootIndex >= 0 ? rootIndex : 0]
     }
 
@@ -363,6 +363,12 @@ class TaskBase extends TaskControl {
     })
   }
 
+  throwError(context) {
+    return ({ target }) => {
+      throw new Error(context, { cause: target.error })
+    }
+  }
+
   save(event) {
     // stop save events except expand,
     // to allow view to handle it
@@ -377,6 +383,7 @@ class TaskBase extends TaskControl {
       node = event.target.parentElement
     }
 
+    //TODO: use getRootNode
     // grab root element
     let root = event.target
     const pathLength = event.target.task.path.length
@@ -405,6 +412,7 @@ class TaskBase extends TaskControl {
     }
 
     if (event.type === EVENT_SYNC) {
+      //TODO: use this.transformTask
       // DFS sync all states to the event task
       const syncStates = (t) => {
         t.state = task.state
@@ -419,25 +427,16 @@ class TaskBase extends TaskControl {
 
       syncStates(task)
     }
-
+    // save task
     this.store('readwrite', (store) => {
       const putRequest = store.put(root.task, root.task.id)
-
       putRequest.onsuccess = (success) => {
         console.log(`Updated task ${success.target.result}`)
-        if (event.type === EVENT_EXPAND) {
-          // does not need a render
-          return
-        }
-
+        // skip render for expand event
+        if (event.type === EVENT_EXPAND) return
+        //TODO: abstract event dispatcher
         this.dispatchEvent(
-          new CustomEvent(EVENT_RENDER_BRANCH, {
-            bubbles: true,
-            detail: {
-              node,
-              task,
-            },
-          })
+          new CustomEvent(EVENT_RENDER_BRANCH, { bubbles: true, detail: { task, node } })
         )
       }
 
@@ -446,56 +445,40 @@ class TaskBase extends TaskControl {
   }
 
   store(operation, order) {
-    const store = this.taskBase.transaction(BASE_STORE, operation).objectStore(BASE_STORE)
+    const operator = this.taskBase.transaction(BASE_STORE, operation)
+    const store = operator.objectStore(BASE_STORE)
 
     const request = order(store)
-
-    if (!request) {
-      return
-    }
-
-    request.onerror = ({ target }) => {
-      console.error(target.error)
+    if (request) {
+      request.onerror = this.throwError('Store Error!')
     }
 
     return request
   }
 
   upgrade(migration) {
-    // version upgrade
+    // version upgrade migration
     const store = target.transaction.objectStore(BASE_STORE)
-
-    const request = store.openCursor()
-
-    request.onsuccess = ({ target }) => {
+    const cursorRequest = store.openCursor()
+    cursorRequest.onsuccess = ({ target }) => {
       const cursor = target.result
-
       if (!cursor) {
-        return console.log('Tasks migration complete.')
+        return console.log('Upgrade complete.')
       }
-
-      const task = cursor.value
+      // migrate task and subtasks
+      const model = cursor.value
       if (migration) {
-        // migrate task and subtasks
-        this.transformTask(task, migration)
+        this.transformTask(model, migration)
       }
-
       // save task migration
-      const putRequest = store.put(task, task.id)
-
+      const putRequest = store.put(model, model.id)
       putRequest.onsuccess = (success) => {
-        console.log(`Migrated task ${success.target.result}`)
+        console.log(`Migrated task ${success.target.result}.`)
       }
-
-      putRequest.onerror = (event) => {
-        console.error(event.target.error)
-      }
+      putRequest.onerror = this.throwError(`Migrating task ${model.id}.`)
 
       cursor.continue()
     }
-
-    request.onerror = ({ target }) => {
-      console.error(target.error)
-    }
+    cursorRequest.onerror = this.throwError('Upgrading tasks.')
   }
 }
