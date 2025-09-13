@@ -132,11 +132,11 @@ class TaskBase extends TaskControl {
 
   import() {
     console.log('Importing...')
+
     const input = document.createElement('input')
     input.setAttribute('type', 'file')
     input.addEventListener('change', (event) => {
       const file = event.target.files[0]
-
       if (!file) {
         return this.throwError('No file provided.')
       }
@@ -180,35 +180,28 @@ class TaskBase extends TaskControl {
     })
   }
 
-  mapSave(transform) {
-    const requestAll = this.transact('readwrite', (store) => {
-      const readRequest = store.getAll()
-
-      let tasks = []
-      readRequest.onsuccess = ({ target }) => {
+  mapSave(transform = (a) => a) {
+    this.transact('readwrite', (store) => {
+      const loadRequest = store.getAll()
+      loadRequest.onsuccess = ({ target }) => {
         const result = target.result
         // sort tasks based on path
         result.sort((a, b) => {
           return a.path[0] > b.path[0] ? 1 : -1
         })
-
-        tasks = transform(result)
-        tasks.forEach((task, index) => {
+        // transform callback
+        const tasks = transform(result)
+        const saveTask = (task, index) => {
           // root tasks
           if (task.id) {
-            // save updated tasks
+            // save root task
             const putRequest = store.put(task, task.id)
-
+            putRequest.onerror = this.throwError(`Saving root task ${task.id}`)
             putRequest.onsuccess = ({ target }) => {
-              console.log(`Updated task ${task.id}`)
-
+              console.log(`Saved root task ${task.id}.`)
               if (index === tasks.length - 1) {
                 this.dispatch(EVENT_RENDER, { tasks })
               }
-            }
-
-            putRequest.onerror = (event) => {
-              console.error(event.target.error)
             }
           } else {
             // promote branch to root
@@ -217,24 +210,21 @@ class TaskBase extends TaskControl {
               task.id = event.target.result
               // another request to save the DB key in id
               const putRequest = store.put(task, task.id)
-              // only root tasks have id
+              putRequest.onerror = this.throwError(`Promoting to root task ${task.id}`)
               putRequest.onsuccess = () => {
-                console.log(`Added new root task ${task.id}`)
-
+                console.log(`Promoted root task ${task.id}`)
                 if (index === tasks.length - 1) {
                   this.dispatch(EVENT_RENDER, { tasks })
                 }
               }
-
-              putRequest.onerror = (event) => {
-                console.error(event.target.error)
-              }
             }
           }
-        })
+        }
+
+        tasks.forEach(saveTask)
       }
 
-      return readRequest
+      return loadRequest
     })
   }
 
