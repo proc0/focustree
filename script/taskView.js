@@ -7,7 +7,7 @@ class TaskView extends TaskControl {
     this.addEventListener(EVENT_EDIT, this.renderBranch.bind(this))
     this.addEventListener(EVENT_DELETE, this.deleteRoot.bind(this))
     this.addEventListener(EVENT_FOCUS, this.focusTree.bind(this))
-    this.addEventListener(EVENT_MENU, this.showMenu.bind(this))
+    this.addEventListener(EVENT_MENU, this.toggleMenu.bind(this))
     this.addEventListener(EVENT_EXPAND, this.hideMenu.bind(this))
     // parent class handlers
     this.bindDragEvents()
@@ -206,15 +206,7 @@ class TaskView extends TaskControl {
     return taskNode
   }
 
-  showMenu(event) {
-    event.stopPropagation()
-    const menu = this.querySelector('menu')
-    if (menu.isOpen()) {
-      if (event.detail.node === menu.node) {
-        return menu.hide()
-      }
-      menu.hide()
-    }
-    menu.show(event)
+  toggleMenu(event) {
+    this.querySelector('menu').toggle(event)
   }
 }
