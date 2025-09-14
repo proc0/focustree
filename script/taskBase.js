@@ -109,11 +109,11 @@ class TaskBase extends TaskControl {
 
   export() {
     console.log('Exporting...')
+
     this.transact('readonly', (store) => {
       const readRequest = store.getAll()
       readRequest.onsuccess = ({ target }) => {
         const tasks = target.result
-        console.log(tasks)
         const a = document.createElement('a')
         a.href = URL.createObjectURL(
           new Blob([JSON.stringify(tasks, null, 2)], {
@@ -138,7 +138,7 @@ class TaskBase extends TaskControl {
     input.addEventListener('change', (event) => {
       const file = event.target.files[0]
       if (!file) {
-        return this.throwError('No file provided.')
+        return this.throwError('Selecting file')
       }
 
       const reader = new FileReader()
@@ -189,35 +189,31 @@ class TaskBase extends TaskControl {
         result.sort((a, b) => {
           return a.path[0] > b.path[0] ? 1 : -1
         })
+
         // transform callback
         const tasks = transform(result)
+        const updateTask = (task, index) => {
+          const putRequest = store.put(task, task.id)
+          putRequest.onerror = this.throwError(`Saving task ${task.id}`)
+          putRequest.onsuccess = ({ target }) => {
+            if (index === tasks.length - 1) {
+              this.dispatch(EVENT_RENDER, { tasks })
+            }
+          }
+        }
+
         const saveTask = (task, index) => {
           // root tasks
           if (task.id) {
-            // save root task
-            const putRequest = store.put(task, task.id)
-            putRequest.onerror = this.throwError(`Saving root task ${task.id}`)
-            putRequest.onsuccess = ({ target }) => {
-              console.log(`Saved root task ${task.id}.`)
-              if (index === tasks.length - 1) {
-                this.dispatch(EVENT_RENDER, { tasks })
-              }
-            }
-          } else {
-            // promote branch to root
-            const addRequest = store.add(task)
-            addRequest.onsuccess = (event) => {
-              task.id = event.target.result
-              // another request to save the DB key in id
-              const putRequest = store.put(task, task.id)
-              putRequest.onerror = this.throwError(`Promoting to root task ${task.id}`)
-              putRequest.onsuccess = () => {
-                console.log(`Promoted root task ${task.id}`)
-                if (index === tasks.length - 1) {
-                  this.dispatch(EVENT_RENDER, { tasks })
-                }
-              }
-            }
+            console.log(`Saved root task ${task.id}.`)
+            return updateTask(task, index)
+          }
+          // promote branch to root
+          const addRequest = store.add(task)
+          addRequest.onsuccess = (event) => {
+            task.id = event.target.result
+            console.log(`Promoted task ${task.id}.`)
+            updateTask(task, index)
           }
         }
 
@@ -301,7 +297,6 @@ class TaskBase extends TaskControl {
         console.log(`Updated task ${success.target.result}`)
         // skip render for expand event
         if (event.type === EVENT_EXPAND) return
-
         this.dispatch(EVENT_RENDER_BRANCH, { task, node })
       }
 
@@ -332,7 +327,7 @@ class TaskBase extends TaskControl {
 
   throwError(context) {
     return ({ target }) => {
-      throw new Error(`${context} Error!`, { cause: target.error })
+      throw new Error(`TaskBase Error: ${context}`, { cause: target.error })
     }
   }
 
