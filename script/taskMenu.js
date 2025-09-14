@@ -119,14 +119,17 @@ class TaskMenu extends HTMLMenuElement {
 
   // overloaded root + task menu
   toggle(event) {
-    event.stopPropagation()
+    event.stopImmediatePropagation()
     const isRootMenu = this.isRoot(event)
     const menu = isRootMenu ? document.querySelector(QUERY_ROOT_MENU) : this
     if (this.isOpen(menu)) {
       if (event.detail?.node === this.node) {
         return this.hide(menu)
       }
+
       this.hide(menu)
+      // root menu is one instance
+      if (isRootMenu) return
     }
     // simple open root menu or show task menu
     return isRootMenu ? this.open(menu) : this.show(event)

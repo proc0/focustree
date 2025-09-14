@@ -13,6 +13,7 @@ select {
 
   &::picker(select) {
     appearance: base-select;
+    border: 0;
   }
 
   &::picker-icon {
@@ -60,6 +61,10 @@ select {
   select.active {
     color: var(--forest-state-active) !important;
   }
+
+  select.ready {
+    color: var(--forest-fg-shade) !important;
+  }
 }
 
 .theme-gruvbox {
@@ -73,5 +78,9 @@ select {
 
   select.active {
     color: var(--gruvbox-state-active) !important;
+  }
+
+  select.ready {
+    color: var(--gruvbox-fg-shade) !important;
   }
 }

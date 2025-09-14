@@ -85,6 +85,7 @@ class TaskView extends TaskControl {
   renderSelect(task) {
     const taskState = document.createElement('select')
     taskState.setAttribute('slot', NAME_STATE)
+    taskState.setAttribute('id', task.path.join('-'))
     task.data.states.forEach((state, index) => {
       const option = document.createElement('option')
       option.value = index
