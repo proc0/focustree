@@ -172,7 +172,7 @@ task-base > task-node {
 
 /* interaction */
 
-header > menu.open {
+header > menu.menu-open {
   opacity: 1;
   visibility: visible;
 }

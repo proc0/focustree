@@ -33,6 +33,7 @@ const EVENT_DRAG = 'drag'
 const ID_ROOT_ADD = 'root-add'
 const ID_ROOT_IMPORT = 'root-import'
 const ID_ROOT_EXPORT = 'root-export'
+const ID_ROOT_MENU_TOGGLE = 'root-menu-toggle'
 // custom html templates
 const TEMPLATE_NODE = 'template-task'
 const TEMPLATE_EDIT = 'template-edit'
@@ -87,3 +88,5 @@ const CLASS_MENU_OPEN = 'menu-open'
 // theme classes (should match html)
 const THEME_ICON_BUTTON = 'icon-button'
 const THEME_FIELD_INPUT = 'field-input'
+
+const QUERY_ROOT_MENU = 'header > menu'

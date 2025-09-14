@@ -54,15 +54,37 @@ class TaskMenu extends HTMLMenuElement {
     })
   }
 
-  isOpen() {
-    return !!this.node
+  // document level event
+  clear(event) {
+    event.stopImmediatePropagation()
+    const rootMenu = document.querySelector(QUERY_ROOT_MENU)
+    if (this.isOpen(rootMenu)) this.hide(rootMenu)
+    if (this.isOpen()) this.hide()
   }
 
-  hide() {
-    if (!this.node) return
-    this.removeAttribute('style')
-    this.node.removeClass(CLASS_MENU_OPEN)
-    this.node = null
+  // overloaded root + task menu
+  isOpen(menu = this) {
+    return menu.classList.contains(CLASS_MENU_OPEN)
+  }
+
+  isRoot(event) {
+    return event?.target?.getAttribute('id') === ID_ROOT_MENU_TOGGLE
+  }
+
+  // overloaded root + task menu
+  hide(menu = this) {
+    menu.classList.remove(CLASS_MENU_OPEN)
+    if (menu.node) {
+      menu.classList.remove(CLASS_MENU_OPEN)
+      menu.removeAttribute('style')
+      menu.node.removeClass(CLASS_MENU_OPEN)
+      menu.node = null
+    }
+  }
+
+  // overloaded root + task menu
+  open(menu = this) {
+    return menu.classList.add(CLASS_MENU_OPEN)
   }
 
   select(query) {
@@ -92,5 +114,21 @@ class TaskMenu extends HTMLMenuElement {
       'style',
       `top:${menuTop}px; left:${menuRight}px; visibility: visible; opacity: 1`
     )
+    this.open()
+  }
+
+  // overloaded root + task menu
+  toggle(event) {
+    event.stopPropagation()
+    const isRootMenu = this.isRoot(event)
+    const menu = isRootMenu ? document.querySelector(QUERY_ROOT_MENU) : this
+    if (this.isOpen(menu)) {
+      if (event.detail?.node === this.node) {
+        return this.hide(menu)
+      }
+      this.hide(menu)
+    }
+    // simple open root menu or show task menu
+    return isRootMenu ? this.open(menu) : this.show(event)
   }
 }
