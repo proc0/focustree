@@ -136,7 +136,23 @@
         <menuitem><button class="icon-button" id="root-import" title="Import">↧</button></menuitem>
         <menuitem><button class="icon-button" id="root-export" title="Export">↥</button></menuitem>
         <menuitem>
-          <button class="icon-button" id="root-settings" title="Settings">⛭</button>
+          <button
+            class="icon-button"
+            id="root-settings"
+            title="Settings"
+            onclick="settings.showModal()"
+          >
+            ⛭
+          </button>
+          <dialog id="settings" closedby="any">
+            <p>Theme:</p>
+            <select
+              onchange="document.documentElement.setAttribute('class', `theme-${this.value.toLowerCase()}`); document.documentElement.setAttribute('data-theme', `theme-${this.value.toLowerCase()}`)"
+            >
+              <option>Forest</option>
+              <option>Gruvbox</option>
+            </select>
+          </dialog>
         </menuitem>
         <menuitem><button class="icon-button" id="root-info" title="Info">?</button></menuitem>
       </menu>
