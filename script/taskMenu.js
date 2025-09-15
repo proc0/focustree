@@ -95,13 +95,17 @@ class TaskMenu extends HTMLMenuElement {
     return this.querySelector(`[name="${name}"]`)
   }
 
-  show(event) {
-    this.node = event.detail.node
-
+  render() {
     this.querySelector(`[name="${NAME_STATE}"] select`)?.remove()
     const stateSelect = this.parentElement.renderSelect(this.node.task)
     this.selectName(NAME_STATE).appendChild(stateSelect)
     this.node.addClass(CLASS_MENU_OPEN)
+  }
+
+  show(event) {
+    this.node = event.detail.node
+
+    this.render()
 
     const menuButton = this.node.selectName(NAME_MENU)
     const menuButtonRect = menuButton.getBoundingClientRect()

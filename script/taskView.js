@@ -170,7 +170,7 @@ class TaskView extends TaskControl {
     const menu = this.querySelector('menu')
     if (menu.node?.equals(taskNode)) {
       menu.node = taskNode
-      taskNode.addClass(CLASS_MENU_OPEN)
+      menu.render()
     }
 
     // leaf node
