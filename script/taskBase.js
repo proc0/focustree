@@ -65,8 +65,10 @@ class TaskBase extends TaskControl {
       // add default model
       task = structuredClone(this.model)
       // get new task path (order index of root)
-      const rootIndex = this.getRootNodes().length
-      task.path = [rootIndex >= 0 ? rootIndex : 0]
+      const rootNodes = this.getRootNodes()
+      const lastIndex = rootNodes ? rootNodes.length - 1 : 0
+      const lastNodePath = rootNodes[lastIndex]?.task.path[0]
+      task.path = [lastNodePath ? lastNodePath + 1 : 0]
     }
 
     // save root task

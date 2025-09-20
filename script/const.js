@@ -10,7 +10,7 @@ const STATE_PAUSE = 'pause'
 const STATE_DONE = 'done'
 const STATE_REJECT = 'reject'
 // define states above and add them to the state list
-const STATES = [STATE_READY, STATE_ACTIVE, STATE_PAUSE, STATE_DONE]
+const STATES = [STATE_READY, STATE_ACTIVE, STATE_PAUSE, STATE_DONE, STATE_REJECT]
 
 // global events
 const EVENT_RENDER = 'render'

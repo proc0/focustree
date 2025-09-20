@@ -127,7 +127,6 @@ div {
       display: inline-flex;
       justify-content: center;
       padding-left: 0.3rem;
-      line-height: 1rem;
     }
   }
 
@@ -155,6 +154,12 @@ div {
   &.active {
     & [name='task-name']::after {
       content: '👁';
+    }
+  }
+
+  &.reject {
+    & [name='task-name']::after {
+      content: '✘';
     }
   }
 
@@ -238,6 +243,12 @@ div.focus summary {
     }
   }
 
+  &.reject {
+    & [name='task-name']::after {
+      color: var(--forest-state-reject);
+    }
+  }
+
   /* drag-n-drop */
   .drop-above {
     background: linear-gradient(
@@ -312,6 +323,12 @@ div.theme-gruvbox {
   &.active {
     & [name='task-name']::after {
       color: var(--gruvbox-state-active);
+    }
+  }
+
+  &.reject {
+    & [name='task-name']::after {
+      color: var(--gruvbox-state-reject);
     }
   }
 

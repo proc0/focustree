@@ -56,7 +56,7 @@ class TaskView extends TaskControl {
     const tasks = detail.tasks
 
     tasks.sort((a, b) => {
-      return a.path[0] > b.path[0] ? 1 : -1
+      return Number(a.path[0]) > Number(b.path[0]) ? 1 : -1
     })
 
     this.clear()
