@@ -15,6 +15,7 @@
     <script src="script/taskBase.js"></script>
     <script src="script/taskNode.js"></script>
     <script src="script/taskFocus.js"></script>
+    <script src="script/taskSettings.js"></script>
     <script src="script/taskMenu.js"></script>
   </head>
   <body>
@@ -129,6 +130,13 @@
         </menuitem>
       </menu>
     </template>
+    <template id="template-settings">
+      <p>Theme:</p>
+      <select>
+        <option>Forest</option>
+        <option selected>Gruvbox</option>
+      </select>
+    </template>
     <header>
       <button class="icon-button" id="root-menu-toggle" name="root-menu" title="Menu">☰</button>
       <menu>
@@ -136,23 +144,7 @@
         <menuitem><button class="icon-button" id="root-import" title="Import">↧</button></menuitem>
         <menuitem><button class="icon-button" id="root-export" title="Export">↥</button></menuitem>
         <menuitem>
-          <button
-            class="icon-button"
-            id="root-settings"
-            title="Settings"
-            onclick="settings.showModal()"
-          >
-            ⛭
-          </button>
-          <dialog id="settings" closedby="any">
-            <p>Theme:</p>
-            <select
-              onchange="document.documentElement.setAttribute('class', `theme-${this.value.toLowerCase()}`); document.documentElement.setAttribute('data-theme', `theme-${this.value.toLowerCase()}`)"
-            >
-              <option>Forest</option>
-              <option>Gruvbox</option>
-            </select>
-          </dialog>
+          <button class="icon-button" id="root-settings" title="Settings">⛭</button>
         </menuitem>
         <menuitem><button class="icon-button" id="root-info" title="Info">?</button></menuitem>
       </menu>

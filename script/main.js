@@ -7,10 +7,13 @@ window.onload = () => {
   customElements.define(TAG_NODE, TaskNode)
   customElements.define(TAG_MENU, TaskMenu, { extends: 'menu' })
   customElements.define(TAG_FOCUS, TaskFocus, { extends: 'dialog' })
+  customElements.define(TAG_SETTINGS, TaskSettings, { extends: 'dialog' })
+
   // instantiate custom elements
   const taskView = document.createElement(TAG_VIEW)
   const taskBase = document.createElement(TAG_BASE)
   const taskFocus = document.createElement('dialog', { is: TAG_FOCUS })
+  const taskSettings = document.createElement('dialog', { is: TAG_SETTINGS })
   const taskMenu = document.createElement('menu', { is: TAG_MENU })
   const main = document.querySelector('main')
 
@@ -21,6 +24,7 @@ window.onload = () => {
   main.appendChild(taskView)
   taskView.appendChild(taskMenu)
   taskView.appendChild(taskFocus)
+  taskView.appendChild(taskSettings)
   taskView.appendChild(taskBase)
 
   /* Root Events
@@ -35,4 +39,7 @@ window.onload = () => {
   document.getElementById(ID_ROOT_ADD).addEventListener('click', taskBase.addRoot.bind(taskBase))
   document.getElementById(ID_ROOT_EXPORT).addEventListener('click', taskBase.export.bind(taskBase))
   document.getElementById(ID_ROOT_IMPORT).addEventListener('click', taskBase.import.bind(taskBase))
+  document
+    .getElementById(ID_ROOT_SETTINGS)
+    .addEventListener('click', () => taskSettings.showModal())
 }

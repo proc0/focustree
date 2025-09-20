@@ -3,6 +3,7 @@ class TaskFocus extends HTMLDialogElement {
 
   constructor() {
     super()
+    this.setAttribute('id', TAG_FOCUS)
   }
 
   connectedCallback() {

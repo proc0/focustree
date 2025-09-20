@@ -130,6 +130,12 @@ task-view > dialog:open {
       color: var(--forest-fg-accent);
     }
   }
+
+  /* settings */
+
+  task-view > dialog#task-settings {
+    background: var(--forest-bg);
+  }
 }
 
 .theme-gruvbox {
@@ -137,5 +143,11 @@ task-view > dialog:open {
     ul li {
       color: var(--gruvbox-fg-accent);
     }
+  }
+
+  /* settings */
+
+  task-view > dialog#task-settings {
+    background: var(--gruvbox-bg);
   }
 }
