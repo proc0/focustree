@@ -48,6 +48,11 @@ class TaskMenu extends HTMLMenuElement {
 
     this.bindEvent(NAME_SYNC, () => this.node.dispatch(EVENT_SYNC))
 
+    this.bindEvent(NAME_CLONE, () => {
+      this.node.dispatch(EVENT_CLONE)
+      this.hide()
+    })
+
     this.bindEvent(NAME_DELETE, () => {
       this.node.delete()
       this.hide()

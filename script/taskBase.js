@@ -29,6 +29,7 @@ class TaskBase extends TaskControl {
     EVENT_SAVE,
     EVENT_STATUS,
     EVENT_SYNC,
+    EVENT_CLONE,
     EVENT_UPDATE,
   ]
 
@@ -257,7 +258,7 @@ class TaskBase extends TaskControl {
     }
 
     // add new task if branching
-    const task = event.detail.task
+    let task = event.detail.task
     if (event.type === EVENT_BRANCH) {
       // create new task and add path
       const newTask = structuredClone(this.model)
@@ -282,10 +283,16 @@ class TaskBase extends TaskControl {
     }
 
     let node = event.target
-    // when deleting a subtask,
-    if (event.type === EVENT_DELETE) {
+    // when deleting or cloning a subtask
+    if (event.type === EVENT_DELETE || event.type === EVENT_CLONE) {
       // grab the parent
       node = event.target.parentElement
+    }
+
+    if (event.type == EVENT_CLONE) {
+      node.task.tree.push(structuredClone(task))
+      node.updateSubPaths()
+      task = node.task
     }
 
     // grab root element

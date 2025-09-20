@@ -84,6 +84,10 @@ class TaskNode extends HTMLElement {
       this.delete()
     })
 
+    this.selectName(NAME_SYNC).addEventListener('click', () => this.dispatch(EVENT_SYNC))
+
+    this.selectName(NAME_CLONE).addEventListener('click', () => this.dispatch(EVENT_CLONE))
+
     // task state selection
     this.selectName(NAME_STATE).addEventListener('change', (event) => {
       event.stopPropagation()
