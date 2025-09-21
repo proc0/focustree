@@ -15,10 +15,11 @@ window.onload = () => {
   const taskFocus = document.createElement('dialog', { is: TAG_FOCUS })
   const taskSettings = document.createElement('dialog', { is: TAG_SETTINGS })
   const taskMenu = document.createElement('menu', { is: TAG_MENU })
-  const main = document.querySelector('main')
-  const header = document.querySelector('header')
+
   /* Connect Elements
   |*-------------------------*/
+  const main = document.querySelector('main')
+  const header = document.querySelector('header')
   // append view first - triggers
   // lifecycle events on children
   header.appendChild(taskSettings)

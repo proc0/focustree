@@ -73,6 +73,11 @@ details {
     & button:first-child {
       margin-right: 0.35rem;
       font-size: 1.24rem;
+      display: none;
+    }
+
+    &:hover button:first-child {
+      display: flex;
     }
 
     & button:last-child {
@@ -110,6 +115,10 @@ div.menu-open {
     }
     ::after {
       opacity: 0;
+    }
+
+    button:first-child {
+      display: flex !important;
     }
   }
 
