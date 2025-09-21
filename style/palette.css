@@ -48,9 +48,9 @@
     --forest-bg-accent: color(display-p3 0.286 0.3817 0.196);
     --forest-bg-shade: color(display-p3 0.077 0.0381 0);
 
-    --forest-fg-accent: color(display-p3 0.6205 0.7007 0.5942);
+    --forest-fg: color(display-p3 0.6205 0.7007 0.5942);
     --forest-fg-neutral: color(display-p3 0.8755 0.8971 0.9083);
-    --forest-fg: color(display-p3 0.7639 0.8059 0.8367);
+    --forest-fg-accent: color(display-p3 0.7639 0.8059 0.8367);
     --forest-fg-shade: color(display-p3 0.3461 0.4659 0.3123);
 
     --forest-highlight: color(display-p3 0.7883 0.7158 0.0609);

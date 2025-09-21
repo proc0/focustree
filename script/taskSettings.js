@@ -9,12 +9,33 @@ class TaskSettings extends HTMLDialogElement {
     const settingsTemplate = document.getElementById(TEMPLATE_SETTINGS)
     this.append(settingsTemplate.content.cloneNode(true))
     this.bindEvents()
+    const cachedTheme = localStorage.getItem('task-theme')
+    if (cachedTheme) {
+      this.setTheme(cachedTheme)
+      this.setOption(cachedTheme)
+    }
   }
 
   bindEvents() {
     this.addEventListener('change', ({ target }) => {
-      document.documentElement.setAttribute('class', `theme-${target.value.toLowerCase()}`)
-      document.documentElement.setAttribute('data-theme', `theme-${target.value.toLowerCase()}`)
+      this.setTheme(target.value)
+      document.querySelector('task-view').refresh()
+    })
+  }
+
+  setTheme(theme) {
+    localStorage.setItem('task-theme', theme)
+    document.documentElement.setAttribute('class', `theme-${theme.toLowerCase()}`)
+    document.documentElement.setAttribute('data-theme', `theme-${theme.toLowerCase()}`)
+  }
+
+  setOption(theme) {
+    this.querySelectorAll('option').forEach((option) => {
+      if (option.value !== theme) {
+        option.removeAttribute('selected')
+      } else {
+        option.setAttribute('selected', '')
+      }
     })
   }
 }

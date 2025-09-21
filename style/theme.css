@@ -107,7 +107,7 @@ html.theme-forest {
     }
   }
 
-  task-view > dialog {
+  dialog {
     color: var(--forest-fg);
   }
 
@@ -232,7 +232,7 @@ html.theme-gruvbox {
     }
   }
 
-  task-view > dialog {
+  dialog {
     color: var(--gruvbox-fg);
   }
 

@@ -4,7 +4,7 @@
 
 /* reset */
 
-task-view > dialog {
+dialog {
   border: none;
   appearance: base-select;
   background: transparent;
@@ -17,7 +17,7 @@ task-view > dialog {
 
 /* structure */
 
-task-view > dialog {
+dialog {
   position: fixed;
   top: 0;
   height: 100%;
@@ -100,25 +100,42 @@ main.focus {
 
 /* effects */
 
-task-view > dialog {
+dialog {
   opacity: 0;
-  transform: translateY(0);
   transition: opacity 0.25s ease-out, transform 0.25s ease-out,
     overlay 0.25s ease-out allow-discrete, display 0.25s ease-out allow-discrete;
 }
 
 /* Open state of the dialog */
-task-view > dialog:open {
+dialog:open {
   opacity: 1;
-  transform: translateY(1em);
 }
 
 /* Before open state  */
 /* Needs to be after dialog:open take effect, (same specificity) */
 @starting-style {
-  task-view > dialog:open {
+  dialog:open {
     opacity: 0;
-    transform: translateY(0);
+  }
+}
+
+/* settings */
+
+header dialog {
+  transform: translateX(-200px);
+  opacity: 1;
+  transition: transform 0.25s ease-in-out, overlay 0.25s ease-out allow-discrete,
+    display 0.25s ease-out allow-discrete;
+}
+
+header dialog:open {
+  transform: translateX(0);
+}
+
+@starting-style {
+  dialog:open {
+    opacity: 1;
+    transform: translateX(-200px);
   }
 }
 
@@ -133,8 +150,9 @@ task-view > dialog:open {
 
   /* settings */
 
-  task-view > dialog#task-settings {
+  header dialog#task-settings {
     background: var(--forest-bg);
+    box-shadow: 0 1rem 2rem var(--color-black-50);
   }
 }
 
@@ -147,7 +165,8 @@ task-view > dialog:open {
 
   /* settings */
 
-  task-view > dialog#task-settings {
+  header dialog#task-settings {
     background: var(--gruvbox-bg);
+    box-shadow: 0 1rem 2rem var(--color-black-50);
   }
 }

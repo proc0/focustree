@@ -52,6 +52,10 @@ class TaskView extends TaskControl {
     this.menu = this.querySelector('menu')
   }
 
+  refresh() {
+    this.base.load()
+  }
+
   render({ detail }) {
     const tasks = detail.tasks
 
