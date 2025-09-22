@@ -177,6 +177,10 @@ header > menu.menu-open {
   visibility: visible;
 }
 
+.hidden {
+  display: none;
+}
+
 /* effects */
 
 task-node {

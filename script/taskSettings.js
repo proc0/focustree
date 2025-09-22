@@ -21,6 +21,13 @@ class TaskSettings extends HTMLDialogElement {
       this.setTheme(target.value)
       document.querySelector('task-view').refresh()
     })
+
+    this.addEventListener('close', () => {
+      setTimeout(() => {
+        this.querySelector('#info').classList.add('hidden')
+        this.querySelector('#settings').classList.remove('hidden')
+      }, 500)
+    })
   }
 
   setTheme(theme) {
@@ -37,5 +44,11 @@ class TaskSettings extends HTMLDialogElement {
         option.setAttribute('selected', '')
       }
     })
+  }
+
+  showInfo() {
+    this.querySelector('#settings').classList.add('hidden')
+    this.querySelector('#info').classList.remove('hidden')
+    return this
   }
 }
