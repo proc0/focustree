@@ -28,6 +28,29 @@ class TaskSettings extends HTMLDialogElement {
         this.querySelector('#settings').classList.remove('hidden')
       }, 500)
     })
+
+    this.querySelectorAll('#info button').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        const direction = event.target.getAttribute('id').split('-')[1]
+        const listItems = this.querySelectorAll('#info ul li')
+
+        for (let i = 0; i < listItems.length; i++) {
+          const item = listItems[i]
+          const isVisible = item.classList.contains('visible')
+          item.classList.remove('visible')
+          if (isVisible) {
+            let index
+            if (direction === 'next') {
+              index = i === listItems.length - 1 ? 0 : i + 1
+            } else {
+              index = i === 0 ? listItems.length - 1 : i - 1
+            }
+            listItems[index].classList.add('visible')
+            break
+          }
+        }
+      })
+    })
   }
 
   setTheme(theme) {

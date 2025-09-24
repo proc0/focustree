@@ -70,6 +70,23 @@ dialog {
   }
 }
 
+/* info tips */
+
+header dialog {
+  ul {
+    display: flex;
+    flex-direction: row;
+
+    li {
+      display: none;
+    }
+
+    li.visible {
+      display: flex;
+    }
+  }
+}
+
 /* focus */
 
 main.focus {
