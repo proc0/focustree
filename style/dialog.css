@@ -15,14 +15,27 @@ dialog {
   }
 }
 
-/* structure */
+header dialog {
+  ul {
+    padding: 0;
 
+    button,
+    button:hover {
+      border: none !important;
+    }
+  }
+}
+
+/* structure */
 dialog {
   position: fixed;
   top: 0;
   height: 100%;
+}
 
-  header {
+task-view dialog {
+  h1,
+  p {
     margin-left: 2rem;
   }
 
@@ -79,6 +92,7 @@ header dialog {
 
     li {
       display: none;
+      flex-direction: column;
     }
 
     li.visible {
@@ -136,7 +150,7 @@ dialog:open {
   }
 }
 
-/* settings */
+/* settings interactions */
 
 header dialog {
   transform: translateX(-200px);

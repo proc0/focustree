@@ -18,10 +18,10 @@ html.theme-forest {
   }
 
   .icon-button:hover {
-    color: var(--forest-fg-accent) !important;
-    background-color: var(--forest-bg) !important;
-    border-left: 0.1rem solid var(--forest-bg-shade) !important;
-    border-right: 0.1rem solid var(--forest-bg-shade) !important;
+    color: var(--forest-fg-accent);
+    background-color: var(--forest-bg);
+    border-left: 0.1rem solid var(--forest-bg-shade);
+    border-right: 0.1rem solid var(--forest-bg-shade);
     text-shadow: none;
   }
 
@@ -141,10 +141,10 @@ html.theme-gruvbox {
   }
 
   .icon-button:hover {
-    color: var(--gruvbox-fg-accent) !important;
-    background-color: var(--gruvbox-bg) !important;
-    border-left: 0.1rem solid var(--gruvbox-bg-shade) !important;
-    border-right: 0.1rem solid var(--gruvbox-bg-shade) !important;
+    color: var(--gruvbox-fg-accent);
+    background-color: var(--gruvbox-bg);
+    border-left: 0.1rem solid var(--gruvbox-bg-shade);
+    border-right: 0.1rem solid var(--gruvbox-bg-shade);
     text-shadow: none;
   }
 

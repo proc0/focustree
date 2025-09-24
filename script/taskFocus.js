@@ -112,14 +112,23 @@ class TaskFocus extends HTMLDialogElement {
     // cleanup
     this.seed = null
     this.querySelectorAll('ul li').forEach((taskName) => taskName.remove())
-    this.querySelector('header h1').remove()
+    this.querySelector('h1').remove()
     document.querySelector('main').classList.remove(CLASS_FOCUS)
   }
 
   renderFocus(task) {
     // const dialog = this.querySelector('dialog')
-    const focusTitleEl = this.querySelector('header h1')
-    const focusNoteEl = this.querySelector('header p')
+    const focusTitleEl = this.querySelector('h1')
+    const focusNoteEl = this.querySelector('p')
+
+    if (focusNoteEl) {
+      focusNoteEl.textContent = task.note
+    } else {
+      const focusNote = document.createElement('p')
+      focusNote.setAttribute('slot', 'task-focus-note')
+      focusNote.textContent = task.note
+      this.prepend(focusNote)
+    }
 
     if (focusTitleEl) {
       const focusTaskName = focusTitleEl.textContent
@@ -133,16 +142,7 @@ class TaskFocus extends HTMLDialogElement {
       const focusTitle = document.createElement('h1')
       focusTitle.setAttribute('slot', 'task-focus-name')
       focusTitle.textContent = task.name
-      this.querySelector('header').prepend(focusTitle)
-    }
-
-    if (focusNoteEl) {
-      focusNoteEl.textContent = task.note
-    } else {
-      const focusNote = document.createElement('p')
-      focusNote.setAttribute('slot', 'task-focus-note')
-      focusNote.textContent = task.note
-      this.querySelector('header').appendChild(focusNote)
+      this.prepend(focusTitle)
     }
   }
 

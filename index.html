@@ -112,10 +112,8 @@
       </div>
     </template>
     <template id="template-focus">
-      <header>
-        <slot name="focus-task-name"></slot>
-        <slot name="focus-task-note"></slot>
-      </header>
+      <slot name="focus-task-name"></slot>
+      <slot name="focus-task-note"></slot>
       <ul>
         <slot name="task-name"></slot>
       </ul>
@@ -142,7 +140,7 @@
       <div id="info" class="hidden">
         <h2>Tips</h2>
         <ul>
-          <button class="icon-button" id="info-previous" title="Previous">--</button>
+          <button class="icon-button" id="info-previous" title="Previous">◄</button>
           <li class="visible">
             <p>Overview</p>
             <img src="assets/screenshot.png" width="200" />
@@ -150,7 +148,7 @@
           <li>
             <p>blah blah blah</p>
           </li>
-          <button class="icon-button" id="info-next" title="Next">--</button>
+          <button class="icon-button" id="info-next" title="Next">►</button>
         </ul>
       </div>
     </template>
