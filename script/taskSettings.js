@@ -24,15 +24,15 @@ class TaskSettings extends HTMLDialogElement {
 
     this.addEventListener('close', () => {
       setTimeout(() => {
-        this.querySelector('#info').classList.add('hidden')
+        this.querySelector('#guide').classList.add('hidden')
         this.querySelector('#settings').classList.remove('hidden')
       }, 500)
     })
 
-    this.querySelectorAll('#info button').forEach((button) => {
+    this.querySelectorAll('#guide button').forEach((button) => {
       button.addEventListener('click', (event) => {
         const direction = event.target.getAttribute('id').split('-')[1]
-        const listItems = this.querySelectorAll('#info ul li')
+        const listItems = this.querySelectorAll('#guide ul li')
 
         for (let i = 0; i < listItems.length; i++) {
           const item = listItems[i]
@@ -69,9 +69,9 @@ class TaskSettings extends HTMLDialogElement {
     })
   }
 
-  showInfo() {
+  showGuide() {
     this.querySelector('#settings').classList.add('hidden')
-    this.querySelector('#info').classList.remove('hidden')
+    this.querySelector('#guide').classList.remove('hidden')
     return this
   }
 }

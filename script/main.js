@@ -44,6 +44,6 @@ window.onload = () => {
     .getElementById(ID_ROOT_SETTINGS)
     .addEventListener('click', () => taskSettings.showModal())
   document
-    .getElementById(ID_ROOT_INFO)
-    .addEventListener('click', () => taskSettings.showInfo().showModal())
+    .getElementById(ID_ROOT_GUIDE)
+    .addEventListener('click', () => taskSettings.showGuide().showModal())
 }

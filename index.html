@@ -137,18 +137,74 @@
           <option selected>Gruvbox</option>
         </select>
       </div>
-      <div id="info" class="hidden">
-        <h2>Tips</h2>
+      <div id="guide" class="hidden">
+        <h2>Guide</h2>
         <ul>
-          <button class="icon-button" id="info-previous" title="Previous">◄</button>
+          <button class="icon-button" id="guide-previous" title="Previous">◄</button>
           <li class="visible">
-            <p>Overview</p>
-            <img src="assets/screenshot.png" width="200" />
+            <h3>Overview</h3>
+            <p>
+              <img src="assets/screenshot.png" width="200" />
+            </p>
           </li>
           <li>
-            <p>blah blah blah</p>
+            <h3>Edit mode</h3>
+            <p>
+              Click on the edit icon (✎) to enter edit mode for the task. New tasks start in edit
+              mode. While in edit mode, edit the task name, and optionally a task note while the
+              task is in edit mode. Click on the checkmark icon (✓) to confirm changes.
+            </p>
           </li>
-          <button class="icon-button" id="info-next" title="Next">►</button>
+          <li>
+            <h3>New root task</h3>
+            <p>Use the root menu to add a new root task by clicking on the plus icon (✚)</p>
+          </li>
+          <li>
+            <h3>New subtask</h3>
+            <p>
+              Click on the plus icon (✚) in the task menu or in edit mode to add a new child task.
+            </p>
+          </li>
+          <li>
+            <h3>Delete task</h3>
+            <p>Click on the x icon (✖) to delete a root task or subtask.</p>
+          </li>
+          <li>
+            <h3>Focus mode</h3>
+            <p>
+              Click on the eye icon (👁) to begin focus mode. While in focus mode, click on the
+              checkmark icon (✓) to mark the task as complete or the pause icon () to pause the
+              task. THis will walk down the task tree until it reaches one of the leaf tasks.
+            </p>
+          </li>
+          <li>
+            <h3>Drag and drop tasks</h3>
+            <p>
+              Click and drag tasks to rearrange the task tree. Dragging a task on top of another
+              tasks make the dragged task a subtask. Dragging the task slightly below or above
+              another task reorders the tasks. Dragging a task slighly above ore bloew another root
+              task, promotes that task to a root task.
+            </p>
+          </li>
+          <li>
+            <h3>Sync task states</h3>
+            <p>
+              Click on the sync icon (⇣) to sync the whole task tree. All subtasks will inherit the
+              task state.
+            </p>
+          </li>
+          <li>
+            <h3>Clone task</h3>
+            <p>
+              Click on the clone icon (⚯) to clone the task. Cloned tasks are added at the same
+              level.
+            </p>
+          </li>
+          <li>
+            <h3>Change task state</h3>
+            <p>From the task menu, change the state of the task.</p>
+          </li>
+          <button class="icon-button" id="guide-next" title="Next">►</button>
         </ul>
       </div>
     </template>
@@ -161,7 +217,7 @@
         <menuitem>
           <button class="icon-button" id="root-settings" title="Settings">⛭</button>
         </menuitem>
-        <menuitem><button class="icon-button" id="root-info" title="Info">?</button></menuitem>
+        <menuitem><button class="icon-button" id="root-guide" title="Guide">?</button></menuitem>
       </menu>
     </header>
     <main></main>

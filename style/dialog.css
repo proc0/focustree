@@ -18,6 +18,12 @@ dialog {
 dialog {
   ul {
     padding: 0;
+
+    li {
+      h3 {
+        margin: 0;
+      }
+    }
   }
 
   button,
@@ -88,9 +94,14 @@ task-view dialog {
 /* info tips */
 
 header dialog {
+  width: 18%;
+
   ul {
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
 
     li {
       display: none;

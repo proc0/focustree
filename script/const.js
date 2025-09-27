@@ -36,7 +36,7 @@ const ID_ROOT_IMPORT = 'root-import'
 const ID_ROOT_EXPORT = 'root-export'
 const ID_ROOT_MENU_TOGGLE = 'root-menu-toggle'
 const ID_ROOT_SETTINGS = 'root-settings'
-const ID_ROOT_INFO = 'root-info'
+const ID_ROOT_GUIDE = 'root-guide'
 // custom html templates
 const TEMPLATE_NODE = 'template-task'
 const TEMPLATE_EDIT = 'template-edit'
