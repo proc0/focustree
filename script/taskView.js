@@ -29,6 +29,9 @@ class TaskView extends TaskControl {
   focusTree(event) {
     const node = event.target
 
+    // close root menu
+    this.menu.hide(document.querySelector('header menu'))
+
     node.focusNode()
     // show focus modal
     this.querySelector('dialog').showFocus(node)

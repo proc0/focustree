@@ -49,38 +49,18 @@ select {
 
 /* theme */
 
-.theme-forest {
-  select.done {
-    color: var(--forest-state-done) !important;
-  }
-
-  select.pause {
-    color: var(--forest-state-pause) !important;
-  }
-
-  select.active {
-    color: var(--forest-state-active) !important;
-  }
-
-  select.ready {
-    color: var(--forest-fg-shade) !important;
-  }
+select.done {
+  color: var(--state-done) !important;
 }
 
-.theme-gruvbox {
-  select.done {
-    color: var(--gruvbox-state-done) !important;
-  }
+select.pause {
+  color: var(--state-pause) !important;
+}
 
-  select.pause {
-    color: var(--gruvbox-state-pause) !important;
-  }
+select.active {
+  color: var(--state-active) !important;
+}
 
-  select.active {
-    color: var(--gruvbox-state-active) !important;
-  }
-
-  select.ready {
-    color: var(--gruvbox-fg-shade) !important;
-  }
+select.ready {
+  color: var(--fg-shade) !important;
 }

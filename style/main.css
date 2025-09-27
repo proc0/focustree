@@ -121,6 +121,7 @@ task-base {
   display: flex;
   flex-direction: column;
   width: 100%;
+  transition: all 0.25s ease-in;
 }
 
 task-node {
@@ -179,6 +180,36 @@ header > menu.menu-open {
 
 .hidden {
   display: none;
+}
+
+
+/* focus */
+
+main.focus {
+  task-node {
+    padding-left: 2rem;
+  }
+
+  task-node:not([data-focus])::part(summary) {
+    filter: blur(5px);
+  }
+
+  task-node:not([data-focus])::part(summary):before {
+    display: none;
+  }
+
+  task-node::part(icon-button) {
+    display: none;
+  }
+
+  task-base {
+    margin-top: 10%;
+    margin-left: 10%;
+  }
+
+  & > menu {
+    visibility: hidden;
+  }
 }
 
 /* effects */

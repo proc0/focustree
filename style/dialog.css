@@ -15,14 +15,17 @@ dialog {
   }
 }
 
-header dialog {
+dialog {
   ul {
     padding: 0;
+  }
 
-    button,
-    button:hover {
-      border: none !important;
-    }
+  button,
+  button:hover,
+  menuitem button,
+  menuitem button:hover {
+    border: none !important;
+    user-select: none;
   }
 }
 
@@ -42,8 +45,7 @@ task-view dialog {
   ul {
     display: flex;
     flex-direction: column;
-    place-items: flex-end;
-    padding: 0 55% 0 0;
+    place-items: flex-start;
     margin-top: 5em;
     height: 50%;
     overflow: hidden;
@@ -52,7 +54,7 @@ task-view dialog {
       display: flex;
       text-align: left;
       margin-left: 0.5em;
-      font-size: 1.5em;
+      font-size: 1em;
       &:before {
         padding-right: 0.5em;
         font-weight: bold;
@@ -101,34 +103,6 @@ header dialog {
   }
 }
 
-/* focus */
-
-main.focus {
-  task-node {
-    padding-left: 2rem;
-  }
-
-  task-node:not([data-focus])::part(summary) {
-    filter: blur(3px);
-  }
-
-  task-node:not([data-focus])::part(summary):before {
-    display: none;
-  }
-
-  task-node::part(icon-button) {
-    display: none;
-  }
-
-  task-base {
-    margin-top: 8%;
-  }
-
-  & > menu {
-    visibility: hidden;
-  }
-}
-
 /* effects */
 
 dialog {
@@ -172,32 +146,22 @@ header dialog:open {
 
 /* theme */
 
-.theme-forest {
-  task-view > dialog {
-    ul li {
-      color: var(--forest-fg-accent);
+task-view > dialog {
+  ul {
+    li {
+      color: var(--fg);
+      text-shadow: 0 0 1rem var(--color-black-50);
     }
   }
 
-  /* settings */
-
-  header dialog#task-settings {
-    background: var(--forest-bg);
-    box-shadow: 0 1rem 2rem var(--color-black-50);
+  &::backdrop {
+    background-color: var(--color-black-50);
   }
 }
 
-.theme-gruvbox {
-  task-view > dialog {
-    ul li {
-      color: var(--gruvbox-fg-accent);
-    }
-  }
+/* settings */
 
-  /* settings */
-
-  header dialog#task-settings {
-    background: var(--gruvbox-bg);
-    box-shadow: 0 1rem 2rem var(--color-black-50);
-  }
+header dialog#task-settings {
+  background: var(--bg);
+  box-shadow: 0 1rem 2rem var(--color-black-50);
 }
