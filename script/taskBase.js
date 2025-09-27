@@ -286,13 +286,17 @@ class TaskBase extends TaskControl {
 
     let node = event.target
     // when deleting or cloning a subtask
-    if (event.type === EVENT_DELETE || event.type === EVENT_CLONE) {
+    if (event.type === EVENT_DELETE || (event.type === EVENT_CLONE && !event.target.isRoot())) {
       // grab the parent
       node = event.target.parentElement
     }
 
     if (event.type == EVENT_CLONE) {
-      node.task.tree.push(structuredClone(task))
+      if (node.isRoot()) {
+        return this.addRoot({ detail: { task: node.task } })
+      } else {
+        node.task.tree.push(structuredClone(task))
+      }
       node.updateSubPaths()
       task = node.task
     }

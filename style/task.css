@@ -204,140 +204,58 @@ div.focus summary {
 /*         Theme
 |*-------------------------*/
 
-/* forest */
-
-.theme-forest {
+div {
   summary {
-    color: var(--forest-fg);
+    color: var(--fg);
 
     &::before {
-      color: var(--forest-highlight) !important;
+      color: var(--highlight) !important;
     }
   }
 
   &.leaf.editing {
     summary {
-      color: var(--forest-fg-shade);
+      color: var(--fg-shade);
       &:hover {
-        color: var(--forest-fg-shade) !important;
-      }
-
-      button {
-        color: var(--forest-bg-accent) !important;
-
-        &:hover {
-          background-color: var(--forest-bg-shade) !important;
-          color: var(--forest-fg-accent) !important;
-        }
-      }
-    }
-  }
-
-  /* states */
-  &.done {
-    & [name='task-name']::after {
-      color: var(--forest-state-done);
-    }
-  }
-
-  &.pause {
-    & [name='task-name']::after {
-      color: var(--forest-state-pause);
-    }
-  }
-
-  &.active {
-    & [name='task-name']::after {
-      color: var(--forest-state-active);
-    }
-  }
-
-  &.reject {
-    & [name='task-name']::after {
-      color: var(--forest-state-reject);
-    }
-  }
-
-  /* drag-n-drop */
-  .drop-above {
-    background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) 95%,
-      var(--forest-highlight) 96%,
-      var(--forest-highlight) 100%
-    );
-  }
-
-  .drop-over {
-    background-color: var(--forest-highlight);
-  }
-
-  .drop-below {
-    background: linear-gradient(
-      0deg,
-      var(--forest-highlight) 0%,
-      var(--forest-highlight) 4%,
-      rgba(0, 0, 0, 0) 5%,
-      rgba(0, 0, 0, 0) 100%
-    );
-  }
-}
-
-/* gruvbox */
-
-div.theme-gruvbox {
-  summary {
-    color: var(--gruvbox-fg);
-
-    &::before {
-      color: var(--gruvbox-highlight) !important;
-    }
-  }
-
-  &.leaf.editing {
-    summary {
-      color: var(--gruvbox-fg-shade);
-      &:hover {
-        color: var(--gruvbox-fg-shade) !important;
+        color: var(--fg-shade) !important;
       }
       button {
-        color: var(--gruvbox-bg-accent) !important;
+        color: var(--bg-accent) !important;
 
         &:hover {
-          background-color: var(--gruvbox-bg-shade) !important;
-          color: var(--gruvbox-fg-accent) !important;
+          background-color: var(--bg-shade) !important;
+          color: var(--fg-accent) !important;
         }
       }
     }
   }
 
   &.editing {
-    color: var(--gruvbox-fg-neutral);
+    color: var(--fg-neutral);
   }
 
   /* states */
   &.done {
     & [name='task-name']::after {
-      color: var(--gruvbox-state-done);
+      color: var(--state-done);
     }
   }
 
   &.pause {
     & [name='task-name']::after {
-      color: var(--gruvbox-state-pause);
+      color: var(--state-pause);
     }
   }
 
   &.active {
     & [name='task-name']::after {
-      color: var(--gruvbox-state-active);
+      color: var(--state-active);
     }
   }
 
   &.reject {
     & [name='task-name']::after {
-      color: var(--gruvbox-state-reject);
+      color: var(--state-reject);
     }
   }
 
@@ -347,20 +265,20 @@ div.theme-gruvbox {
       0deg,
       rgba(0, 0, 0, 0) 0%,
       rgba(0, 0, 0, 0) 95%,
-      var(--gruvbox-highlight) 96%,
-      var(--gruvbox-highlight) 100%
+      var(--highlight) 96%,
+      var(--highlight) 100%
     );
   }
 
   .drop-over {
-    background-color: var(--gruvbox-highlight);
+    background-color: var(--highlight);
   }
 
   .drop-below {
     background: linear-gradient(
       0deg,
-      var(--gruvbox-highlight) 0%,
-      var(--gruvbox-highlight) 4%,
+      var(--highlight) 0%,
+      var(--highlight) 4%,
       rgba(0, 0, 0, 0) 5%,
       rgba(0, 0, 0, 0) 100%
     );
