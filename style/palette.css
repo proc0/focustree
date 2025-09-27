@@ -1,42 +1,31 @@
-/* color picker: https://css.land/lch/ */
-@media (color-gamut: srgb) {
-  :root {
-    --color-black: lch(0 0 0); /* rgb(0% 0% 0%) */
-    --color-black-50: lch(0 0 0 / 0.5);
+/*########################*|
+|*     Color Palettes
+|*########################*/
 
-    /* forest */
-    --forest-bg: lch(14.329% 11.434 59.083); /* rgb(18.58% 12.97% 8.93%) */
-    --forest-bg-shade: lch(3.328% 52.498 59.084); /* rgb(8.1% 3.7% 0%) */
-    --forest-bg-accent: lch(38.111% 33.87 126.955); /* rgb(25.85% 38.51% 16.89%) */
+/*      SRGB Palettes
+|*-------------------------*/
 
-    --forest-fg: lch(64.476% 50.595 137.834); /* rgb(37.75% 68.01% 36.04%) */
-    --forest-fg-neutral: lch(90.466% 3.077 229.097); /* rgb(87.06% 89.8% 90.98%) */
-    --forest-fg-accent: lch(81.88% 6.85 238.527); /* rgb(75.4% 80.76% 84.04%) */
-    --forest-fg-shade: lch(46.478% 29.598 137.84); /* rgb(31.12% 47.02% 29.53%) */
+:root {
+  /* gruvbox */
+  --gruvbox-bg: #282828;
+  --gruvbox-bg-accent: #928374;
+  --gruvbox-bg-shade: #1d2021;
 
-    --forest-highlight: lch(74.003% 94.58 91.974); /* rgb(79.89% 71.16% 0%) */
-    --forest-state-active: lch(82.603% 80.741 100.581); /* rgb(81.96% 83.14% 6.67%) */
-    --forest-state-pause: lch(36.869% 72.277 43.404); /* rgb(64.71% 12.94% 1.18%) */
-    --forest-state-done: lch(64.463% 67.969 106.725); /* rgb(57.25% 64.71% 1.18%) */
-    --forest-state-reject: hsla(11, 96%, 33%, 1);
+  --gruvbox-fg: #fbf1c7;
+  --gruvbox-fg-neutral: hsla(198, 18%, 89%, 1);
+  --gruvbox-fg-accent: #d79921;
+  --gruvbox-fg-shade: #a89984;
 
-    /* gruvbox */
-    --gruvbox-bg: #282828;
-    --gruvbox-bg-accent: #928374;
-    --gruvbox-bg-shade: #1d2021;
-
-    --gruvbox-fg: #fbf1c7;
-    --gruvbox-fg-neutral: hsla(198, 18%, 89%, 1);
-    --gruvbox-fg-accent: #d79921;
-    --gruvbox-fg-shade: #a89984;
-
-    --gruvbox-highlight: #076678;
-    --gruvbox-state-active: #fabd2f;
-    --gruvbox-state-pause: #fb4934;
-    --gruvbox-state-done: #b8bb26;
-    --gruvbox-state-reject: #cc241d;
-  }
+  --gruvbox-highlight: #076678;
+  --gruvbox-state-active: #fabd2f;
+  --gruvbox-state-pause: #fb4934;
+  --gruvbox-state-done: #b8bb26;
+  --gruvbox-state-reject: #cc241d;
 }
+
+/*       P3 Palettes
+|*-------------------------*/
+/* Picker: https://css.land/lch/ */
 
 @media (color-gamut: p3) {
   :root {
@@ -44,112 +33,80 @@
     --color-black-50: color(display-p3 0 0 0 / 0.5);
 
     /* forest */
-    --forest-bg: color(display-p3 0.1772 0.132 0.0951);
+    --forest-bg: color(display-p3 0.1391 0.0914 0.041);
     --forest-bg-accent: color(display-p3 0.286 0.3817 0.196);
-    --forest-bg-shade: color(display-p3 0.077 0.0381 0);
+    --forest-bg-shade: color(display-p3 0.1175 0.0667 0);
 
     --forest-fg: color(display-p3 0.6205 0.7007 0.5942);
     --forest-fg-neutral: color(display-p3 0.8755 0.8971 0.9083);
-    --forest-fg-accent: color(display-p3 0.7639 0.8059 0.8367);
+    --forest-fg-accent: color(display-p3 0.5126 0.6441 0.1701);
     --forest-fg-shade: color(display-p3 0.3461 0.4659 0.3123);
 
-    --forest-highlight: color(display-p3 0.7883 0.7158 0.0609);
+    --forest-highlight: color(display-p3 0.3667 0.5453 0.0067);
     --forest-state-active: color(display-p3 0.8217 0.831 0.2799);
     --forest-state-pause: color(display-p3 0.5945 0.1799 0.0887);
     --forest-state-done: color(display-p3 0.5867 0.6448 0.1996);
-    --forest-state-reject: hsla(11, 96%, 33%, 1);
-
-    /* gruvbox */
-    --gruvbox-bg: #282828;
-    --gruvbox-bg-accent: #928374;
-    --gruvbox-bg-shade: #1d2021;
-
-    --gruvbox-fg: #fbf1c7;
-    --gruvbox-fg-neutral: hsla(198, 18%, 89%, 1);
-    --gruvbox-fg-accent: #d79921;
-    --gruvbox-fg-shade: #a89984;
-
-    --gruvbox-highlight: #076678;
-    --gruvbox-state-active: #fabd2f;
-    --gruvbox-state-pause: #fb4934;
-    --gruvbox-state-done: #b8bb26;
-    --gruvbox-state-reject: #cc241d;
+    --forest-state-reject: color(display-p3 0.5945 0.1799 0.0887);
   }
 }
 
-/* Reference colors */
-/*
---old-gold: hsla(52, 68%, 46%, 1);
---dark-moss-green: hsla(88, 64%, 25%, 1);
---avocado: hsla(95, 69%, 31%, 1);
---asparagus: hsla(115, 26%, 50%, 1);
---black-olive: hsla(110, 5%, 23%, 1);
---drab-dark-brown: hsla(64, 80%, 12%, 1);
---platinum: hsla(198, 18%, 89%, 1);
+// P3 fallback to SRGB
+@media (color-gamut: srgb) {
+  :root {
+    --color-black: color(display-p3 0 0 0);
+    --color-black-50: color(display-p3 0 0 0 / 0.5);
 
---bistre: hsla(10, 32%, 15%, 1);
---avocado: hsla(80, 88%, 27%, 1);
---apple-green: hsla(80, 80%, 42%, 1);
---alice-blue: hsla(201, 41%, 92%, 1);
---citrine: hsla(52, 75%, 55%, 1);
+    /* forest */
+    --forest-bg: lch(9.328% 12.493 59.156); /* rgb(14.78% 8.89% 3.18%)*/
+    --forest-bg-shade: lch(6.328% 12.498 59.084); /* rgb(12.28% 6.53% 0%) */
+    --forest-bg-accent: lch(38.111% 33.87 126.955); /* rgb(25.85% 38.51% 16.89%) */
 
---mossy-forest-1-hsla: hsla(84, 96%, 12%, 1);
---mossy-forest-2-hsla: hsla(84, 96%, 7%, 1);
---mossy-forest-3-hsla: hsla(78, 96%, 17%, 1);
---mossy-forest-4-hsla: hsla(67, 96%, 33%, 1);
---mossy-forest-5-hsla: hsla(61, 85%, 45%, 1);
+    --forest-fg: lch(64.476% 50.595 137.834); /* rgb(37.75% 68.01% 36.04%) */
+    --forest-fg-neutral: lch(90.466% 3.077 229.097); /* rgb(87.06% 89.8% 90.98%) */
+    --forest-fg-accent: lch(62.838% 72.983 114.445); /* rgb(48.46% 64.67% 0%) */
+    --forest-fg-shade: lch(46.478% 29.598 137.84); /* rgb(31.12% 47.02% 29.53%) */
 
---fireborn-fungus-1-hsla: hsla(39, 88%, 56%, 1);
---fireborn-fungus-2-hsla: hsla(28, 89%, 50%, 1);
---fireborn-fungus-3-hsla: hsla(22, 96%, 48%, 1);
---fireborn-fungus-4-hsla: hsla(11, 96%, 33%, 1);
---fireborn-fungus-5-hsla: hsla(0, 0%, 5%, 1); */
-/*
-gruvbox
+    --forest-highlight: lch(52.466% 79.615 117.74); /* rgb(36.73% 53.94% 0%) */
+    --forest-state-active: lch(82.603% 80.741 100.581); /* rgb(81.96% 83.14% 6.67%) */
+    --forest-state-pause: lch(36.869% 72.277 43.404); /* rgb(64.71% 12.94% 1.18%) */
+    --forest-state-done: lch(64.463% 67.969 106.725); /* rgb(57.25% 64.71% 1.18%) */
+    --forest-state-reject: lch(36.869% 72.277 43.404); /* rgb(64.71% 12.94% 1.18%) */
+  }
+}
 
-let s:gb.dark0_hard  = ['#1d2021', 234]     " 29-32-33
-let s:gb.dark0       = ['#282828', 235]     " 40-40-40
-let s:gb.dark0_soft  = ['#32302f', 236]     " 50-48-47
-let s:gb.dark1       = ['#3c3836', 237]     " 60-56-54
-let s:gb.dark2       = ['#504945', 239]     " 80-73-69
-let s:gb.dark3       = ['#665c54', 241]     " 102-92-84
-let s:gb.dark4       = ['#7c6f64', 243]     " 124-111-100
-let s:gb.dark4_256   = ['#7c6f64', 243]     " 124-111-100
+/*     Theme Mapping
+|*-------------------------*/
 
-let s:gb.gray_245    = ['#928374', 245]     " 146-131-116
-let s:gb.gray_244    = ['#928374', 244]     " 146-131-116
+html.theme-gruvbox {
+  --bg: var(--gruvbox-bg);
+  --bg-accent: var(--gruvbox-bg-accent);
+  --bg-shade: var(--gruvbox-bg-shade);
 
-let s:gb.light0_hard = ['#f9f5d7', 230]     " 249-245-215
-let s:gb.light0      = ['#fbf1c7', 229]     " 253-244-193
-let s:gb.light0_soft = ['#f2e5bc', 228]     " 242-229-188
-let s:gb.light1      = ['#ebdbb2', 223]     " 235-219-178
-let s:gb.light2      = ['#d5c4a1', 250]     " 213-196-161
-let s:gb.light3      = ['#bdae93', 248]     " 189-174-147
-let s:gb.light4      = ['#a89984', 246]     " 168-153-132
-let s:gb.light4_256  = ['#a89984', 246]     " 168-153-132
+  --fg: var(--gruvbox-fg);
+  --fg-neutral: var(--gruvbox-fg-neutral);
+  --fg-accent: var(--gruvbox-fg-accent);
+  --fg-shade: var(--gruvbox-fg-shade);
 
-let s:gb.bright_red     = ['#fb4934', 167]     " 251-73-52
-let s:gb.bright_green   = ['#b8bb26', 142]     " 184-187-38
-let s:gb.bright_yellow  = ['#fabd2f', 214]     " 250-189-47
-let s:gb.bright_blue    = ['#83a598', 109]     " 131-165-152
-let s:gb.bright_purple  = ['#d3869b', 175]     " 211-134-155
-let s:gb.bright_aqua    = ['#8ec07c', 108]     " 142-192-124
-let s:gb.bright_orange  = ['#fe8019', 208]     " 254-128-25
+  --highlight: var(--gruvbox-highlight);
+  --state-active: var(--gruvbox-state-active);
+  --state-pause: var(--gruvbox-state-pause);
+  --state-done: var(--gruvbox-state-done);
+  --state-reject: var(--gruvbox-state-reject);
+}
 
-let s:gb.neutral_red    = ['#cc241d', 124]     " 204-36-29
-let s:gb.neutral_green  = ['#98971a', 106]     " 152-151-26
-let s:gb.neutral_yellow = ['#d79921', 172]     " 215-153-33
-let s:gb.neutral_blue   = ['#458588', 66]      " 69-133-136
-let s:gb.neutral_purple = ['#b16286', 132]     " 177-98-134
-let s:gb.neutral_aqua   = ['#689d6a', 72]      " 104-157-106
-let s:gb.neutral_orange = ['#d65d0e', 166]     " 214-93-14
+html.theme-forest {
+  --bg: var(--forest-bg);
+  --bg-accent: var(--forest-bg-accent);
+  --bg-shade: var(--forest-bg-shade);
 
-let s:gb.faded_red      = ['#9d0006', 88]      " 157-0-6
-let s:gb.faded_green    = ['#79740e', 100]     " 121-116-14
-let s:gb.faded_yellow   = ['#b57614', 136]     " 181-118-20
-let s:gb.faded_blue     = ['#076678', 24]      " 7-102-120
-let s:gb.faded_purple   = ['#8f3f71', 96]      " 143-63-113
-let s:gb.faded_aqua     = ['#427b58', 66]      " 66-123-88
-let s:gb.faded_orange   = ['#af3a03', 130]     " 175-58-3
+  --fg: var(--forest-fg);
+  --fg-neutral: var(--forest-fg-neutral);
+  --fg-accent: var(--forest-fg-accent);
+  --fg-shade: var(--forest-fg-shade);
 
-*/
+  --highlight: var(--forest-highlight);
+  --state-active: var(--forest-state-active);
+  --state-pause: var(--forest-state-pause);
+  --state-done: var(--forest-state-done);
+  --state-reject: var(--forest-state-reject);
+}
